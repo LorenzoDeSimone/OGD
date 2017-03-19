@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     private bool jumpAble;
     private float nextJump;
     private Transform childGuide;
+    public GravityField myGravityField;
 
     void Start()
     {
@@ -46,5 +47,28 @@ public class PlayerController : MonoBehaviour
             rb.velocity = new Vector2(-jumpSpeed * sinPlayerAngle, jumpSpeed * cosPlayerAngle);
             nextJump = Time.time + jumpRate;
         }
+
+
+
+        RaycastHit2D myGround = Physics2D.Raycast(transform.position, myGravityField.transform.position - transform.position, Mathf.Infinity, LayerMask.GetMask("Walkable"));
+        //Debug.Log(myGravityField.transform.position);
+        //Debug.Log("Mypos"+transform.position);
+        //Vector2 myUnderPos = transform.position + Vector3.down * 2;
+        //Debug.Log(-myGround.normal);
+
+
+        //Debug.DrawLine(transform.position, myGravityField.transform.position);
+        //Debug.Log(myGround.point);
+        //Debug.DrawLine(transform.position, myGround.point);
+
+        //        GetComponent<Rigidbody2D>().AddForce(Vector2.down * 100);
+        GetComponent<Rigidbody2D>().AddForce(-myGround.normal * 100);
+        //transform.up = Vector2.Lerp(transform.up, transform.position-myGravityField.transform.position, Time.deltaTime*10);
+        transform.up = Vector2.Lerp(transform.up, myGround.normal, Time.deltaTime * 10);
+    }
+
+    public void setGravityCenter(GravityField newGravityField)
+    {
+        myGravityField = newGravityField;
     }
 }
