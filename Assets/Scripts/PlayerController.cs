@@ -48,8 +48,6 @@ public class PlayerController : MonoBehaviour
             else
                 joystickAngle = joystickSinAngle;
 
-            Debug.Log(joystickAngle * Mathf.Rad2Deg + " - " + playerAngle * Mathf.Rad2Deg);
-
             float movement = Mathf.Cos(joystickAngle - playerAngle) * Mathf.Sqrt(moveHorizontal * moveHorizontal + moveVerical * moveVerical);
             transform.position += new Vector3(movement * Mathf.Cos(playerAngle), movement * Mathf.Sin(playerAngle), 0) * speed * Time.fixedDeltaTime;
             childGuide.position += ((transform.position + new Vector3(moveHorizontal, moveVerical, 0)) - childGuide.position) * guideSpeed * Time.fixedDeltaTime;
