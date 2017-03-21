@@ -33,6 +33,8 @@ public class PlayerController : MonoBehaviour
 
         float moveLT = Input.GetAxis("LT");
         float moveRT = Input.GetAxis("RT");
+        RaycastHit2D myGround = Physics2D.Raycast(transform.position, myGravityField.transform.position - transform.position, Mathf.Infinity, LayerMask.GetMask("Walkable"));
+
 
         if (moveVerical < 0)
             joystickAngle = -joystickAngle;
@@ -46,15 +48,14 @@ public class PlayerController : MonoBehaviour
         {
             childGuide.position = transform.position;
         }
-        if (Input.GetKeyDown(KeyCode.JoystickButton0) == true && Time.time > nextJump && Physics2D.Raycast(new Vector2(transform.position.x - 2 * sinPlayerAngle, transform.position.y - 2 * cosPlayerAngle), new Vector2(-sinPlayerAngle, -cosPlayerAngle), 2))
+        /*if (Input.GetKeyDown(KeyCode.JoystickButton0) == true && Time.time > nextJump && Physics2D.Raycast(new Vector2(transform.position.x - 2 * sinPlayerAngle, transform.position.y - 2 * cosPlayerAngle), new Vector2(-sinPlayerAngle, -cosPlayerAngle), 2))
         {
             rb.velocity = new Vector2(-jumpSpeed * sinPlayerAngle, jumpSpeed * cosPlayerAngle);
             nextJump = Time.time + jumpRate;
-        }
+        }*/
+        if (Input.GetKeyDown(KeyCode.JoystickButton0) == true && CanJump())
+            rb.velocity = myGround.normal * jumpSpeed * Time.fixedDeltaTime;
 
-
-
-        RaycastHit2D myGround = Physics2D.Raycast(transform.position, myGravityField.transform.position - transform.position, Mathf.Infinity, LayerMask.GetMask("Walkable"));
         //Debug.Log(myGravityField.transform.position);
         //Debug.Log("Mypos"+transform.position);
         //Vector2 myUnderPos = transform.position + Vector3.down * 2;
@@ -79,15 +80,12 @@ public class PlayerController : MonoBehaviour
             else//Clockwise
                 movementVector = new Vector3(myGround.normal.y, -myGround.normal.x);
 
-
-
             transform.position += movementVector * speed * Time.fixedDeltaTime;
         }
 
 
-
-
     }
+
 
     public void setGravityCenter(GravityField newGravityField)
     {
@@ -96,6 +94,6 @@ public class PlayerController : MonoBehaviour
 
     public bool CanJump()
     {
-        return jumpAble;
+        return Physics2D.Raycast(transform.position, myGravityField.transform.position - transform.position, 1.1f, LayerMask.GetMask("Walkable"));
     }
 }

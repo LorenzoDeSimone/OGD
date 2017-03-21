@@ -292,7 +292,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 7
-  jumpSpeed: 20
+  jumpSpeed: 1100
   jumpRate: 1
   myGravityField: {fileID: 276307618}
 --- !u!212 &899389168
