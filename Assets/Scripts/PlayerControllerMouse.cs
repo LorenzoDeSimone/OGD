@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerControllerMouse : MonoBehaviour
 {
     public float speed;
     public float jumpSpeed;
     public float jumpRate;
     public float guideSpeed;
-    public GravityField myGravityField;
+    public GravityFieldMouse myGravityField;
 
     private Rigidbody2D rb;
     private float nextJump;
@@ -23,8 +23,12 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        float moveHorizontal = Input.GetAxis("Horizontal");
-        float moveVerical = Input.GetAxis("Vertical");
+        float moveHorizontal = Camera.main.ScreenPointToRay(Input.mousePosition).origin.x - transform.position.x;
+        float moveVerical = Camera.main.ScreenPointToRay(Input.mousePosition).origin.y - transform.position.y;
+        if (moveHorizontal > 1) moveHorizontal = 1;
+        else if (moveHorizontal < -1) moveHorizontal = -1;
+        if (moveVerical > 1) moveVerical = 1;
+        else if (moveVerical < -1) moveVerical = -1;
         float playerAngle = transform.eulerAngles.z * Mathf.Deg2Rad;
         float joystickCosAngle = Mathf.Acos(moveHorizontal);
         float joystickSinAngle = Mathf.Asin(moveVerical);
@@ -48,8 +52,6 @@ public class PlayerController : MonoBehaviour
             else
                 joystickAngle = joystickSinAngle;
 
-            Debug.Log(joystickAngle * Mathf.Rad2Deg + " - " + playerAngle * Mathf.Rad2Deg);
-
             float movement = Mathf.Cos(joystickAngle - playerAngle) * Mathf.Sqrt(moveHorizontal * moveHorizontal + moveVerical * moveVerical);
             transform.position += new Vector3(movement * Mathf.Cos(playerAngle), movement * Mathf.Sin(playerAngle), 0) * speed * Time.fixedDeltaTime;
             childGuide.position += ((transform.position + new Vector3(moveHorizontal, moveVerical, 0)) - childGuide.position) * guideSpeed * Time.fixedDeltaTime;
@@ -63,7 +65,7 @@ public class PlayerController : MonoBehaviour
             rb.velocity = new Vector2(-jumpSpeed * sinPlayerAngle, jumpSpeed * cosPlayerAngle);
             nextJump = Time.time + jumpRate;
         }*/
-        if ((Input.GetKeyDown(KeyCode.JoystickButton0) || Input.GetKeyDown(KeyCode.Space)) == true && CanJump())
+        if ((Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) == true && CanJump())
             rb.velocity = myGround.normal * jumpSpeed * Time.fixedDeltaTime;
 
         //Debug.Log(myGravityField.transform.position);
@@ -94,7 +96,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void setGravityCenter(GravityField newGravityField)
+    public void setGravityCenter(GravityFieldMouse newGravityField)
     {
         myGravityField = newGravityField;
     }
