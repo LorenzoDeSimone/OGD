@@ -30,6 +30,10 @@ public class PlayerController : MonoBehaviour
         float sinPlayerAngle = Mathf.Sin(playerAngle);
         float cosPlayerAngle = Mathf.Cos(playerAngle);
         float joystickAngle = Mathf.Acos(moveHorizontal);
+
+        float moveLT = Input.GetAxis("LT");
+        float moveRT = Input.GetAxis("RT");
+
         if (moveVerical < 0)
             joystickAngle = -joystickAngle;
         if (moveHorizontal != 0 || moveVerical != 0)
@@ -65,10 +69,33 @@ public class PlayerController : MonoBehaviour
         GetComponent<Rigidbody2D>().AddForce(-myGround.normal * 100);
         //transform.up = Vector2.Lerp(transform.up, transform.position-myGravityField.transform.position, Time.deltaTime*10);
         transform.up = Vector2.Lerp(transform.up, myGround.normal, Time.deltaTime * 10);
+
+        if (moveLT != 0 || moveRT != 0)
+        {
+            Vector3 movementVector;
+
+            if (moveLT != 0)//CounterClockwise
+                movementVector = new Vector3(-myGround.normal.y, myGround.normal.x);
+            else//Clockwise
+                movementVector = new Vector3(myGround.normal.y, -myGround.normal.x);
+
+
+
+            transform.position += movementVector * speed * Time.fixedDeltaTime;
+        }
+
+
+
+
     }
 
     public void setGravityCenter(GravityField newGravityField)
     {
         myGravityField = newGravityField;
+    }
+
+    public bool CanJump()
+    {
+        return jumpAble;
     }
 }
