@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Scripts.Player;
 
 public class GravityField : MonoBehaviour {
 
@@ -22,7 +23,15 @@ public class GravityField : MonoBehaviour {
         //}
 
         PlayerController player = collider.GetComponent<PlayerController>();
-        player.setGravityCenter(this);
+        if (player == null)
+        {
+            MobilePlayerController mobPlayer = collider.GetComponent<MobilePlayerController>();
+            mobPlayer.SetGravityCenter(this);
+        }
+        else
+        {
+            player.SetGravityCenter(this);
+        }
         Debug.Log(transform.position);
 
         //collider.GetComponent<ComponentType>();

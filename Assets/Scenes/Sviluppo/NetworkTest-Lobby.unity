@@ -276,9 +276,8 @@ MonoBehaviour:
   m_RunInBackground: 1
   m_ScriptCRCCheck: 1
   m_MaxDelay: 0.01
-  m_LogLevel: 2
-  m_PlayerPrefab: {fileID: 1245300087153912, guid: 890ee3d1764f1584c87df9061563aeeb,
-    type: 2}
+  m_LogLevel: 0
+  m_PlayerPrefab: {fileID: 0}
   m_AutoCreatePlayer: 1
   m_PlayerSpawnMethod: 0
   m_OfflineScene: NetworkTest-Lobby
@@ -329,7 +328,7 @@ MonoBehaviour:
   m_ShowLobbyGUI: 1
   m_MaxPlayers: 4
   m_MaxPlayersPerConnection: 1
-  m_MinPlayers: 0
+  m_MinPlayers: 2
   m_LobbyPlayerPrefab: {fileID: 114680828914932336, guid: f2a55bb9c6c84e64988637225db0de6f,
     type: 2}
   m_GamePlayerPrefab: {fileID: 1245300087153912, guid: 890ee3d1764f1584c87df9061563aeeb,

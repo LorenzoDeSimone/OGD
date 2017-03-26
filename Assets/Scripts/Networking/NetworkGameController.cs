@@ -2,7 +2,7 @@
 using UnityEngine.Networking;
 using UnityEngine.Networking.Match;
 
-namespace Networking
+namespace Assets.Scripts.Networking
 {
 	public class NetworkGameController : NetworkBehaviour {
 

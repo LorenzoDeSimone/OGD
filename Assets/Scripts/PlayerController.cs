@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -92,13 +90,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void setGravityCenter(GravityField newGravityField)
-    {
-        myGravityField = newGravityField;
-    }
-
     public bool CanJump()
     {
         return Physics2D.Raycast(transform.position, myGravityField.transform.position - transform.position, 1.1f, LayerMask.GetMask("Walkable"));
+    }
+
+    public void SetGravityCenter(GravityField newGravityField)
+    {
+        myGravityField = newGravityField;
     }
 }
