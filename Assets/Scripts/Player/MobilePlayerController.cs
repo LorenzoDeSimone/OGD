@@ -15,8 +15,7 @@ namespace Assets.Scripts.Player
         Transform myTransform;
         Vector3 movementVector;
 
-        private float moveLT, moveRT;
-        private bool jumpPressed;
+        private bool counterClockwisePressed, clockwisePressed, jumpPressed;
 
         [ClientCallback]
         void Start()
@@ -24,8 +23,7 @@ namespace Assets.Scripts.Player
             myRigidBody = GetComponent<Rigidbody2D>();
             myTransform = GetComponent<Transform>();
         }
-
-
+ 
         [ClientCallback]
         void Update()
         {
@@ -34,8 +32,8 @@ namespace Assets.Scripts.Player
 
         void InputHandling()//TODO change with screen button
         {
-            moveLT = Input.GetAxis("Horizontal");
-            moveRT = Input.GetAxis("Vertical");
+            counterClockwisePressed = Input.GetKey(KeyCode.LeftArrow);
+            clockwisePressed = Input.GetKey(KeyCode.RightArrow);
             jumpPressed = Input.GetKeyDown(KeyCode.Space);
         }
 
@@ -43,21 +41,24 @@ namespace Assets.Scripts.Player
         void FixedUpdate()
         {
             RaycastHit2D myGround = GetMyGround();
-       
-            if (moveLT != 0 || moveRT != 0)
+            GetComponent<Rigidbody2D>().AddForce(-myGround.normal * 100);
+            transform.up = Vector2.Lerp(transform.up, myGround.normal, Time.deltaTime * 10);
+
+            if (counterClockwisePressed || clockwisePressed)
             {
                 Vector3 movementVector;
 
-                if (moveLT != 0)//CounterClockwise
+                if (counterClockwisePressed)
                     movementVector = new Vector3(-myGround.normal.y, myGround.normal.x);
-                else//Clockwise
+                else
                     movementVector = new Vector3(myGround.normal.y, -myGround.normal.x);
 
                 transform.position += movementVector * speed * Time.fixedDeltaTime;
             }
             if (jumpPressed && CanJump())
+            {
                 myRigidBody.velocity = myGround.normal * jumpPower * Time.fixedDeltaTime;
-
+            }
         }
 
         public void SetGravityCenter(GravityField newGravityField)
