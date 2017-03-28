@@ -5,14 +5,14 @@ namespace Assets.Scripts.CameraHandling
 {
     public class ActivateLocalCamera : NetworkBehaviour
     {
-        public Camera localCamera;
+        public GameObject localCamera;
 
-        void Start()
+        public override void OnStartLocalPlayer()
         {
-            if (isLocalPlayer)
-            {
-                localCamera.gameObject.SetActive(true);
-            }
+            Debug.Log("LOCAL:" + isLocalPlayer);
+            GameObject go = Instantiate(localCamera);
+            go.GetComponent<FollowPlayer>().playerTransform = transform;
+            go.SetActive(true);
         }
     }
 

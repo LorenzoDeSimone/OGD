@@ -6,7 +6,7 @@ namespace Assets.Scripts.MobileInput
     {
         void OnMouseDown()
         {
-            Debug.Log(gameObject.name+" "+gameObject.GetInstanceID()+" is down...");
+            Debug.Log(gameObject.name+" "+gameObject.GetInstanceID()+" is down");
         }
     }
 }
