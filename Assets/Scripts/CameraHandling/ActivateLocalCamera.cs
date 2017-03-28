@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 
-namespace Assets.Scripts.Networking
+namespace Assets.Scripts.CameraHandling
 {
     public class ActivateLocalCamera : NetworkBehaviour
     {
