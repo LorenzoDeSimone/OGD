@@ -11,43 +11,53 @@ namespace Assets.Scripts.Player
         public float jumpLockTime = 1.5f;
         public GravityField myGravityField;
 
-        Rigidbody2D rb;
-        Transform tr;
+        Rigidbody2D myRigidBody;
+        Transform myTransform;
         Vector3 movementVector;
-        float moveLT;
-        float moveRT;
+
+        private bool counterClockwisePressed, clockwisePressed, jumpPressed;
 
         [ClientCallback]
         void Start()
         {
-            rb = GetComponent<Rigidbody2D>();
-            tr = GetComponent<Transform>();
+            myRigidBody = GetComponent<Rigidbody2D>();
+            myTransform = GetComponent<Transform>();
         }
-
-
+ 
         [ClientCallback]
         void Update()
         {
-            moveLT = Input.GetAxis("Horizontal");
-            moveRT = Input.GetAxis("Vertical");
+            InputHandling();
+        }
+
+        void InputHandling()//TODO change with screen button
+        {
+            counterClockwisePressed = Input.GetKey(KeyCode.LeftArrow);
+            clockwisePressed = Input.GetKey(KeyCode.RightArrow);
+            jumpPressed = Input.GetKeyDown(KeyCode.Space);
         }
 
         [ClientCallback]
         void FixedUpdate()
         {
             RaycastHit2D myGround = GetMyGround();
-            if (moveLT != 0 || moveRT != 0)
+            GetComponent<Rigidbody2D>().AddForce(-myGround.normal * 100);
+            transform.up = Vector2.Lerp(transform.up, myGround.normal, Time.deltaTime * 10);
+
+            if (counterClockwisePressed || clockwisePressed)
             {
                 Vector3 movementVector;
 
-                if (moveLT != 0)
-                    //CounterClockwise
+                if (counterClockwisePressed)
                     movementVector = new Vector3(-myGround.normal.y, myGround.normal.x);
                 else
-                    //Clockwise
                     movementVector = new Vector3(myGround.normal.y, -myGround.normal.x);
 
                 transform.position += movementVector * speed * Time.fixedDeltaTime;
+            }
+            if (jumpPressed && CanJump())
+            {
+                myRigidBody.velocity = myGround.normal * jumpPower * Time.fixedDeltaTime;
             }
         }
 
@@ -58,9 +68,14 @@ namespace Assets.Scripts.Player
 
         private RaycastHit2D GetMyGround()
         {
-            return Physics2D.Raycast(tr.position,
-                myGravityField.transform.position - tr.position,
+            return Physics2D.Raycast(myTransform.position,
+                myGravityField.transform.position - myTransform.position,
                 Mathf.Infinity, LayerMask.GetMask("Walkable"));
+        }
+
+        public bool CanJump()
+        {
+            return Physics2D.Raycast(transform.position, myGravityField.transform.position - transform.position, 1.1f, LayerMask.GetMask("Walkable"));
         }
     }
 }

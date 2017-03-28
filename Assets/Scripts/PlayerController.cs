@@ -59,8 +59,6 @@ public class PlayerController : MonoBehaviour
             rb.velocity = new Vector2(-jumpSpeed * sinPlayerAngle, jumpSpeed * cosPlayerAngle);
             nextJump = Time.time + jumpRate;
         }*/
-        if ((Input.GetKeyDown(KeyCode.JoystickButton0) || Input.GetKeyDown(KeyCode.Space)) == true && CanJump())
-            rb.velocity = myGround.normal * jumpSpeed * Time.fixedDeltaTime;
 
         //Debug.Log(myGravityField.transform.position);
         //Debug.Log("Mypos"+transform.position);
