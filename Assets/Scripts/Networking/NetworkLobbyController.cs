@@ -6,14 +6,24 @@ namespace Assets.Scripts.Networking
 {
 	public class NetworkLobbyController : NetworkLobbyManager {
 
-		// Use this for initialization
-		void Start () {
-			
-		}
-		
-		// Update is called once per frame
-		void Update () {
-			
-		}
+		public void JoinPublicMatch()
+        {
+
+        }
+
+        private void CreatePublicMatch()
+        {
+
+        }
+
+        public void CreatePrivateMatch()
+        {
+
+        }
+
+        public void JoinPrivateMatch()
+        {
+
+        }
 	}
 }
