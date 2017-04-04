@@ -11,54 +11,48 @@ namespace Assets.Scripts.Player
         public float jumpLockTime = 1.5f;
         public GravityField myGravityField;
 
-        Rigidbody2D myRigidBody;
+        public Rigidbody2D myRigidBody;
         Transform myTransform;
         Vector3 movementVector;
-
-        private bool counterClockwisePressed, clockwisePressed, jumpPressed;
+        bool previousCanJump;
 
         [ClientCallback]
         void Start()
         {
             myRigidBody = GetComponent<Rigidbody2D>();
             myTransform = GetComponent<Transform>();
+            previousCanJump = InputManager.IsJumpButtonOnTap();
         }
  
         [ClientCallback]
         void Update()
         {
-            if(isLocalPlayer)
-              InputHandling();
-        }
-
-        void InputHandling()//TODO change with screen button
-        {
-            //counterClockwisePressed = Input.GetKey(KeyCode.LeftArrow);
-            clockwisePressed = Input.GetKeyDown(KeyCode.RightArrow);
-            jumpPressed = Input.GetKeyDown(KeyCode.Space);
-        }
-
-        [ClientCallback]
-        void FixedUpdate()
-        {
             RaycastHit2D myGround = GetMyGround();
             GetComponent<Rigidbody2D>().AddForce(-myGround.normal * 100);
             transform.up = Vector2.Lerp(transform.up, myGround.normal, Time.deltaTime * 10);
 
-            if (counterClockwisePressed || clockwisePressed)
+            if (InputManager.IsCounterclockwiseButtonPressed() || InputManager.IsClockwiseButtonPressed())
             {
                 Vector3 movementVector;
 
-                if (counterClockwisePressed)
+                if (InputManager.IsCounterclockwiseButtonPressed())
                     movementVector = new Vector3(-myGround.normal.y, myGround.normal.x);
                 else
                     movementVector = new Vector3(myGround.normal.y, -myGround.normal.x);
 
                 transform.position += movementVector * speed * Time.fixedDeltaTime;
             }
-            if (jumpPressed && CanJump())
-                myRigidBody.velocity = myGround.normal * jumpPower * Time.fixedDeltaTime;
+            if (InputManager.IsJumpButtonOnTap() && CanJump())
+                Debug.Log("JUMP!");
+                //myRigidBody.velocity = myGround.normal * jumpPower * Time.fixedDeltaTime;
+            if (InputManager.IsRocketButtonOnTap() && CanShoot())
+                Debug.Log("BOOM!");
+        }
 
+        [ClientCallback]
+        void FixedUpdate()
+        {
+      
         }
 
         public void SetGravityCenter(GravityField newGravityField)
@@ -77,17 +71,10 @@ namespace Assets.Scripts.Player
         {
             return Physics2D.Raycast(transform.position, myGravityField.transform.position - transform.position, 1.1f, LayerMask.GetMask("Walkable"));
         }
-
-        public void CounterclockwiseButtonPressed()
+        
+        public bool CanShoot()
         {
-            Debug.Log("A");
-            counterClockwisePressed = true;
-        }
-
-        public void CounterclockwiseButtonReleased(bool a)
-        {
-            Debug.Log("B");
-            counterClockwisePressed = false;
+            return true;//Placeholder before rocket count implementation
         }
     }
 }
