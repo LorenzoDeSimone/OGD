@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -9,43 +8,63 @@ namespace Assets.Scripts.Networking
 {
 	public class NetworkLobbyController : NetworkLobbyManager {
 
+        const string CHARS_POOL = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789-";
+        const int NAME_LENGHT = 16;
+
+        public float publicMatchWaitTime = 10.0f;
+
         bool loadingPublicMatches = true;
+        bool searchingPublicMatch = true;
+        bool joiningMatch = false;
+        bool creatingMatch = true;
+
         List<MatchInfoSnapshot> publicMatches;
-        MatchInfoSnapshot selectedMatchIfno;
 
         public void JoinPublicMatch()
         {
             StartMatchMaker();
 
-            loadingPublicMatches = true;
-            matchMaker.ListMatches(0, 5, "", false, 0, 0, InitMatchList);
-
             // gui coroutine here
 
-            StartCoroutine(WaitAndJoinPublic());
+            StartCoroutine(JoinPublic());
         }
 
-        private IEnumerator WaitAndJoinPublic()
+        private IEnumerator JoinPublic()
         {
-            yield return new WaitUntil(IsLoadingPublicMatches);
+            while(searchingPublicMatch)
+            {
+                loadingPublicMatches = true;
+                matchMaker.ListMatches(0, 10, "", false, 0, 0, InitMatchList);
 
-            if (publicMatches.Count == 0)
-            {
-                CreatePublicMatch();
-            }
-            else
-            {
-                //selectedMatchIfno = 
-                //matchMaker.JoinMatch(networkID, "", "", "", 0, 0, OnMatchJoined);
-                //backDelegate = lobbyManager.StopClientClbk;
-                //_isMatchmaking = true;
-                //DisplayIsConnecting();
+                yield return new WaitWhile(IsLoadingPublicMatches);
+
+                Debug.Log(publicMatches);
+
+                if (publicMatches.Count == 0)
+                {
+                    creatingMatch = true;
+                    CreatePublicMatch();
+                    yield return new WaitWhile(IsCreatingMatch);
+                }
+                else
+                {
+                    foreach(MatchInfoSnapshot mis in publicMatches)
+                    {
+                        joiningMatch = true; 
+                        matchMaker.JoinMatch(mis.networkId, "", "", "", 0, 0, OnMatchJoined);
+
+                        yield return new WaitWhile(IsJoiningMatch);
+
+                        if (!searchingPublicMatch)
+                            break;
+                    }
+                }
             }
         }
 
         private void CreatePublicMatch()
         {
-            CreateMatch(matchName);
+            CreateMatch( RandomPublicName() );
         }
 
         public void InitMatchList(bool success, string extendedInfo, List<MatchInfoSnapshot> matches)
@@ -71,6 +90,29 @@ namespace Assets.Scripts.Networking
              */
         }
 
+        public override void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo)
+        {
+            base.OnMatchCreate(success, extendedInfo, matchInfo);
+
+            Debug.Log("Create:"+success);
+
+            if (success)
+            {
+                matchMaker.JoinMatch(matchInfo.networkId, "", "", "", 0, 0, OnMatchJoined);
+            }
+
+            creatingMatch = false;
+        }
+
+        public override void OnMatchJoined(bool success, string extendedInfo, MatchInfo matchInfo)
+        {
+            base.OnMatchJoined(success, extendedInfo, matchInfo);
+            searchingPublicMatch = !success;
+            joiningMatch = false;
+            Debug.Log("Join:"+success);
+            Debug.Log(IsJoiningMatch());
+        }
+
         private void CreateMatch(string matchName)
         {
             matchMaker.CreateMatch(
@@ -81,20 +123,43 @@ namespace Assets.Scripts.Networking
                    OnMatchCreate);
         }
 
-        public override void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo)
-        {
-            base.OnMatchCreate(success, extendedInfo, matchInfo);
-            //_currentMatchID = (System.UInt64)matchInfo.networkId;
-        }
-
         private string RandomPublicName()
         {
-            throw new NotImplementedException();
+            string randName = "";
+            System.Random rInt = new System.Random();
+
+            for ( int i = 0; i < NAME_LENGHT; i++ )
+            {
+                randName += CHARS_POOL[rInt.Next()%CHARS_POOL.Length];
+            }
+
+            Debug.Log(randName);
+            return randName;
         }
 
         private bool IsLoadingPublicMatches()
         {
             return loadingPublicMatches;
+        }
+
+        private bool IsJoiningMatch()
+        {
+            return joiningMatch;
+        }
+
+        private bool IsCreatingMatch()
+        {
+            return creatingMatch;
+        }
+
+        public void ResetAndStop()
+        {
+            StopClient();
+            StopMatchMaker();
+            StopAllCoroutines();
+            loadingPublicMatches = true;
+            searchingPublicMatch = true;
+            joiningMatch = false;
         }
     }
 }
