@@ -27,13 +27,14 @@ namespace Assets.Scripts.Player
         [ClientCallback]
         void Update()
         {
-            InputHandling();
+            if(isLocalPlayer)
+              InputHandling();
         }
 
         void InputHandling()//TODO change with screen button
         {
-            counterClockwisePressed = Input.GetKey(KeyCode.LeftArrow);
-            clockwisePressed = Input.GetKey(KeyCode.RightArrow);
+            //counterClockwisePressed = Input.GetKey(KeyCode.LeftArrow);
+            clockwisePressed = Input.GetKeyDown(KeyCode.RightArrow);
             jumpPressed = Input.GetKeyDown(KeyCode.Space);
         }
 
@@ -56,9 +57,8 @@ namespace Assets.Scripts.Player
                 transform.position += movementVector * speed * Time.fixedDeltaTime;
             }
             if (jumpPressed && CanJump())
-            {
                 myRigidBody.velocity = myGround.normal * jumpPower * Time.fixedDeltaTime;
-            }
+
         }
 
         public void SetGravityCenter(GravityField newGravityField)
@@ -76,6 +76,18 @@ namespace Assets.Scripts.Player
         public bool CanJump()
         {
             return Physics2D.Raycast(transform.position, myGravityField.transform.position - transform.position, 1.1f, LayerMask.GetMask("Walkable"));
+        }
+
+        public void CounterclockwiseButtonPressed()
+        {
+            Debug.Log("A");
+            counterClockwisePressed = true;
+        }
+
+        public void CounterclockwiseButtonReleased(bool a)
+        {
+            Debug.Log("B");
+            counterClockwisePressed = false;
         }
     }
 }

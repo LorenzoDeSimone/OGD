@@ -156,7 +156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5102bde3fa1ffa343a0e7a3db8ea9c5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 100
+  speed: 10
   jumpPower: 1000
   jumpLockTime: 1.5
   myGravityField: {fileID: 0}
