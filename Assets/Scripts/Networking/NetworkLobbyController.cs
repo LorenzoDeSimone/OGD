@@ -35,7 +35,6 @@ namespace Assets.Scripts.Networking
             {
                 loadingPublicMatches = true;
                 matchMaker.ListMatches(0, 10, "", false, 0, 0, InitMatchList);
-
                 yield return new WaitWhile(IsLoadingPublicMatches);
 
                 Debug.Log(publicMatches);
@@ -52,7 +51,6 @@ namespace Assets.Scripts.Networking
                     {
                         joiningMatch = true; 
                         matchMaker.JoinMatch(mis.networkId, "", "", "", 0, 0, OnMatchJoined);
-
                         yield return new WaitWhile(IsJoiningMatch);
 
                         if (!searchingPublicMatch)
@@ -67,9 +65,17 @@ namespace Assets.Scripts.Networking
             CreateMatch( RandomPublicName() );
         }
 
-        public void InitMatchList(bool success, string extendedInfo, List<MatchInfoSnapshot> matches)
+        private void InitMatchList(bool success, string extendedInfo, List<MatchInfoSnapshot> matches)
         {
-            publicMatches = matches;
+            if(success)
+            {
+                publicMatches = matches;
+            }
+            else
+            {
+                publicMatches = new List<MatchInfoSnapshot>();
+            }
+
             loadingPublicMatches = false;
         }
 
@@ -110,7 +116,6 @@ namespace Assets.Scripts.Networking
             searchingPublicMatch = !success;
             joiningMatch = false;
             Debug.Log("Join:"+success);
-            Debug.Log(IsJoiningMatch());
         }
 
         private void CreateMatch(string matchName)
@@ -160,6 +165,7 @@ namespace Assets.Scripts.Networking
             loadingPublicMatches = true;
             searchingPublicMatch = true;
             joiningMatch = false;
+            Debug.Log("Reset");
         }
     }
 }
