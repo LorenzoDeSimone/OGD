@@ -32,7 +32,7 @@ public class GravityField : MonoBehaviour {
         {
             player.SetGravityCenter(this);
         }
-        Debug.Log(transform.position);
+        //Debug.Log(transform.position);
 
         //collider.GetComponent<ComponentType>();
 
