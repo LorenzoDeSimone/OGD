@@ -54,7 +54,9 @@ namespace Assets.Scripts.Networking
                         yield return new WaitWhile(IsJoiningMatch);
 
                         if (!searchingPublicMatch)
+                        {
                             break;
+                        }
                     }
                 }
             }
@@ -99,12 +101,12 @@ namespace Assets.Scripts.Networking
         public override void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo)
         {
             base.OnMatchCreate(success, extendedInfo, matchInfo);
-
-            Debug.Log("Create:"+success);
-
+            
             if (success)
             {
-                matchMaker.JoinMatch(matchInfo.networkId, "", "", "", 0, 0, OnMatchJoined);
+                searchingPublicMatch = false;
+                Debug.Log("Created and joined in:"+matchInfo.ToString());
+                ReadyLocalLobbyPlayer();
             }
 
             creatingMatch = false;
@@ -114,8 +116,29 @@ namespace Assets.Scripts.Networking
         {
             base.OnMatchJoined(success, extendedInfo, matchInfo);
             searchingPublicMatch = !success;
+
+            if (success)
+            {
+                StartClient();
+                Debug.Log("Joined in:" + matchInfo.ToString());
+                ReadyLocalLobbyPlayer();
+            }
+
             joiningMatch = false;
             Debug.Log("Join:"+success);
+        }
+
+        private void ReadyLocalLobbyPlayer()
+        {
+            foreach (NetworkLobbyPlayer localLobbyPlayer in lobbySlots)
+            {
+                Debug.Log(localLobbyPlayer);
+                if (localLobbyPlayer.isLocalPlayer)
+                {
+                    localLobbyPlayer.readyToBegin = true;
+                    break;
+                }
+            }
         }
 
         private void CreateMatch(string matchName)
@@ -159,6 +182,7 @@ namespace Assets.Scripts.Networking
 
         public void ResetAndStop()
         {
+            StopHost();
             StopClient();
             StopMatchMaker();
             StopAllCoroutines();
