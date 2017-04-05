@@ -42,11 +42,11 @@ namespace Assets.Scripts.Player
 
                 transform.position += movementVector * speed * Time.fixedDeltaTime;
             }
-            if (InputManager.IsJumpButtonOnTap() && CanJump())
-                Debug.Log("JUMP!");
+            //if (InputManager.IsJumpButtonOnTap() && CanJump())
+                //Debug.Log("JUMP!");
                 //myRigidBody.velocity = myGround.normal * jumpPower * Time.fixedDeltaTime;
-            if (InputManager.IsRocketButtonOnTap() && CanShoot())
-                Debug.Log("BOOM!");
+            //if (InputManager.IsRocketButtonOnTap() && CanShoot())
+              //  Debug.Log("BOOM!");
         }
 
         [ClientCallback]
@@ -75,6 +75,14 @@ namespace Assets.Scripts.Player
         public bool CanShoot()
         {
             return true;//Placeholder before rocket count implementation
+        }
+
+        public void Jump()
+        {
+            RaycastHit2D myGround = GetMyGround();
+            GetComponent<Rigidbody2D>().AddForce(-myGround.normal * 100);
+            transform.up = Vector2.Lerp(transform.up, myGround.normal, Time.deltaTime * 10);
+            myRigidBody.velocity = myGround.normal * jumpPower * Time.fixedDeltaTime;
         }
     }
 }
