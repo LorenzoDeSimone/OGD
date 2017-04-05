@@ -37,8 +37,21 @@ public class InputManager : NetworkBehaviour {
     { clockwisePressed = isPressed; }
 
     public void SetRocketButton(bool isOnTap)
-    { rocketOnTap = isOnTap; }
+    {
+        rocketOnTap = isOnTap && !rocketOnTap;
+        if(rocketOnTap && localPlayer.CanShoot())
+        {
+            Debug.Log("Shoot");
+        }
+    }
 
     public void SetJumpButton(bool isOnTap)
-    { jumpOnTap = isOnTap && !jumpOnTap; }
+    {
+        jumpOnTap = isOnTap && !jumpOnTap;
+        if (jumpOnTap && localPlayer.CanJump())
+        {
+            Debug.Log("Jump");
+            localPlayer.Jump();
+        }
+    }
 }
