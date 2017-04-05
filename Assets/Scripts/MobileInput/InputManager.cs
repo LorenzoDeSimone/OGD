@@ -16,18 +16,14 @@ public class InputManager : NetworkBehaviour {
         localPlayer = players[0].gameObject.GetComponent<MobilePlayerController>();
     }
 
-    //Getters used by the MobilePlayerControllerScript
-    public static bool IsCounterclockwiseButtonPressed()
-    { return counterclockwisePressed; }
-
-    public static bool IsClockwiseButtonPressed()
-    { return clockwisePressed; }
-
-    public static bool IsRocketButtonOnTap()
-    { return rocketOnTap; }
-
-    public static bool IsJumpButtonOnTap()
-    { return jumpOnTap; }
+    //Handles continous movement
+    void FixedUpdate()
+    {
+        if (counterclockwisePressed)
+            localPlayer.MoveCounterclockwise();
+        else if (clockwisePressed)
+            localPlayer.MoveClockwise();
+    }
 
     //Setters value from buttons
     public void SetCounterclockwiseButton(bool isPressed)

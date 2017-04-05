@@ -14,39 +14,32 @@ namespace Assets.Scripts.Player
         public Rigidbody2D myRigidBody;
         Transform myTransform;
         Vector3 movementVector;
-        bool previousCanJump;
+        RaycastHit2D myGround;
 
         [ClientCallback]
         void Start()
         {
             myRigidBody = GetComponent<Rigidbody2D>();
             myTransform = GetComponent<Transform>();
-            previousCanJump = InputManager.IsJumpButtonOnTap();
+            myGround = GetMyGround();
         }
  
         [ClientCallback]
         void Update()
         {
-            RaycastHit2D myGround = GetMyGround();
+            myGround = GetMyGround();
+            ApplyGravity();
+            Rotate();
+        }
+
+        private void ApplyGravity()
+        {
             GetComponent<Rigidbody2D>().AddForce(-myGround.normal * 100);
+        }
+
+        private void Rotate()
+        {
             transform.up = Vector2.Lerp(transform.up, myGround.normal, Time.deltaTime * 10);
-
-            if (InputManager.IsCounterclockwiseButtonPressed() || InputManager.IsClockwiseButtonPressed())
-            {
-                Vector3 movementVector;
-
-                if (InputManager.IsCounterclockwiseButtonPressed())
-                    movementVector = new Vector3(-myGround.normal.y, myGround.normal.x);
-                else
-                    movementVector = new Vector3(myGround.normal.y, -myGround.normal.x);
-
-                transform.position += movementVector * speed * Time.fixedDeltaTime;
-            }
-            //if (InputManager.IsJumpButtonOnTap() && CanJump())
-                //Debug.Log("JUMP!");
-                //myRigidBody.velocity = myGround.normal * jumpPower * Time.fixedDeltaTime;
-            //if (InputManager.IsRocketButtonOnTap() && CanShoot())
-              //  Debug.Log("BOOM!");
         }
 
         [ClientCallback]
@@ -75,6 +68,20 @@ namespace Assets.Scripts.Player
         public bool CanShoot()
         {
             return true;//Placeholder before rocket count implementation
+        }
+
+
+        //Movement routines called by the input manager
+        public void MoveCounterclockwise()
+        {
+            Vector3 movementVector = new Vector3(-myGround.normal.y, myGround.normal.x);
+            transform.position += movementVector * speed * Time.fixedDeltaTime;
+        }
+
+        public void MoveClockwise()
+        {
+            Vector3 movementVector = new Vector3(myGround.normal.y, -myGround.normal.x);
+            transform.position += movementVector * speed * Time.fixedDeltaTime;
         }
 
         public void Jump()
