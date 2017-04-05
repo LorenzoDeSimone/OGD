@@ -6,12 +6,13 @@ using Assets.Scripts.Player;
 
 public class InputManager : NetworkBehaviour {
 
-    private static bool counterclockwisePressed=false, clockwisePressed=false, rocketOnTap=false, jumpOnTap=false;
+    private static bool counterclockwisePressed=false, clockwisePressed=false;
     private MobilePlayerController localPlayer; 
 
     // Use this for initialization
     void Start ()
     {
+        //Searches for local player Game Object and stores it
         List<UnityEngine.Networking.PlayerController> players = NetworkManager.singleton.client.connection.playerControllers;
         localPlayer = players[0].gameObject.GetComponent<MobilePlayerController>();
     }
@@ -32,22 +33,15 @@ public class InputManager : NetworkBehaviour {
     public void SetClockwiseButton(bool isPressed)
     { clockwisePressed = isPressed; }
 
-    public void SetRocketButton(bool isOnTap)
+    public void SetRocketButton(bool isPressed)
     {
-        rocketOnTap = isOnTap && !rocketOnTap;
-        if(rocketOnTap && localPlayer.CanShoot())
-        {
-            Debug.Log("Shoot");
-        }
+        if (isPressed && localPlayer.CanShoot())
+            localPlayer.Shoot();
     }
 
-    public void SetJumpButton(bool isOnTap)
+    public void SetJumpButton(bool isPressed)
     {
-        jumpOnTap = isOnTap && !jumpOnTap;
-        if (jumpOnTap && localPlayer.CanJump())
-        {
-            Debug.Log("Jump");
-            localPlayer.Jump();
-        }
+        if (isPressed && localPlayer.CanJump())
+          localPlayer.Jump();
     }
 }
