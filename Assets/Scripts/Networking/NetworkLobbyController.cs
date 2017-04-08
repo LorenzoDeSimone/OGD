@@ -106,7 +106,6 @@ namespace Assets.Scripts.Networking
             {
                 searchingPublicMatch = false;
                 Debug.Log("Created and joined in:"+matchInfo.ToString());
-                ReadyLocalLobbyPlayer();
             }
 
             creatingMatch = false;
@@ -119,26 +118,12 @@ namespace Assets.Scripts.Networking
 
             if (success)
             {
-                StartClient();
+                //StartClient();
                 Debug.Log("Joined in:" + matchInfo.ToString());
-                ReadyLocalLobbyPlayer();
             }
 
             joiningMatch = false;
             Debug.Log("Join:"+success);
-        }
-
-        private void ReadyLocalLobbyPlayer()
-        {
-            foreach (NetworkLobbyPlayer localLobbyPlayer in lobbySlots)
-            {
-                Debug.Log(localLobbyPlayer);
-                if (localLobbyPlayer.isLocalPlayer)
-                {
-                    localLobbyPlayer.readyToBegin = true;
-                    break;
-                }
-            }
         }
 
         private void CreateMatch(string matchName)
