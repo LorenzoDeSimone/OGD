@@ -47,16 +47,27 @@ public class SpawnCollectable : MonoBehaviour
         if (Time.time > nextCollectableTime)
         {
             int i, j, fate;
-            float count;
+            float count, distance;
             for (i = 0; i < platforms.Count; i++)
             {
                 count = 0;
+                List<float> distances = new List<float>();
                 foreach (Transform player in players)
                 {
-                    if(player.gameObject.activeSelf)
-                        count += Vector3.Distance(platforms[i].position, player.position);
+                    if (player.gameObject.activeSelf)
+                    {
+                        distance = Vector3.Distance(platforms[i].position, player.position);
+                        count += distance;
+                        distances.Add(distance);
+                    }
                 }
                 distanceFromPlayers[i] = count;
+                count = 0;
+                for (int k = 0; k < distances.Count - 1; k++)
+                    for (j = k + 1; j < distances.Count; j++)
+                        count += Mathf.Abs(distances[k] - distances[j]);
+                distanceFromPlayers[i] -= (count / distances.Count);
+                Debug.Log(platforms[i].name + " " + distanceFromPlayers[i]);
             }
             Transform tr;
             for (i = 0; i < platforms.Count - 1; i++)

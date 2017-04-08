@@ -84,9 +84,13 @@ namespace Assets.Scripts.Player
             transform.position += movementVector * speed * Time.fixedDeltaTime;
         }
 
+        public void Shoot()
+        {
+            Debug.Log("Shoot");
+        }
+
         public void Jump()
         {
-            RaycastHit2D myGround = GetMyGround();
             GetComponent<Rigidbody2D>().AddForce(-myGround.normal * 100);
             transform.up = Vector2.Lerp(transform.up, myGround.normal, Time.deltaTime * 10);
             myRigidBody.velocity = myGround.normal * jumpPower * Time.fixedDeltaTime;
