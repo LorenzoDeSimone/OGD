@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Networking.Match;
+using UnityEngine.Networking.Types;
 
 namespace Assets.Scripts.Networking
 {
@@ -19,13 +20,14 @@ namespace Assets.Scripts.Networking
         bool creatingMatch = true;
 
         List<MatchInfoSnapshot> publicMatches;
+        private ulong netId;
+        private ulong nodeId;
 
         public void JoinPublicMatch()
         {
+
             StartMatchMaker();
-
-            // gui coroutine here
-
+            Debug.LogError("Start:"+matchMaker);
             StartCoroutine(JoinPublic());
         }
 
@@ -105,7 +107,9 @@ namespace Assets.Scripts.Networking
             if (success)
             {
                 searchingPublicMatch = false;
-                Debug.Log("Created and joined in:"+matchInfo.ToString());
+                Debug.LogError("Created MATCH: " + matchInfo.ToString());
+                netId = (ulong)matchInfo.networkId;
+                nodeId = (ulong)matchInfo.nodeId;
             }
 
             creatingMatch = false;
@@ -118,12 +122,12 @@ namespace Assets.Scripts.Networking
 
             if (success)
             {
-                //StartClient();
-                Debug.Log("Joined in:" + matchInfo.ToString());
+                Debug.LogError("JOINED MATCH: "+matchInfo.ToString());
+                netId = (ulong)matchInfo.networkId;
+                nodeId = (ulong)matchInfo.nodeId;
             }
 
             joiningMatch = false;
-            Debug.Log("Join:"+success);
         }
 
         private void CreateMatch(string matchName)
@@ -145,8 +149,7 @@ namespace Assets.Scripts.Networking
             {
                 randName += CHARS_POOL[rInt.Next()%CHARS_POOL.Length];
             }
-
-            Debug.Log(randName);
+            
             return randName;
         }
 
@@ -165,16 +168,29 @@ namespace Assets.Scripts.Networking
             return creatingMatch;
         }
 
+        private bool IsDestroyingMatch()
+        {
+            return creatingMatch;
+        }
+
         public void ResetAndStop()
         {
+            StopAllCoroutines();
+
+            if (matchMaker)
+            {
+                matchMaker.DropConnection((NetworkID)netId, (NodeID)nodeId, 0, OnDropConnection);
+                StopMatchMaker(); 
+            }
+
             StopHost();
             StopClient();
-            StopMatchMaker();
-            StopAllCoroutines();
+            Debug.LogError("end:"+matchMaker);
+
             loadingPublicMatches = true;
             searchingPublicMatch = true;
             joiningMatch = false;
-            Debug.Log("Reset");
+            creatingMatch = true;
         }
     }
 }

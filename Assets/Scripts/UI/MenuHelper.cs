@@ -1,24 +1,28 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Events;
+using Assets.Scripts.Networking;
 using System.Collections.Generic;
 
 namespace Assets.Scripts.UI
 {
-    class MenuHelper : MonoBehaviour
+    [RequireComponent(typeof(Button))]
+    abstract class MenuHelper : MonoBehaviour
     {
-        public MenuHelper backButtonHelper;
         public List<GameObject> toActivate;
         public List<GameObject> toDeactivate;
 
-        public void TriggerHelper()
-        {
-            SetList(false, toDeactivate);
-            SetList(true, toActivate);
+        private Button attachedButton;
 
-            backButtonHelper.toDeactivate = toActivate;
-            backButtonHelper.toActivate = toDeactivate;
+        void Start()
+        {
+            attachedButton = GetComponent<Button>();
+            attachedButton.onClick.AddListener(TriggerHelper);
         }
 
-        private void SetList(bool setVal, List<GameObject> list)
+        public abstract void TriggerHelper();
+
+        protected void SetList(bool setVal, List<GameObject> list)
         {
             foreach (GameObject go in list)
             {

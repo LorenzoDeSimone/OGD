@@ -712,12 +712,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 509214113}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e9209fe50d3c034b81fc749a5066c2b, type: 3}
+  m_Script: {fileID: 11500000, guid: 9ee5405838bc08148b6c4f047dcceddd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backButtonHelper: {fileID: 0}
   toActivate: []
   toDeactivate: []
+  lobbyControllerTag: NetworkLobbyController
 --- !u!114 &509214116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -756,29 +756,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 0}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 509214115}
-        m_MethodName: TriggerHelper
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 2108872118}
-        m_MethodName: ResetAndStop
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!1 &611229679
@@ -1232,18 +1210,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 0}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 819400179}
-        m_MethodName: TriggerHelper
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &819400179
@@ -1254,16 +1221,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 819400176}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e9209fe50d3c034b81fc749a5066c2b, type: 3}
+  m_Script: {fileID: 11500000, guid: 8e4c27666507edf43834518dddc45d1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backButtonHelper: {fileID: 509214115}
   toActivate:
-  - {fileID: 116558506}
   - {fileID: 509214113}
+  - {fileID: 116558506}
   toDeactivate:
   - {fileID: 344707481}
   - {fileID: 1902691489}
+  backButtonHelper: {fileID: 509214115}
+  backButtonWillResetLobbyController: 1
 --- !u!1 &822346714
 GameObject:
   m_ObjectHideFlags: 0
@@ -1382,16 +1350,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 842132684}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e9209fe50d3c034b81fc749a5066c2b, type: 3}
+  m_Script: {fileID: 11500000, guid: 8e4c27666507edf43834518dddc45d1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backButtonHelper: {fileID: 509214115}
   toActivate:
-  - {fileID: 1992265822}
   - {fileID: 509214113}
+  - {fileID: 1992265822}
   toDeactivate:
   - {fileID: 344707481}
   - {fileID: 1902691489}
+  backButtonHelper: {fileID: 509214115}
+  backButtonWillResetLobbyController: 1
 --- !u!114 &842132687
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1430,18 +1399,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 0}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 842132686}
-        m_MethodName: TriggerHelper
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!1 &983309058
@@ -1743,29 +1701,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 0}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1189993042}
-        m_MethodName: TriggerHelper
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 2108872118}
-        m_MethodName: JoinPublicMatch
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1189993042
@@ -1776,16 +1712,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 1189993039}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e9209fe50d3c034b81fc749a5066c2b, type: 3}
+  m_Script: {fileID: 11500000, guid: 8e4c27666507edf43834518dddc45d1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backButtonHelper: {fileID: 509214115}
   toActivate:
-  - {fileID: 1662957871}
   - {fileID: 509214113}
+  - {fileID: 1662957871}
   toDeactivate:
   - {fileID: 344707481}
   - {fileID: 1902691489}
+  backButtonHelper: {fileID: 509214115}
+  backButtonWillResetLobbyController: 1
 --- !u!1 &1205778706
 GameObject:
   m_ObjectHideFlags: 0
@@ -1924,6 +1861,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1662957872}
+  - component: {fileID: 1662957874}
+  - component: {fileID: 1662957873}
   m_Layer: 5
   m_Name: JoinPublicPlayMenu
   m_TagString: Untagged
@@ -1950,6 +1889,50 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1662957873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1662957871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c221bca0c7bcce4d9e9370ee17fbd8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lobbyControllerTag: NetworkLobbyController
+--- !u!114 &1662957874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1662957871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 0
+    i1: 0
+    i2: 0
+    i3: 0
+    i4: 0
+    i5: 0
+    i6: 0
+    i7: 0
+    i8: 0
+    i9: 0
+    i10: 0
+    i11: 0
+    i12: 0
+    i13: 0
+    i14: 0
+    i15: 0
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!1 &1767017960
 GameObject:
   m_ObjectHideFlags: 0
@@ -2058,18 +2041,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 0}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1902691492}
-        m_MethodName: TriggerHelper
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1902691492
@@ -2080,15 +2052,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 1902691489}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e9209fe50d3c034b81fc749a5066c2b, type: 3}
+  m_Script: {fileID: 11500000, guid: 8e4c27666507edf43834518dddc45d1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backButtonHelper: {fileID: 509214115}
   toActivate:
-  - {fileID: 611229679}
   - {fileID: 509214113}
+  - {fileID: 611229679}
   toDeactivate:
   - {fileID: 344707481}
+  - {fileID: 1902691489}
+  backButtonHelper: {fileID: 509214115}
+  backButtonWillResetLobbyController: 0
 --- !u!1 &1941083978
 GameObject:
   m_ObjectHideFlags: 0
@@ -2273,7 +2247,7 @@ GameObject:
   - component: {fileID: 2108872119}
   m_Layer: 0
   m_Name: LobbyController
-  m_TagString: Untagged
+  m_TagString: NetworkLobbyController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
