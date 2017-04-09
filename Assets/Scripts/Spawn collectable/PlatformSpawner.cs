@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class PlatformSpawner : MonoBehaviour
 {
-    public int Countdown;
-    public int NumOfCollectables;
-    public int NumOfCollectablesBig;
+    public int Countdown = 0;
+    public int NumOfCollectables = 0;
+    public int NumOfCollectablesBig = 0;
     
     public GameObject CollectablePrefab;
     public GameObject CollectablePrefabBig;
@@ -19,7 +19,6 @@ public class PlatformSpawner : MonoBehaviour
             Instantiate(CollectablePrefab, transform).SetActive(false);
         for (int i = 0; i < NumOfCollectablesBig; i++)
             Instantiate(CollectablePrefabBig, transform).SetActive(false);
-        StartCoroutine(startCountdown());
     }
 
     // Update is called once per frame
@@ -28,7 +27,12 @@ public class PlatformSpawner : MonoBehaviour
 
     }
 
-    public IEnumerator startCountdown()
+    public void dropCollectables()
+    {
+        StartCoroutine(startCountdown());
+    }
+
+    private IEnumerator startCountdown()
     {
         int i = Countdown;
         float angle;
