@@ -27,7 +27,6 @@ namespace Assets.Scripts.Networking
         {
 
             StartMatchMaker();
-            Debug.LogError("Start:"+matchMaker);
             StartCoroutine(JoinPublic());
         }
 
@@ -107,7 +106,6 @@ namespace Assets.Scripts.Networking
             if (success)
             {
                 searchingPublicMatch = false;
-                Debug.LogError("Created MATCH: " + matchInfo.ToString());
                 netId = (ulong)matchInfo.networkId;
                 nodeId = (ulong)matchInfo.nodeId;
             }
@@ -122,7 +120,6 @@ namespace Assets.Scripts.Networking
 
             if (success)
             {
-                Debug.LogError("JOINED MATCH: "+matchInfo.ToString());
                 netId = (ulong)matchInfo.networkId;
                 nodeId = (ulong)matchInfo.nodeId;
             }
@@ -185,7 +182,6 @@ namespace Assets.Scripts.Networking
 
             StopHost();
             StopClient();
-            Debug.LogError("end:"+matchMaker);
 
             loadingPublicMatches = true;
             searchingPublicMatch = true;

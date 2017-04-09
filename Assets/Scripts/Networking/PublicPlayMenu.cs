@@ -8,7 +8,6 @@ namespace Assets.Scripts.Networking
 
         void OnEnable()
         {
-            Debug.LogAssertion("STARTED");
             GetLobbyController().JoinPublicMatch();
         }
 
