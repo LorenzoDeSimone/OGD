@@ -15,7 +15,7 @@ namespace Assets.Scripts.UI
                 backButtonHelper.toActivate = toDeactivate;
                 backButtonHelper.resetLobbyController = backButtonWillResetLobbyController; 
             }
-
+            
             SetList(false, toDeactivate);
             SetList(true, toActivate);
         }

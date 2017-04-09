@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -18,15 +19,15 @@ namespace Assets.Scripts.Networking
         bool searchingPublicMatch = true;
         bool joiningMatch = false;
         bool creatingMatch = true;
-
         List<MatchInfoSnapshot> publicMatches;
-        private ulong netId;
-        private ulong nodeId;
+        ulong netId;
+        ulong nodeId;
+        ulong createdMatchID = (ulong)NetworkID.Invalid;
 
         public void JoinPublicMatch()
         {
-
             StartMatchMaker();
+            readyToReset = false;
             StartCoroutine(JoinPublic());
         }
 
@@ -38,34 +39,30 @@ namespace Assets.Scripts.Networking
                 matchMaker.ListMatches(0, 10, "", false, 0, 0, InitMatchList);
                 yield return new WaitWhile(IsLoadingPublicMatches);
 
-                Debug.Log(publicMatches);
-
                 if (publicMatches.Count == 0)
                 {
                     creatingMatch = true;
-                    CreatePublicMatch();
+                    CreateMatch(RandomPublicName());
                     yield return new WaitWhile(IsCreatingMatch);
                 }
                 else
                 {
                     foreach(MatchInfoSnapshot mis in publicMatches)
                     {
-                        joiningMatch = true; 
-                        matchMaker.JoinMatch(mis.networkId, "", "", "", 0, 0, OnMatchJoined);
-                        yield return new WaitWhile(IsJoiningMatch);
-
-                        if (!searchingPublicMatch)
+                        if (mis.currentSize > 0)
                         {
-                            break;
+                            joiningMatch = true;
+                            matchMaker.JoinMatch(mis.networkId, "", "", "", 0, 0, OnMatchJoined);
+                            yield return new WaitWhile(IsJoiningMatch);
+
+                            if (!searchingPublicMatch)
+                            {
+                                break;
+                            } 
                         }
                     }
                 }
             }
-        }
-
-        private void CreatePublicMatch()
-        {
-            CreateMatch( RandomPublicName() );
         }
 
         private void InitMatchList(bool success, string extendedInfo, List<MatchInfoSnapshot> matches)
@@ -105,9 +102,10 @@ namespace Assets.Scripts.Networking
             
             if (success)
             {
-                searchingPublicMatch = false;
                 netId = (ulong)matchInfo.networkId;
                 nodeId = (ulong)matchInfo.nodeId;
+                createdMatchID = (ulong)matchInfo.networkId;
+                searchingPublicMatch = false;
             }
 
             creatingMatch = false;
@@ -165,23 +163,44 @@ namespace Assets.Scripts.Networking
             return creatingMatch;
         }
 
-        private bool IsDestroyingMatch()
+        private bool readyToReset = false;
+
+        public bool IsReadyToReset()
         {
-            return creatingMatch;
+            return readyToReset;
+        }
+
+        public override void OnDestroyMatch(bool success, string extendedInfo)
+        {
+            base.OnDestroyMatch(success, extendedInfo);
+            Stop();
         }
 
         public void ResetAndStop()
         {
             StopAllCoroutines();
 
+            if(createdMatchID != (ulong)NetworkID.Invalid)
+            {
+                matchMaker.DestroyMatch((NetworkID)createdMatchID, 0, OnDestroyMatch);
+                createdMatchID = (ulong)NetworkID.Invalid;
+            }
+            else
+            {
+                Stop();
+            }
+        }
+
+        private void Stop()
+        {
+            readyToReset = true;
+
             if (matchMaker)
             {
-                matchMaker.DropConnection((NetworkID)netId, (NodeID)nodeId, 0, OnDropConnection);
-                StopMatchMaker(); 
+                StopMatchMaker();
+                StopHost();
+                StopClient();
             }
-
-            StopHost();
-            StopClient();
 
             loadingPublicMatches = true;
             searchingPublicMatch = true;

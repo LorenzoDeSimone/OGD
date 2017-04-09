@@ -1,6 +1,8 @@
 ﻿using System;
 using Assets.Scripts.Networking;
 using UnityEngine;
+using System.Collections;
+
 namespace Assets.Scripts.UI
 {
     class BackButtonHelper : MenuHelper
@@ -13,8 +15,25 @@ namespace Assets.Scripts.UI
             if(resetLobbyController)
             {
               GetLobbyController().ResetAndStop();
+              StartCoroutine(ResetLobbyWhenReady());
+            }
+            else
+            {
+                SetListsStates();
             }
 
+        }
+
+        private IEnumerator ResetLobbyWhenReady()
+        {
+            Debug.LogError(GetLobbyController().IsReadyToReset());
+            yield return new WaitUntil(GetLobbyController().IsReadyToReset);
+            Debug.LogError(GetLobbyController().IsReadyToReset());
+            SetListsStates();
+        }
+
+        private void SetListsStates()
+        {
             SetList(false, toDeactivate);
             SetList(true, toActivate);
         }
