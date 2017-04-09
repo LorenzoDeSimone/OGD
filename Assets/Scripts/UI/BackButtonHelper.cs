@@ -26,9 +26,7 @@ namespace Assets.Scripts.UI
 
         private IEnumerator ResetLobbyWhenReady()
         {
-            Debug.LogError(GetLobbyController().IsReadyToReset());
             yield return new WaitUntil(GetLobbyController().IsReadyToReset);
-            Debug.LogError(GetLobbyController().IsReadyToReset());
             SetListsStates();
         }
 
