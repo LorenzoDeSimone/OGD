@@ -8,12 +8,11 @@ namespace Assets.Scripts.Player
     {
         public float speed = 1.0f;
         public float jumpPower = 100.0f;
-        public float jumpLockTime = 1.5f;
-        public GravityField myGravityField;
-
-        public Rigidbody2D myRigidBody;
+        public float rotationSpeed = 1000.0f;
+        private GravityField myGravityField;
+        private Rigidbody2D myRigidBody;
+        int rot = 0;
         Transform myTransform;
-        Vector3 movementVector;
         RaycastHit2D myGround;
 
         [ClientCallback]
@@ -21,16 +20,13 @@ namespace Assets.Scripts.Player
         {
             myRigidBody = GetComponent<Rigidbody2D>();
             myTransform = GetComponent<Transform>();
-            myGround = GetMyGround();
+            //myGround = GetMyGround();
+            //myGravityField = myGround.transform.gameObject.GetComponent < GravityField > ();
         }
  
         [ClientCallback]
         void Update()
-        {
-            myGround = GetMyGround();
-            ApplyGravity();
-            Rotate();
-        }
+        { }
 
         private void ApplyGravity()
         {
@@ -39,13 +35,21 @@ namespace Assets.Scripts.Player
 
         private void Rotate()
         {
-            transform.up = Vector2.LerpUnclamped(transform.up, myGround.normal, Time.deltaTime * 10);
+            //Forward -> blue arrow in the editor
+            //Normal -> Normal of current gravity field
+            //We calculate the quaternion rotation that has the same forward vector of the current ground
+            //but has the ground normal as the upward vector
+            Quaternion targetRotation = Quaternion.LookRotation(myGround.transform.forward,myGround.normal);
+            //We interpolate to make the rotation smooth
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
 
         [ClientCallback]
         void FixedUpdate()
         {
-      
+            myGround = GetMyGround();
+            ApplyGravity();
+            Rotate();
         }
 
         public void SetGravityCenter(GravityField newGravityField)
@@ -76,23 +80,24 @@ namespace Assets.Scripts.Player
         {
             Vector3 movementVector = new Vector3(-myGround.normal.y, myGround.normal.x);
             transform.position += movementVector * speed * Time.fixedDeltaTime;
+            GetComponent<SpriteRenderer>().flipX = true;//TEMP WORKAROUND, Animations will be implemented
         }
 
         public void MoveClockwise()
         {
             Vector3 movementVector = new Vector3(myGround.normal.y, -myGround.normal.x);
             transform.position += movementVector * speed * Time.fixedDeltaTime;
+            GetComponent<SpriteRenderer>().flipX = false;//TEMP WORKAROUND, Animations will be implemented
         }
 
         public void Shoot()
         {
-            Debug.Log("Shoot");
+            Debug.Log("BOOM!");
         }
 
         public void Jump()
         {
             GetComponent<Rigidbody2D>().AddForce(-myGround.normal * 100);
-            transform.up = Vector2.Lerp(transform.up, myGround.normal, Time.deltaTime * 10);
             myRigidBody.velocity = myGround.normal * jumpPower * Time.fixedDeltaTime;
         }
     }
