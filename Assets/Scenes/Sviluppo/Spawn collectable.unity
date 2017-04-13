@@ -390,6 +390,52 @@ Transform:
   m_PrefabParentObject: {fileID: 4572954772692842, guid: 28a2f06ed5c724349bd59c52182a2daa,
     type: 2}
   m_PrefabInternal: {fileID: 1243758013}
+--- !u!1 &258905740
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 258905741}
+  - component: {fileID: 258905742}
+  m_Layer: 0
+  m_Name: SpawnManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &258905741
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 258905740}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.2936853, y: -3.0729043, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &258905742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 258905740}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbc7d693db31a0b49b40f23a30d0bddf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlatformsFolder: {fileID: 1359806997}
+  CollectablePrefab: {fileID: 1392533751142890, guid: 88889e0d99b205d49a9a7e1b44a4c2dd,
+    type: 2}
+  CollectablePrefabBig: {fileID: 1538310357859350, guid: 21536bbcfca5c2c4a9ea58c33494e4f4,
+    type: 2}
+  dropSpeed: 0.5
 --- !u!1 &271906700
 GameObject:
   m_ObjectHideFlags: 0
@@ -3047,7 +3093,7 @@ GameObject:
   - component: {fileID: 2124109524}
   - component: {fileID: 2124109523}
   m_Layer: 8
-  m_Name: Collectables ("find" distances platforms)
+  m_Name: Collectables (continuos drop)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
