@@ -106,6 +106,11 @@ namespace Assets.Scripts.Networking
                 nodeId = (ulong)matchInfo.nodeId;
                 createdMatchID = (ulong)matchInfo.networkId;
                 searchingPublicMatch = false;
+                Debug.Log("Create and join at "+matchInfo.networkId);
+            }
+            else
+            {
+                Debug.LogError("Create fail");
             }
 
             creatingMatch = false;
@@ -120,6 +125,11 @@ namespace Assets.Scripts.Networking
             {
                 netId = (ulong)matchInfo.networkId;
                 nodeId = (ulong)matchInfo.nodeId;
+                Debug.Log("Join at "+matchInfo.networkId);
+            }
+            else
+            {
+                Debug.LogError("Join fail");
             }
 
             joiningMatch = false;
@@ -173,6 +183,14 @@ namespace Assets.Scripts.Networking
         public override void OnDestroyMatch(bool success, string extendedInfo)
         {
             base.OnDestroyMatch(success, extendedInfo);
+            if(success)
+            {
+                Debug.Log("Destoyed");
+            }
+            else
+            {
+                Debug.LogError("Destroy Fail");
+            }
             Stop();
         }
 
