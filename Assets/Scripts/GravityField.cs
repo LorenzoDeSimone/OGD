@@ -5,6 +5,8 @@ using Assets.Scripts.Player;
 
 public class GravityField : MonoBehaviour {
 
+    public float gravityStrength=50;
+
 	// Use this for initialization
 	void Start () {
 		
