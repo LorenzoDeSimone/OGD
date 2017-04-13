@@ -39,7 +39,7 @@ namespace Assets.Scripts.Player
 
         private void Rotate()
         {
-            transform.up = Vector2.Lerp(transform.up, myGround.normal, Time.deltaTime * 10);
+            transform.up = Vector2.LerpUnclamped(transform.up, myGround.normal, Time.deltaTime * 10);
         }
 
         [ClientCallback]
