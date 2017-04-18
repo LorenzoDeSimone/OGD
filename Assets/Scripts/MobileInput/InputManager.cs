@@ -20,10 +20,13 @@ public class InputManager : NetworkBehaviour {
     //Handles continous movement
     void FixedUpdate()
     {
-        if (counterclockwisePressed)
+        if (counterclockwisePressed || Input.GetKey(KeyCode.LeftArrow))
             localPlayer.MoveCounterclockwise();
-        else if (clockwisePressed)
+        else if (clockwisePressed || Input.GetKey(KeyCode.RightArrow))
             localPlayer.MoveClockwise();
+
+        if (Input.GetKeyDown(KeyCode.Space) && localPlayer.CanJump())
+            localPlayer.Jump();
     }
 
     //Setters value from buttons
