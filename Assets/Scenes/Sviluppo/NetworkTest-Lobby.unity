@@ -2169,9 +2169,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c221bca0c7bcce4d9e9370ee17fbd8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lobbyControllerTag: NetworkLobbyController
   loadingSpinner: {fileID: 230085974}
   loadingMessage: {fileID: 1382901246}
-  lobbyControllerTag: NetworkLobbyController
 --- !u!114 &1662957874
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2623,6 +2623,7 @@ GameObject:
   - component: {fileID: 2108872120}
   - component: {fileID: 2108872118}
   - component: {fileID: 2108872119}
+  - component: {fileID: 2108872121}
   m_Layer: 0
   m_Name: LobbyController
   m_TagString: NetworkLobbyController
@@ -2641,7 +2642,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81677ad65b7e8d9478a0beae32a5a60d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_NetworkPort: 7777
+  m_NetworkPort: 10000
   m_ServerBindToIP: 0
   m_ServerBindAddress: 
   m_NetworkAddress: localhost
@@ -2751,6 +2752,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2108872121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2108872117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1180575928, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HostMigration: 1
+  m_ShowGUI: 1
+  m_OffsetX: 10
+  m_OffsetY: 300
 --- !u!1 &2137318542
 GameObject:
   m_ObjectHideFlags: 0

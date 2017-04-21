@@ -8,64 +8,23 @@ using UnityEngine.Networking.Types;
 
 namespace Assets.Scripts.Networking
 {
-	public class NetworkLobbyController : NetworkLobbyManager {
-
-        const string CHARS_POOL = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789-";
-        const int NAME_LENGHT = 16;
+    public class NetworkLobbyController : NetworkLobbyManager {
 
         public float publicMatchWaitTime = 10.0f;
 
-        bool loadingPublicMatches = true;
-        bool searchingPublicMatch = true;
-        bool joiningMatch = false;
-        bool creatingMatch = true;
-        List<MatchInfoSnapshot> publicMatches;
+        internal bool loadingPublicMatches = true;
+        internal bool readyToReset = true;
+        internal bool creatingMatch = true;
+        internal bool joiningMatch = false;
+        internal bool searchingPublicMatch = true;
+
+        internal List<MatchInfoSnapshot> publicMatches;
+
         ulong netId;
         ulong nodeId;
         ulong createdMatchID = (ulong)NetworkID.Invalid;
 
-        public void JoinPublicMatch()
-        {
-            StartMatchMaker();
-            readyToReset = false;
-            StartCoroutine(JoinPublic());
-        }
-
-        private IEnumerator JoinPublic()
-        {
-            while(searchingPublicMatch)
-            {
-                loadingPublicMatches = true;
-                matchMaker.ListMatches(0, 10, "", false, 0, 0, InitMatchList);
-                yield return new WaitWhile(IsLoadingPublicMatches);
-
-                if (publicMatches.Count == 0)
-                {
-                    creatingMatch = true;
-                    CreateMatch(RandomPublicName());
-                    yield return new WaitWhile(IsCreatingMatch);
-                }
-                else
-                {
-                    foreach(MatchInfoSnapshot mis in publicMatches)
-                    {
-                        if (mis.currentSize > 0)
-                        {
-                            joiningMatch = true;
-                            matchMaker.JoinMatch(mis.networkId, "", "", "", 0, 0, OnMatchJoined);
-                            yield return new WaitWhile(IsJoiningMatch);
-
-                            if (!searchingPublicMatch)
-                            {
-                                break;
-                            } 
-                        }
-                    }
-                }
-            }
-        }
-
-        private void InitMatchList(bool success, string extendedInfo, List<MatchInfoSnapshot> matches)
+        public void InitMatchList(bool success, string extendedInfo, List<MatchInfoSnapshot> matches)
         {
             if(success)
             {
@@ -77,23 +36,6 @@ namespace Assets.Scripts.Networking
             }
 
             loadingPublicMatches = false;
-        }
-
-        public void CreatePrivateMatch()
-        {
-            StartMatchMaker();
-            CreateMatch("name");
-        }
-
-        public void JoinPrivateMatch()
-        {
-            StartMatchMaker();
-            /*
-             * if SearchAndJoin:
-             *      show loading 
-             * else
-             *      show error
-             */
         }
 
         public override void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo)
@@ -135,7 +77,7 @@ namespace Assets.Scripts.Networking
             joiningMatch = false;
         }
 
-        private void CreateMatch(string matchName)
+        public void CreateMatch(string matchName)
         {
             matchMaker.CreateMatch(
                    matchName,
@@ -145,35 +87,25 @@ namespace Assets.Scripts.Networking
                    OnMatchCreate);
         }
 
-        private string RandomPublicName()
+        public bool IsSearchingPublicMatch()
         {
-            string randName = "";
-            System.Random rInt = new System.Random();
-
-            for ( int i = 0; i < NAME_LENGHT; i++ )
-            {
-                randName += CHARS_POOL[rInt.Next()%CHARS_POOL.Length];
-            }
-            
-            return randName;
+            return searchingPublicMatch;
         }
 
-        private bool IsLoadingPublicMatches()
+        public bool IsLoadingPublicMatches()
         {
             return loadingPublicMatches;
         }
 
-        private bool IsJoiningMatch()
+        public bool IsJoiningMatch()
         {
             return joiningMatch;
         }
 
-        private bool IsCreatingMatch()
+        public bool IsCreatingMatch()
         {
             return creatingMatch;
         }
-
-        private bool readyToReset = false;
 
         public bool IsReadyToReset()
         {
@@ -224,6 +156,11 @@ namespace Assets.Scripts.Networking
             searchingPublicMatch = true;
             joiningMatch = false;
             creatingMatch = true;
+        }
+
+        public void OnPlayerDisconnected(NetworkPlayer player)
+        {
+            
         }
     }
 }
