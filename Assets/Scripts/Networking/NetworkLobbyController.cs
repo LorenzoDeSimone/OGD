@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Networking.Match;
 using UnityEngine.Networking.Types;
-
+using UnityEngine.Events;
 namespace Assets.Scripts.Networking
 {
     public class NetworkLobbyController : NetworkLobbyManager {
@@ -20,23 +18,12 @@ namespace Assets.Scripts.Networking
 
         internal List<MatchInfoSnapshot> publicMatches;
 
+        public delegate void OnPlayerDisconnectDelegate(NetworkPlayer player, int playerCount);
+        public static event OnPlayerDisconnectDelegate PlayerDisconnectEvent;
+
         ulong netId;
         ulong nodeId;
         ulong createdMatchID = (ulong)NetworkID.Invalid;
-
-        public void InitMatchList(bool success, string extendedInfo, List<MatchInfoSnapshot> matches)
-        {
-            if(success)
-            {
-                publicMatches = matches;
-            }
-            else
-            {
-                publicMatches = new List<MatchInfoSnapshot>();
-            }
-
-            loadingPublicMatches = false;
-        }
 
         public override void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo)
         {
@@ -77,41 +64,6 @@ namespace Assets.Scripts.Networking
             joiningMatch = false;
         }
 
-        public void CreateMatch(string matchName)
-        {
-            matchMaker.CreateMatch(
-                   matchName,
-                   (uint)maxPlayers,
-                   true,
-                   "", "", "", 0, 0,
-                   OnMatchCreate);
-        }
-
-        public bool IsSearchingPublicMatch()
-        {
-            return searchingPublicMatch;
-        }
-
-        public bool IsLoadingPublicMatches()
-        {
-            return loadingPublicMatches;
-        }
-
-        public bool IsJoiningMatch()
-        {
-            return joiningMatch;
-        }
-
-        public bool IsCreatingMatch()
-        {
-            return creatingMatch;
-        }
-
-        public bool IsReadyToReset()
-        {
-            return readyToReset;
-        }
-
         public override void OnDestroyMatch(bool success, string extendedInfo)
         {
             base.OnDestroyMatch(success, extendedInfo);
@@ -124,6 +76,38 @@ namespace Assets.Scripts.Networking
                 Debug.LogError("Destroy Fail");
             }
             Stop();
+        }
+
+        private void OnPlayerDisconnected(NetworkPlayer player)
+        {
+            if(PlayerDisconnectEvent!= null)
+            {
+                PlayerDisconnectEvent(player,numPlayers);
+            }
+        }
+
+        public void CreateMatch(string matchName)
+        {
+            matchMaker.CreateMatch(
+                   matchName,
+                   (uint)maxPlayers,
+                   true,
+                   "", "", "", 0, 0,
+                   OnMatchCreate);
+        }
+
+        public void InitMatchList(bool success, string extendedInfo, List<MatchInfoSnapshot> matches)
+        {
+            if (success)
+            {
+                publicMatches = matches;
+            }
+            else
+            {
+                publicMatches = new List<MatchInfoSnapshot>();
+            }
+
+            loadingPublicMatches = false;
         }
 
         public void ResetAndStop()
@@ -158,9 +142,40 @@ namespace Assets.Scripts.Networking
             creatingMatch = true;
         }
 
-        public void OnPlayerDisconnected(NetworkPlayer player)
+        public NetworkPlayer GetLocalPlayer()
         {
-            
+            foreach( UnityEngine.Networking.PlayerController pC in singleton.client.connection.playerControllers )
+            {
+                if (pC.unetView.isLocalPlayer)
+                    return pC.unetView.GetComponent<NetworkPlayer>();
+            }
+
+            return new NetworkPlayer();
+        }
+
+        public bool IsSearchingPublicMatch()
+        {
+            return searchingPublicMatch;
+        }
+
+        public bool IsLoadingPublicMatches()
+        {
+            return loadingPublicMatches;
+        }
+
+        public bool IsJoiningMatch()
+        {
+            return joiningMatch;
+        }
+
+        public bool IsCreatingMatch()
+        {
+            return creatingMatch;
+        }
+
+        public bool IsReadyToReset()
+        {
+            return readyToReset;
         }
     }
 }
