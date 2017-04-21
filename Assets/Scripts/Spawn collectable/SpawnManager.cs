@@ -14,6 +14,7 @@ public class SpawnManager : MonoBehaviour
 
     private List<Transform> platforms = new List<Transform>();
     private List<PlatformSpawner> platformSpawner = new List<PlatformSpawner>();
+    private List<PlatformFixedSpawner> platformFixedSpawner = new List<PlatformFixedSpawner>();
     private List<GameObject> collectables = new List<GameObject>();
     private List<GameObject> collectablesBig = new List<GameObject>();
 
@@ -25,6 +26,8 @@ public class SpawnManager : MonoBehaviour
             platforms.Add(tr);
             if (tr.gameObject.GetComponent<PlatformSpawner>())
                 platformSpawner.Add(tr.gameObject.GetComponent<PlatformSpawner>());
+            if (tr.gameObject.GetComponent<PlatformFixedSpawner>())
+                platformFixedSpawner.Add(tr.gameObject.GetComponent<PlatformFixedSpawner>());
         }
         for (int i = 0; i < 10; i++)
         {
@@ -36,6 +39,7 @@ public class SpawnManager : MonoBehaviour
 
         StartCoroutine(rainOfCollectibles(10));    // RAIN OF 10 COLLECTABLE
         platformSpawner[Random.Range(0, platformSpawner.Count)].dropCollectables();             // DROP FROM A PLATFORM
+        platformFixedSpawner[Random.Range(0, platformSpawner.Count)].dropCollectables();             // DROP FROM A PLATFORM WITH FIXED POSITION
     }
 
     // Update is called once per frame
