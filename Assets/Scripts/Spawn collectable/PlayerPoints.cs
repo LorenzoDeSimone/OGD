@@ -5,10 +5,12 @@ using UnityEngine.UI;
 
 public class PlayerPoints : MonoBehaviour {
     private int points;
+    private PointManager pointManager;
 
 	// Use this for initialization
 	void Start () {
         points = 0;
+        pointManager = transform.parent.gameObject.GetComponent<PointManager>();
 	}
 	
 	// Update is called once per frame
@@ -19,11 +21,17 @@ public class PlayerPoints : MonoBehaviour {
     public void addPoint()
     {
         points++;
-        GetComponentInChildren<Text>().text = "" + points;
+        pointManager.updatePoints();
     }
 
     public void addPoints(int i)
     {
         points += i;
+        pointManager.updatePoints();
+    }
+
+    public int point()
+    {
+        return points;
     }
 }
