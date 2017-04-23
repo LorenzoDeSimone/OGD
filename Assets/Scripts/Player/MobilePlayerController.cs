@@ -59,9 +59,16 @@ namespace Assets.Scripts.Player
         private void ApplyGravity()
         {
             //float distance = Vector2.Distance(myGround.point, myTransform.position);
-            Debug.DrawRay(myTransform.position, -GetMyGround().normal,Color.red);
+            Vector2 gravityVersor;
             GravityField myGravityField = myGround.collider.GetComponent<GravityField>();
-            GetComponent<Rigidbody2D>().AddForce(-GetMyGround().normal * myGravityField.mass);///distance);
+
+            if (Vector2.Distance(myTransform.position, myGround.point) > getCharacterCircleCollider2D().radius * 10f)
+                gravityVersor = (myGravityField.gameObject.transform.position - myTransform.position).normalized;
+            else
+                gravityVersor = -myGround.normal;
+
+            Debug.DrawRay(myTransform.position, gravityVersor,Color.red);
+            GetComponent<Rigidbody2D>().AddForce(gravityVersor * myGravityField.mass);///distance);
         }
 
         private Vector3 GetMeanVector(Vector2[] positions)
@@ -149,20 +156,21 @@ namespace Assets.Scripts.Player
 
 
         //Movement routines called by the input manager
-        public void MoveCounterclockwise()
-        {
+        public void Move(MOVEMENT_DIRECTIONS movementDirection)
+        {                
             RaycastHit2D myGround = GetMyGround();
-            Vector3 movementVector = new Vector3(-myGround.normal.y, myGround.normal.x);
+            Vector3 movementVector;
+            if (movementDirection.Equals(MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE))
+            {
+                GetComponent<SpriteRenderer>().flipX = true;//TEMP WORKAROUND, Animations will be implemented
+                movementVector = new Vector3(-myGround.normal.y, myGround.normal.x);
+            }
+            else
+            {
+                GetComponent<SpriteRenderer>().flipX = false;//TEMP WORKAROUND, Animations will be implemented
+                movementVector = new Vector3(myGround.normal.y, -myGround.normal.x);
+            }
             transform.position += movementVector * speed * Time.fixedDeltaTime;
-            GetComponent<SpriteRenderer>().flipX = true;//TEMP WORKAROUND, Animations will be implemented
-        }
-
-        public void MoveClockwise()
-        {
-            RaycastHit2D myGround = GetMyGround();
-            Vector3 movementVector = new Vector3(myGround.normal.y, -myGround.normal.x);
-            transform.position += movementVector * speed * Time.fixedDeltaTime;
-            GetComponent<SpriteRenderer>().flipX = false;//TEMP WORKAROUND, Animations will be implemented
         }
 
         public void Shoot()
@@ -198,5 +206,16 @@ namespace Assets.Scripts.Player
                 safeGravityField = exitGravityField;
         }
 
+        private CircleCollider2D getCharacterCircleCollider2D()
+        {
+            CircleCollider2D[] colliders = GetComponents<CircleCollider2D>();
+
+            foreach (CircleCollider2D currCollider in colliders)
+            {
+                if (!currCollider.isTrigger)
+                    return currCollider;
+            }
+            return null;
+        }
     }
 }

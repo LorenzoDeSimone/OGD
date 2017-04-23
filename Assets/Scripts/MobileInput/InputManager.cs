@@ -21,9 +21,9 @@ public class InputManager : NetworkBehaviour {
     void FixedUpdate()
     {
         if (counterclockwisePressed || Input.GetKey(KeyCode.LeftArrow))
-            localPlayer.MoveCounterclockwise();
+            localPlayer.Move(MobilePlayerController.MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE);
         else if (clockwisePressed || Input.GetKey(KeyCode.RightArrow))
-            localPlayer.MoveClockwise();
+            localPlayer.Move(MobilePlayerController.MOVEMENT_DIRECTIONS.CLOCKWISE);
 
         if (Input.GetKeyDown(KeyCode.Space))
             localPlayer.Jump();
