@@ -25,7 +25,7 @@ public class InputManager : NetworkBehaviour {
         else if (clockwisePressed || Input.GetKey(KeyCode.RightArrow))
             localPlayer.MoveClockwise();
 
-        if (Input.GetKeyDown(KeyCode.Space) && localPlayer.CanJump())
+        if (Input.GetKeyDown(KeyCode.Space))
             localPlayer.Jump();
     }
 
@@ -38,13 +38,13 @@ public class InputManager : NetworkBehaviour {
 
     public void SetRocketButton(bool isPressed)
     {
-        if (isPressed && localPlayer.CanShoot())
+        if (isPressed)
             localPlayer.Shoot();
     }
 
     public void SetJumpButton(bool isPressed)
     {
-        if (isPressed && localPlayer.CanJump())
+        if (isPressed)
           localPlayer.Jump();
     }
 }
