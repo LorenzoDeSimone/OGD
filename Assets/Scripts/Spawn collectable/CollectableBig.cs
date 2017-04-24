@@ -19,7 +19,7 @@ public class CollectableBig : MonoBehaviour {
         if(coll.gameObject.tag == "Player")
         {
             gameObject.SetActive(false);
-            coll.gameObject.GetComponent<PlayerPoints>().addPoints(3);
+            PointManager.instance.addPoint(coll.gameObject.transform, 1);
         }
     }
 }
