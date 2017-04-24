@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Scripts.Player;
 
 public class Rocket : MonoBehaviour
 {
@@ -12,10 +13,12 @@ public class Rocket : MonoBehaviour
     private Vector2 targetDirection;
     private Transform myTransform;
 
+
     // Use this for initialization
     void Start ()
     {
         myTransform = GetComponent<Transform>();
+
         targetDirection = (target.transform.position - myTransform.position).normalized;
         myTransform.right = targetDirection;
         steeringMultiplier = speed * steeringMultiplier;
@@ -41,6 +44,20 @@ public class Rocket : MonoBehaviour
 
         myTransform.position = (new Vector2(myTransform.position.x, myTransform.position.y) + (currentDirection * speed + steeringVector)*Time.deltaTime);
         myTransform.right = (currentDirection * speed + steeringVector).normalized;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collider)
+    {
+        //Target management
+        MobilePlayerController newTarget = collider.GetComponent<MobilePlayerController>();
+        if (newTarget != null)
+        {
+            Debug.Log("Player Hit!");
+            //Insert methods for losing coins
+        }
+
+        //StartCoroutine(Example());
+        Destroy(this.gameObject, 2);
     }
 
 }
