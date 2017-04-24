@@ -2,31 +2,36 @@
 using Assets.Scripts.Networking;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
 namespace Assets.Scripts.UI
 {
     class BackButtonHelper : MenuHelper
     {
-        public string lobbyControllerTag = "NetworkLobbyController";
-        internal bool resetLobbyController = true; 
+        internal bool resetLobbyController = true;
+        NetworkLobbyController lobbyController;
+
+        void OnEnable()
+        {
+            lobbyController = (NetworkLobbyController)NetworkManager.singleton;
+        }
 
         public override void TriggerHelper()
         {
             if(resetLobbyController)
             {
-              GetLobbyController().ResetAndStop();
+              lobbyController.ResetAndStop();
               StartCoroutine(ResetLobbyWhenReady());
             }
             else
             {
                 SetListsStates();
             }
-
         }
 
         private IEnumerator ResetLobbyWhenReady()
         {
-            yield return new WaitUntil(GetLobbyController().IsReadyToReset);
+            yield return new WaitUntil(lobbyController.IsReadyToReset);
             SetListsStates();
         }
 
@@ -35,12 +40,5 @@ namespace Assets.Scripts.UI
             SetList(false, toDeactivate);
             SetList(true, toActivate);
         }
-
-        private NetworkLobbyController GetLobbyController()
-        {
-            GameObject go = GameObject.FindGameObjectWithTag(lobbyControllerTag);
-            return go.GetComponent<NetworkLobbyController>();
-        }
-
     }
 }

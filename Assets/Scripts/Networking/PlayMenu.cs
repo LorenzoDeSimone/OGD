@@ -1,24 +1,23 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Assets.Scripts.Networking
 {
     abstract class PlayMenu : MonoBehaviour
     {
-        public string lobbyControllerTag = "NetworkLobbyController";
         protected NetworkLobbyController lobbyController;
 
         void OnEnable()
         {
-            lobbyController = GetLobbyController();
+            lobbyController = (NetworkLobbyController)NetworkManager.singleton;
             InitMenu();
         }
 
-        protected abstract void InitMenu();
-
-        protected NetworkLobbyController GetLobbyController()
+        void OnDisable()
         {
-            GameObject go = GameObject.FindGameObjectWithTag(lobbyControllerTag);
-            return go.GetComponent<NetworkLobbyController>();
+            StopAllCoroutines();
         }
+
+        protected abstract void InitMenu();
     }
 }

@@ -1,42 +1,49 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.Events;
 
 
 namespace Assets.Scripts.Networking
 {
     class OnlineGameManager : NetworkBehaviour
     {
-        public string lobbyControllerTag = "NetworkLobbyController";
-
         [Header("Time of a match in seconds")]
-        public float matchTime = 120;
+        public float matchTime = 180;
+
+        [Header("Time of victory screen in seconds")]
+        public float vicotoryScreenTime = 4;
+
+        public UnityEvent OnPlayerDisconnects;
+        public UnityEvent OnMatchEnded;
 
         protected NetworkLobbyController lobbyController;
         
         void Start()
         {
-            lobbyController = GetLobbyController();
+            lobbyController = (NetworkLobbyController)NetworkManager.singleton;
             NetworkLobbyController.PlayerDisconnectEvent += HandlePlayerDisconnection;
-            StartCoroutine(MatchCountDown());
+
+            StartCoroutine(StartMatchCountDown());
         }
 
         private void OnDestroy()
         {
             NetworkLobbyController.PlayerDisconnectEvent -= HandlePlayerDisconnection;
         }
-
-        protected NetworkLobbyController GetLobbyController()
-        {
-            GameObject go = GameObject.FindGameObjectWithTag(lobbyControllerTag);
-            return go.GetComponent<NetworkLobbyController>();
-        }
-
-        private IEnumerator MatchCountDown()
+        
+        private IEnumerator StartMatchCountDown()
         {
             yield return new WaitForSeconds(matchTime);
-            StartEndMatchProcedures();
+            OnMatchEnded.Invoke();
+            /*
+             * This will make all phisics related things to stop 
+             */
+            Time.timeScale = 0;
+            // unscaled time here!! see above
+            yield return new WaitForSecondsRealtime(vicotoryScreenTime);
+            Time.timeScale = 1;
+            StopMatch();
         }
 
         private void HandlePlayerDisconnection(NetworkPlayer player, int playerCount)
@@ -45,7 +52,7 @@ namespace Assets.Scripts.Networking
             {
                 Debug.LogError("Player lonely");
                 StopAllCoroutines();
-                StartEndMatchProcedures();
+                StopMatch();
             }
             else
             {
@@ -60,11 +67,10 @@ namespace Assets.Scripts.Networking
             }
         }
 
-        private void StartEndMatchProcedures()
+        private void StopMatch()
         {
             Debug.LogError("Match Ended");
-            GameObject go = GameObject.FindGameObjectWithTag(lobbyControllerTag);
-            go.GetComponent<NetworkLobbyController>().ResetAndStop();
+            lobbyController.ResetAndStop();
         }
     }
 }
