@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections.Generic;
+using Assets.Scripts.Player;
 
 
 namespace Assets.Scripts.Player
@@ -23,7 +24,9 @@ namespace Assets.Scripts.Player
 
         private Vector2 groundCheck1, groundCheck2;
 
-        private HashSet<GravityField> myGravityFields;//A collection of gravity fields currently in player's collider
+        private HashSet<GravityField> myGravityFields;//A collection of gravity fields currently in player's trigger
+        private HashSet<Target> myTargets;//A collection of hittable targets currently in player's trigger
+
         private GravityField safeGravityField;//In case no GravityField is present in player's collider, this is used for attraction
                
         public enum MOVEMENT_DIRECTIONS { COUNTERCLOCKWISE, CLOCKWISE, STOP }
@@ -225,20 +228,42 @@ namespace Assets.Scripts.Player
 
         private void OnTriggerEnter2D(Collider2D collider)
         {
-            GravityField newGravityField = collider.GetComponent<GravityField>();
-            myGravityFields.Add(newGravityField);
+            //Gravity Fields management
+            GravityField newGravityField = collider.GetComponent<GravityField>();           
+            if (newGravityField!=null)
+            {
+                myGravityFields.Add(newGravityField);
 
-            if (myGravityFields.Count == 1)
-                safeGravityField = newGravityField;
+                if (myGravityFields.Count == 1)
+                    safeGravityField = newGravityField;
+            }
+
+            //Target management
+            Target newTarget = collider.GetComponent<Target>();
+            if (newTarget != null)
+                myTargets.Add(newTarget);
+
         }
 
         private void OnTriggerExit2D(Collider2D collider)
         {
+            //Gravity Fields management
             GravityField exitGravityField = collider.GetComponent<GravityField>();
-            myGravityFields.Remove(exitGravityField);
+            if (exitGravityField != null)
+            {
+                exitGravityField = collider.GetComponent<GravityField>();
+                myGravityFields.Remove(exitGravityField);
 
-            if (myGravityFields.Count == 0)
-                safeGravityField = exitGravityField;
+                if (myGravityFields.Count == 0)
+                    safeGravityField = exitGravityField;
+
+            }
+
+            //Target management
+            Target target = collider.GetComponent<Target>();
+            if (target != null)
+                myTargets.Remove(target);
+
         }
 
         private CircleCollider2D getCharacterCircleCollider2D()
@@ -251,6 +276,24 @@ namespace Assets.Scripts.Player
                     return currCollider;
             }
             return null;
+        }
+
+        private Target getNearestTarget()
+        {
+            float candidateMinDistance = float.MaxValue;
+            Target candidateNearestTarget = null;
+
+            foreach (Target currTarget in myTargets)
+            {
+                float currDistance = Vector2.Distance(myTransform.position, currTarget.transform.position);
+
+                if (currDistance < candidateMinDistance)
+                {
+                    candidateNearestTarget = currTarget;
+                    candidateMinDistance = currDistance;
+                }
+            }
+            return candidateNearestTarget;
         }
     }
 }
