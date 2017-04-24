@@ -12,7 +12,8 @@ namespace Assets.Scripts.Player
         public float jumpPower = 100.0f;
         public float rotationSpeed = 5.0f;
         public float movementReduction = 10;
-        public float multiplier = 1.1f;
+        public float EdgeCheckMultiplier = 1.1f;
+        public float airResistance = 0.4f;
 
         private static readonly float rotationEpsilon = 0.999f;
         private Rigidbody2D myRigidBody;
@@ -178,17 +179,17 @@ namespace Assets.Scripts.Player
                 movementPerpendicularDown = -myGround.normal;// new Vector2(movementVersor.y, -movementVersor.x).normalized;
             }
 
-            Vector2 nextPlayerPoint = new Vector2(transform.position.x, transform.position.y) + movementVersor * speed * Time.fixedDeltaTime;
+            Vector2 nextPlayerPoint = new Vector2(transform.position.x, transform.position.y) + movementVersor * speed * 0.2f;
             Vector2 myPosition = new Vector2(myTransform.position.x, myTransform.position.y);
             Vector2 BackRaycastDirection = -movementVersor;//(myGravityField.transform.position - myTransform.position).normalized;
 
 
             RaycastHit2D nextGroundCheck = Physics2D.Raycast(nextPlayerPoint, movementPerpendicularDown,
-                                                               getCharacterCircleCollider2D().radius * multiplier,
+                                                               getCharacterCircleCollider2D().radius * EdgeCheckMultiplier,
                                                                LayerMask.GetMask("Walkable"));
-            /*if (nextGroundCheck.collider == null && IsGrounded())//Edge detected
+            if (nextGroundCheck.collider == null && IsGrounded())//Edge detected
             {
-                whereGroundShouldBe = nextPlayerPoint + movementPerpendicularDown * getCharacterCircleCollider2D().radius * multiplier;
+                whereGroundShouldBe = nextPlayerPoint + movementPerpendicularDown * getCharacterCircleCollider2D().radius * EdgeCheckMultiplier;
                 PlatformEdge = Physics2D.Raycast(whereGroundShouldBe, BackRaycastDirection, Mathf.Infinity, LayerMask.GetMask("Walkable"));
                 recalculatedNextPlayerPoint = PlatformEdge.point + PlatformEdge.normal * getCharacterCircleCollider2D().radius;
                 movementVersor = (recalculatedNextPlayerPoint - myPosition).normalized;
@@ -197,19 +198,14 @@ namespace Assets.Scripts.Player
                 Debug.DrawLine(nextPlayerPoint, whereGroundShouldBe, Color.green);
                 Debug.DrawLine(whereGroundShouldBe, PlatformEdge.point, Color.yellow);
                 Debug.DrawLine(PlatformEdge.point, recalculatedNextPlayerPoint, Color.red);
-
-                //Debug.DrawLine(recalculatedNextPlayerPoint - Vector2.right, recalculatedNextPlayerPoint + Vector2.right, Color.cyan);
-                //Debug.DrawLine(recalculatedNextPlayerPoint - Vector2.up, recalculatedNextPlayerPoint + Vector2.up, Color.cyan);
             }
+
+            float distance = Vector2.Distance(myGround.point, myTransform.position);
+
+            if (IsGrounded())
+                transform.position += new Vector3(movementVersor.x, movementVersor.y) * speed * Time.fixedDeltaTime;
             else
-            {
-
-                //Debug.DrawLine(nextPlayerPoint - Vector2.right, nextPlayerPoint + Vector2.right, Color.yellow);
-                //Debug.DrawLine(nextPlayerPoint - Vector2.up, nextPlayerPoint + Vector2.up, Color.yellow);
-            }
-            */
-            //if (IsGrounded())
-            transform.position += new Vector3(movementVersor.x, movementVersor.y) * speed * Time.fixedDeltaTime;
+                transform.position += new Vector3(movementVersor.x, movementVersor.y) * speed * 1/Mathf.Pow(distance, airResistance) * Time.fixedDeltaTime;
         }
 
         public void Shoot()
