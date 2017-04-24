@@ -54,7 +54,7 @@ namespace Assets.Scripts.Player
             if (IsGrounded())
                 Debug.Log("On Land!");
             myGround = GetMyGround();
-            ApplyRotation();
+            ApplyRotation(false);
         }
 
         [ClientCallback]
@@ -92,7 +92,7 @@ namespace Assets.Scripts.Player
             return new Vector2(x / positions.Length, y / positions.Length);
         }
 
-        private void ApplyRotation()
+        private void ApplyRotation(bool forceTargetRotation)
         {
             //Forward -> blue arrow in the editor
             //Normal -> Normal of current gravity field
@@ -103,7 +103,7 @@ namespace Assets.Scripts.Player
             //Debug.Log(Quaternion.Dot(transform.rotation, targetRotation));
 
             //If the rotation to do is very small, we just apply it directly
-            if (Mathf.Abs(Quaternion.Dot(transform.rotation, targetRotation)) > rotationEpsilon)
+            if (forceTargetRotation || Mathf.Abs(Quaternion.Dot(transform.rotation, targetRotation)) > rotationEpsilon)
                 transform.rotation = targetRotation;
             else//else, we interpolate to make the rotation smooth
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);     
@@ -166,7 +166,7 @@ namespace Assets.Scripts.Player
         public void Move(MOVEMENT_DIRECTIONS movementDirection)
         {
             GravityField myGravityField = myGround.collider.GetComponent<GravityField>();
-            RaycastHit2D PlatformEdge;
+            RaycastHit2D platformEdge;
 
             Vector2 movementVersor, movementPerpendicularDown, whereGroundShouldBe, recalculatedNextPlayerPoint;
 
@@ -191,17 +191,22 @@ namespace Assets.Scripts.Player
             RaycastHit2D nextGroundCheck = Physics2D.Raycast(nextPlayerPoint, movementPerpendicularDown,
                                                                getCharacterCircleCollider2D().radius * EdgeCheckMultiplier,
                                                                LayerMask.GetMask("Walkable"));
+
             if (nextGroundCheck.collider == null && IsGrounded())//Edge detected
             {
                 whereGroundShouldBe = nextPlayerPoint + movementPerpendicularDown * getCharacterCircleCollider2D().radius * EdgeCheckMultiplier;
-                PlatformEdge = Physics2D.Raycast(whereGroundShouldBe, BackRaycastDirection, Mathf.Infinity, LayerMask.GetMask("Walkable"));
-                recalculatedNextPlayerPoint = PlatformEdge.point + PlatformEdge.normal * getCharacterCircleCollider2D().radius;
-                movementVersor = (recalculatedNextPlayerPoint - myPosition).normalized;
+                platformEdge = Physics2D.Raycast(whereGroundShouldBe, BackRaycastDirection, Mathf.Infinity, LayerMask.GetMask("Walkable"));
+                if (platformEdge.collider !=null && platformEdge.collider.gameObject.Equals(myGravityField.gameObject))
+                {
+                    Debug.Log("Myland!");
+                    recalculatedNextPlayerPoint = platformEdge.point + platformEdge.normal * getCharacterCircleCollider2D().radius;
+                    movementVersor = (recalculatedNextPlayerPoint - myPosition).normalized;
 
-                Debug.DrawLine(myTransform.position, nextPlayerPoint, Color.blue);
-                Debug.DrawLine(nextPlayerPoint, whereGroundShouldBe, Color.green);
-                Debug.DrawLine(whereGroundShouldBe, PlatformEdge.point, Color.yellow);
-                Debug.DrawLine(PlatformEdge.point, recalculatedNextPlayerPoint, Color.red);
+                    Debug.DrawLine(myTransform.position, nextPlayerPoint, Color.blue);
+                    Debug.DrawLine(nextPlayerPoint, whereGroundShouldBe, Color.green);
+                    Debug.DrawLine(whereGroundShouldBe, platformEdge.point, Color.yellow);
+                    Debug.DrawLine(platformEdge.point, recalculatedNextPlayerPoint, Color.red);
+                }
             }
 
             float distance = Vector2.Distance(myGround.point, myTransform.position);
@@ -238,6 +243,7 @@ namespace Assets.Scripts.Player
             if (IsGrounded())
             {
                 RaycastHit2D myGround = GetMyGround();
+                ApplyRotation(true);
                 GetComponent<Rigidbody2D>().AddForce(myTransform.up * jumpPower * Time.fixedDeltaTime);
                 //myRigidBody.velocity = myGround.normal * jumpPower;// * Time.fixedDeltaTime;
             }
