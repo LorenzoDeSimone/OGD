@@ -11,6 +11,8 @@ namespace Assets.Scripts.Player
         public float speed = 1.0f;
         public float jumpPower = 100.0f;
         public float rotationSpeed = 5.0f;
+        public float movementReduction = 10;
+        public float multiplier = 1.1f;
 
         private static readonly float rotationEpsilon = 0.999f;
         private Rigidbody2D myRigidBody;
@@ -157,20 +159,57 @@ namespace Assets.Scripts.Player
 
         //Movement routines called by the input manager
         public void Move(MOVEMENT_DIRECTIONS movementDirection)
-        {                
-            RaycastHit2D myGround = GetMyGround();
-            Vector3 movementVector;
+        {
+            GravityField myGravityField = myGround.collider.GetComponent<GravityField>();
+            RaycastHit2D PlatformEdge;
+
+            Vector2 movementVersor, movementPerpendicularDown, whereGroundShouldBe, recalculatedNextPlayerPoint;
+
             if (movementDirection.Equals(MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE))
             {
                 GetComponent<SpriteRenderer>().flipX = true;//TEMP WORKAROUND, Animations will be implemented
-                movementVector = new Vector3(-myGround.normal.y, myGround.normal.x);
+                movementVersor = new Vector3(-myGround.normal.y, myGround.normal.x);
+                movementPerpendicularDown = -myGround.normal;//new Vector2(-movementVersor.y, movementVersor.x).normalized;
             }
             else
             {
                 GetComponent<SpriteRenderer>().flipX = false;//TEMP WORKAROUND, Animations will be implemented
-                movementVector = new Vector3(myGround.normal.y, -myGround.normal.x);
+                movementVersor = new Vector3(myGround.normal.y, -myGround.normal.x);
+                movementPerpendicularDown = -myGround.normal;// new Vector2(movementVersor.y, -movementVersor.x).normalized;
             }
-            transform.position += movementVector * speed * Time.fixedDeltaTime;
+
+            Vector2 nextPlayerPoint = new Vector2(transform.position.x, transform.position.y) + movementVersor * speed * Time.fixedDeltaTime;
+            Vector2 myPosition = new Vector2(myTransform.position.x, myTransform.position.y);
+            Vector2 BackRaycastDirection = -movementVersor;//(myGravityField.transform.position - myTransform.position).normalized;
+
+
+            RaycastHit2D nextGroundCheck = Physics2D.Raycast(nextPlayerPoint, movementPerpendicularDown,
+                                                               getCharacterCircleCollider2D().radius * multiplier,
+                                                               LayerMask.GetMask("Walkable"));
+            /*if (nextGroundCheck.collider == null && IsGrounded())//Edge detected
+            {
+                whereGroundShouldBe = nextPlayerPoint + movementPerpendicularDown * getCharacterCircleCollider2D().radius * multiplier;
+                PlatformEdge = Physics2D.Raycast(whereGroundShouldBe, BackRaycastDirection, Mathf.Infinity, LayerMask.GetMask("Walkable"));
+                recalculatedNextPlayerPoint = PlatformEdge.point + PlatformEdge.normal * getCharacterCircleCollider2D().radius;
+                movementVersor = (recalculatedNextPlayerPoint - myPosition).normalized;
+
+                Debug.DrawLine(myTransform.position, nextPlayerPoint, Color.blue);
+                Debug.DrawLine(nextPlayerPoint, whereGroundShouldBe, Color.green);
+                Debug.DrawLine(whereGroundShouldBe, PlatformEdge.point, Color.yellow);
+                Debug.DrawLine(PlatformEdge.point, recalculatedNextPlayerPoint, Color.red);
+
+                //Debug.DrawLine(recalculatedNextPlayerPoint - Vector2.right, recalculatedNextPlayerPoint + Vector2.right, Color.cyan);
+                //Debug.DrawLine(recalculatedNextPlayerPoint - Vector2.up, recalculatedNextPlayerPoint + Vector2.up, Color.cyan);
+            }
+            else
+            {
+
+                //Debug.DrawLine(nextPlayerPoint - Vector2.right, nextPlayerPoint + Vector2.right, Color.yellow);
+                //Debug.DrawLine(nextPlayerPoint - Vector2.up, nextPlayerPoint + Vector2.up, Color.yellow);
+            }
+            */
+            //if (IsGrounded())
+            transform.position += new Vector3(movementVersor.x, movementVersor.y) * speed * Time.fixedDeltaTime;
         }
 
         public void Shoot()
