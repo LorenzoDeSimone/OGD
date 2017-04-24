@@ -233,8 +233,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 6
-  jumpPower: 20000
+  jumpPower: 30000
   rotationSpeed: 6
+  movementReduction: 10
+  EdgeCheckMultiplier: 1.1
+  airResistance: 0.4
 --- !u!212 &212783235714675410
 SpriteRenderer:
   m_ObjectHideFlags: 1

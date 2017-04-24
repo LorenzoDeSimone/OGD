@@ -218,7 +218,7 @@ namespace Assets.Scripts.Player
             if (IsGrounded())
             {
                 RaycastHit2D myGround = GetMyGround();
-                GetComponent<Rigidbody2D>().AddForce(myGround.normal * jumpPower * Time.fixedDeltaTime);
+                GetComponent<Rigidbody2D>().AddForce(myTransform.up * jumpPower * Time.fixedDeltaTime);
                 //myRigidBody.velocity = myGround.normal * jumpPower;// * Time.fixedDeltaTime;
             }
         }
