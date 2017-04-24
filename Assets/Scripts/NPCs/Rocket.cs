@@ -13,12 +13,12 @@ public class Rocket : MonoBehaviour
     private Vector2 targetDirection;
     private Transform myTransform;
 
+    public GameObject playerWhoShot;
 
     // Use this for initialization
     void Start ()
     {
         myTransform = GetComponent<Transform>();
-
         targetDirection = (target.transform.position - myTransform.position).normalized;
         myTransform.right = targetDirection;
         steeringMultiplier = speed * steeringMultiplier;
@@ -49,15 +49,28 @@ public class Rocket : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collider)
     {
         //Target management
-        MobilePlayerController newTarget = collider.GetComponent<MobilePlayerController>();
-        if (newTarget != null)
+        MobilePlayerController newTargetPlayer = collider.GetComponent<MobilePlayerController>();
+        Target target = collider.GetComponent<Target>();
+        GravityField gravityField = collider.GetComponent<GravityField>();
+
+        if (target != null)
+        {
+            Debug.Log("Target Hit!");
+            Destroy(this.gameObject);
+        }
+        else if(gravityField !=null)
+        {
+            Debug.Log("Platform Hit!");
+            Destroy(this.gameObject);
+        }
+
+        /*Player hit not working right now: it hits the player Who shot immediately =(
+        if (newTargetPlayer != null)
         {
             Debug.Log("Player Hit!");
             //Insert methods for losing coins
-        }
+        }*/
 
-        //StartCoroutine(Example());
-        Destroy(this.gameObject, 2);
     }
 
 }

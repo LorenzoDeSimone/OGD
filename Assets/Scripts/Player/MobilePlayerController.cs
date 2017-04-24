@@ -24,8 +24,8 @@ namespace Assets.Scripts.Player
 
         private Vector2 groundCheck1, groundCheck2;
 
-        private HashSet<GravityField> myGravityFields;//A collection of gravity fields currently in player's trigger
-        private HashSet<Target> myTargets;//A collection of hittable targets currently in player's trigger
+        private HashSet<GameObject> myGravityFields;//A collection of gravity fields currently in player's trigger
+        private HashSet<GameObject> myTargets;//A collection of hittable targets currently in player's trigger
 
         private GravityField safeGravityField;//In case no GravityField is present in player's collider, this is used for attraction
                
@@ -37,7 +37,8 @@ namespace Assets.Scripts.Player
             myRigidBody = GetComponent<Rigidbody2D>();
             myTransform = GetComponent<Transform>();
 
-            myGravityFields = new HashSet<GravityField>();
+            myGravityFields = new HashSet<GameObject>();
+            myTargets = new HashSet<GameObject>();
 
             myGround = GetMyGround();
 
@@ -129,7 +130,7 @@ namespace Assets.Scripts.Player
             else
             {
                 //Debug.Log("At least one gravity field");
-                foreach (GravityField currField in myGravityFields)
+                foreach (GameObject currField in myGravityFields)
                 {
                     RaycastHit2D currRaycastHit2D = Physics2D.Raycast(myTransform.position,
                                                                       currField.transform.position - myTransform.position,
@@ -213,7 +214,23 @@ namespace Assets.Scripts.Player
 
         public void Shoot()
         {
-            Debug.Log("BOOM!");
+            GameObject target= getNearestTarget();
+
+            if(target==null)
+            {
+                Debug.Log("No targets in my area!");
+                return;
+            }
+
+            GameObject rocket = (GameObject)Instantiate(Resources.Load("Prefabs/NPCs/Rocket"));
+
+            /*Vector3 rocketOffsetStart = (rocket.transform.position - myTransform.position).normalized * 
+                                         (getCharacterCircleCollider2D().radius + 
+                                         Mathf.Max(rocket.GetComponent<CapsuleCollider2D>().size.x, rocket.GetComponent<CapsuleCollider2D>().size.y));*/
+            rocket.transform.position = myTransform.position;// + rocketOffsetStart;
+            rocket.GetComponent<Rocket>().target = target;
+            rocket.GetComponent<Rocket>().playerWhoShot = gameObject;
+            rocket.gameObject.SetActive(true);
         }
 
         public void Jump()
@@ -232,7 +249,7 @@ namespace Assets.Scripts.Player
             GravityField newGravityField = collider.GetComponent<GravityField>();           
             if (newGravityField!=null)
             {
-                myGravityFields.Add(newGravityField);
+                myGravityFields.Add(newGravityField.gameObject);
 
                 if (myGravityFields.Count == 1)
                     safeGravityField = newGravityField;
@@ -241,7 +258,7 @@ namespace Assets.Scripts.Player
             //Target management
             Target newTarget = collider.GetComponent<Target>();
             if (newTarget != null)
-                myTargets.Add(newTarget);
+                myTargets.Add(newTarget.gameObject);
 
         }
 
@@ -252,7 +269,7 @@ namespace Assets.Scripts.Player
             if (exitGravityField != null)
             {
                 exitGravityField = collider.GetComponent<GravityField>();
-                myGravityFields.Remove(exitGravityField);
+                myGravityFields.Remove(exitGravityField.gameObject);
 
                 if (myGravityFields.Count == 0)
                     safeGravityField = exitGravityField;
@@ -262,7 +279,7 @@ namespace Assets.Scripts.Player
             //Target management
             Target target = collider.GetComponent<Target>();
             if (target != null)
-                myTargets.Remove(target);
+                myTargets.Remove(target.gameObject);
 
         }
 
@@ -278,18 +295,18 @@ namespace Assets.Scripts.Player
             return null;
         }
 
-        private Target getNearestTarget()
+        private GameObject getNearestTarget()
         {
             float candidateMinDistance = float.MaxValue;
-            Target candidateNearestTarget = null;
+            GameObject candidateNearestTarget = null;
 
-            foreach (Target currTarget in myTargets)
+            foreach (GameObject currTarget in myTargets)
             {
                 float currDistance = Vector2.Distance(myTransform.position, currTarget.transform.position);
 
                 if (currDistance < candidateMinDistance)
                 {
-                    candidateNearestTarget = currTarget;
+                    candidateNearestTarget = currTarget.gameObject;
                     candidateMinDistance = currDistance;
                 }
             }
