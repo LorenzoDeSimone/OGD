@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.Events;
 
 
 namespace Assets.Scripts.Networking
@@ -9,18 +9,21 @@ namespace Assets.Scripts.Networking
     class OnlineGameManager : NetworkBehaviour
     {
         [Header("Time of a match in seconds")]
-        public float matchTime = 120;
+        public float matchTime = 180;
 
         [Header("Time of victory screen in seconds")]
-        public float vicotoryScreenTime = 10;
+        public float vicotoryScreenTime = 4;
+
+        public UnityEvent OnPlayerDisconnects;
+        public UnityEvent OnMatchEnded;
 
         protected NetworkLobbyController lobbyController;
         
         void Start()
         {
             lobbyController = (NetworkLobbyController)NetworkManager.singleton;
-
             NetworkLobbyController.PlayerDisconnectEvent += HandlePlayerDisconnection;
+
             StartCoroutine(StartMatchCountDown());
         }
 
