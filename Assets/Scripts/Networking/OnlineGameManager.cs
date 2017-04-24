@@ -8,35 +8,32 @@ namespace Assets.Scripts.Networking
 {
     class OnlineGameManager : NetworkBehaviour
     {
-        public string lobbyControllerTag = "NetworkLobbyController";
-
         [Header("Time of a match in seconds")]
         public float matchTime = 120;
+
+        [Header("Time of victory screen in seconds")]
+        public float vicotoryScreenTime = 10;
 
         protected NetworkLobbyController lobbyController;
         
         void Start()
         {
-            lobbyController = GetLobbyController();
+            lobbyController = (NetworkLobbyController)NetworkManager.singleton;
+
             NetworkLobbyController.PlayerDisconnectEvent += HandlePlayerDisconnection;
-            StartCoroutine(MatchCountDown());
+            StartCoroutine(StartMatchCountDown());
         }
 
         private void OnDestroy()
         {
             NetworkLobbyController.PlayerDisconnectEvent -= HandlePlayerDisconnection;
         }
-
-        protected NetworkLobbyController GetLobbyController()
-        {
-            GameObject go = GameObject.FindGameObjectWithTag(lobbyControllerTag);
-            return go.GetComponent<NetworkLobbyController>();
-        }
-
-        private IEnumerator MatchCountDown()
+        
+        private IEnumerator StartMatchCountDown()
         {
             yield return new WaitForSeconds(matchTime);
-            StartEndMatchProcedures();
+            yield return new WaitForSeconds(vicotoryScreenTime);
+            StopMatch();
         }
 
         private void HandlePlayerDisconnection(NetworkPlayer player, int playerCount)
@@ -45,7 +42,7 @@ namespace Assets.Scripts.Networking
             {
                 Debug.LogError("Player lonely");
                 StopAllCoroutines();
-                StartEndMatchProcedures();
+                StopMatch();
             }
             else
             {
@@ -60,11 +57,10 @@ namespace Assets.Scripts.Networking
             }
         }
 
-        private void StartEndMatchProcedures()
+        private void StopMatch()
         {
             Debug.LogError("Match Ended");
-            GameObject go = GameObject.FindGameObjectWithTag(lobbyControllerTag);
-            go.GetComponent<NetworkLobbyController>().ResetAndStop();
+            lobbyController.ResetAndStop();
         }
     }
 }
