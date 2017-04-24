@@ -5,38 +5,13 @@ using Assets.Scripts.Player;
 
 public class GravityField : MonoBehaviour {
 
-    public float gravityStrength=50;
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
+    public float mass = 50;
+    
+    /*
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        //if (coll.gameObject.tag.StartsWith("Robot"))
-        //{
-
-        //}
-
-        PlayerController player = collider.GetComponent<PlayerController>();
-        if (player == null)
-        {
-            MobilePlayerController mobPlayer = collider.GetComponent<MobilePlayerController>();
-            mobPlayer.SetGravityCenter(this);
-        }
-        else
-        {
-            player.SetGravityCenter(this);
-        }
-        //Debug.Log(transform.position);
-
-        //collider.GetComponent<ComponentType>();
-
-    }
+        MobilePlayerController player = collider.GetComponent<MobilePlayerController>();
+        if (player != null)//If a player has entered in this gravity field attraction area, it changes his gravity field
+            player.SetGravityField(this);
+    }*/
 }
