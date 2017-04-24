@@ -2169,7 +2169,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c221bca0c7bcce4d9e9370ee17fbd8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lobbyControllerTag: NetworkLobbyController
   loadingSpinner: {fileID: 230085974}
   loadingMessage: {fileID: 1382901246}
 --- !u!114 &1662957874
@@ -2721,7 +2720,7 @@ MonoBehaviour:
   m_GamePlayerPrefab: {fileID: 1582415777413702, guid: 890ee3d1764f1584c87df9061563aeeb,
     type: 2}
   m_LobbyScene: NetworkTest-Lobby
-  m_PlayScene: NetworkTest-Game
+  m_PlayScene: NetworkTest-InGameMenus
   lobbySlots: []
   publicMatchWaitTime: 10
 --- !u!114 &2108872119

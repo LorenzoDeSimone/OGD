@@ -13,6 +13,11 @@ namespace Assets.Scripts.Networking
             InitMenu();
         }
 
+        void OnDisable()
+        {
+            StopAllCoroutines();
+        }
+
         protected abstract void InitMenu();
     }
 }
