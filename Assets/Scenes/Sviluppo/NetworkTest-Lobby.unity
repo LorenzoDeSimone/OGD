@@ -2725,13 +2725,13 @@ MonoBehaviour:
   m_ShowLobbyGUI: 1
   m_MaxPlayers: 4
   m_MaxPlayersPerConnection: 1
-  m_MinPlayers: 2
+  m_MinPlayers: 1
   m_LobbyPlayerPrefab: {fileID: 114380445389110200, guid: f2a55bb9c6c84e64988637225db0de6f,
     type: 2}
   m_GamePlayerPrefab: {fileID: 1582415777413702, guid: 890ee3d1764f1584c87df9061563aeeb,
     type: 2}
   m_LobbyScene: NetworkTest-Lobby
-  m_PlayScene: NetworkTest-Game
+  m_PlayScene: NetworkTest-InGameMenus
   lobbySlots: []
   publicMatchWaitTime: 10
 --- !u!114 &2108872119
