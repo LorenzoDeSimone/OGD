@@ -238,7 +238,7 @@ MonoBehaviour:
   movementReduction: 10
   EdgeCheckMultiplier: 1.1
   airResistance: 0.4
-  jumpControlStopWindow: 0.2
+  jumpControlStopWindow: 0.1
 --- !u!212 &212783235714675410
 SpriteRenderer:
   m_ObjectHideFlags: 1
