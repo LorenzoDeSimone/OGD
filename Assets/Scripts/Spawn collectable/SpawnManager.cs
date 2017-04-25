@@ -1,19 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SpawnManager : MonoBehaviour
 {
-
-    public Transform PlatformsFolder;
-
     public GameObject CollectablePrefab;
     public GameObject CollectablePrefabBig;
 
     public float dropSpeed;
 
     private List<Transform> platforms = new List<Transform>();
-    private List<PlatformSpawner> platformSpawner = new List<PlatformSpawner>();
+    //private List<PlatformSpawner> platformSpawner = new List<PlatformSpawner>();
     private List<PlatformFixedSpawner> platformFixedSpawner = new List<PlatformFixedSpawner>();
     private List<GameObject> collectables = new List<GameObject>();
     private List<GameObject> collectablesBig = new List<GameObject>();
@@ -21,13 +19,13 @@ public class SpawnManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        foreach (Transform tr in PlatformsFolder)
+        foreach (GameObject go in GameObject.FindGameObjectsWithTag("Platform"))
         {
-            platforms.Add(tr);
-            if (tr.gameObject.GetComponent<PlatformSpawner>())
-                platformSpawner.Add(tr.gameObject.GetComponent<PlatformSpawner>());
-            if (tr.gameObject.GetComponent<PlatformFixedSpawner>())
-                platformFixedSpawner.Add(tr.gameObject.GetComponent<PlatformFixedSpawner>());
+            platforms.Add(go.transform);
+            //if (go.GetComponent<PlatformSpawner>())
+            //    platformSpawner.Add(go.GetComponent<PlatformSpawner>());
+            if (go.GetComponent<PlatformFixedSpawner>())
+                platformFixedSpawner.Add(go.GetComponent<PlatformFixedSpawner>());
         }
         for (int i = 0; i < 10; i++)
         {
@@ -37,9 +35,9 @@ public class SpawnManager : MonoBehaviour
             collectablesBig[i].SetActive(false);
         }
 
-        StartCoroutine(rainOfCollectibles(10));    // RAIN OF 10 COLLECTABLE
-        platformSpawner[Random.Range(0, platformSpawner.Count)].dropCollectables();             // DROP FROM A PLATFORM
-        platformFixedSpawner[Random.Range(0, platformSpawner.Count)].dropCollectables();             // DROP FROM A PLATFORM WITH FIXED POSITION
+        StartCoroutine(rainOfCollectibles(10));
+        StartCoroutine(startGame());
+        //platformSpawner[Random.Range(0, platformSpawner.Count)].dropCollectables();
     }
 
     // Update is called once per frame
@@ -79,5 +77,26 @@ public class SpawnManager : MonoBehaviour
         }
         else
             collectables.Add(Instantiate(CollectablePrefab, position, CollectablePrefab.transform.rotation, transform));
+    }
+
+    private IEnumerator startGame()
+    {
+        Text countdownCounter = GetComponentInChildren<Text>();
+        countdownCounter.text = "3";
+        yield return new WaitForSeconds(1);
+        countdownCounter.text = "2";
+        yield return new WaitForSeconds(1);
+        countdownCounter.text = "1";
+        yield return new WaitForSeconds(1);
+        countdownCounter.text = "GO";
+        yield return new WaitForSeconds(1);
+        countdownCounter.text = "";
+
+        // Activation Player Movement
+
+        for (int i = 0; i < platformFixedSpawner.Count; i++)
+        {
+            platformFixedSpawner[i].setEnabled(true);
+        }
     }
 }

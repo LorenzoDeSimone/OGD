@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections.Generic;
+using Assets.Scripts.Player;
 
 
 namespace Assets.Scripts.Player
@@ -17,13 +18,18 @@ namespace Assets.Scripts.Player
 
         private static readonly float rotationEpsilon = 0.999f;
         private Rigidbody2D myRigidBody;
+        private bool freeFromJumpBlock = true;
+
+        public float jumpControlStopWindow = 0.2f;
 
         private RaycastHit2D myGround;
         private Transform myTransform;
 
         private Vector2 groundCheck1, groundCheck2;
 
-        private HashSet<GravityField> myGravityFields;//A collection of gravity fields currently in player's collider
+        private HashSet<GameObject> myGravityFields;//A collection of gravity fields currently in player's trigger
+        private HashSet<GameObject> myTargets;//A collection of hittable targets currently in player's trigger
+
         private GravityField safeGravityField;//In case no GravityField is present in player's collider, this is used for attraction
                
         public enum MOVEMENT_DIRECTIONS { COUNTERCLOCKWISE, CLOCKWISE, STOP }
@@ -34,7 +40,8 @@ namespace Assets.Scripts.Player
             myRigidBody = GetComponent<Rigidbody2D>();
             myTransform = GetComponent<Transform>();
 
-            myGravityFields = new HashSet<GravityField>();
+            myGravityFields = new HashSet<GameObject>();
+            myTargets = new HashSet<GameObject>();
 
             myGround = GetMyGround();
 
@@ -50,7 +57,7 @@ namespace Assets.Scripts.Player
             if (IsGrounded())
                 Debug.Log("On Land!");
             myGround = GetMyGround();
-            ApplyRotation();
+            ApplyRotation(false);
         }
 
         [ClientCallback]
@@ -88,7 +95,7 @@ namespace Assets.Scripts.Player
             return new Vector2(x / positions.Length, y / positions.Length);
         }
 
-        private void ApplyRotation()
+        private void ApplyRotation(bool forceTargetRotation)
         {
             //Forward -> blue arrow in the editor
             //Normal -> Normal of current gravity field
@@ -99,7 +106,7 @@ namespace Assets.Scripts.Player
             //Debug.Log(Quaternion.Dot(transform.rotation, targetRotation));
 
             //If the rotation to do is very small, we just apply it directly
-            if (Mathf.Abs(Quaternion.Dot(transform.rotation, targetRotation)) > rotationEpsilon)
+            if (forceTargetRotation || Mathf.Abs(Quaternion.Dot(transform.rotation, targetRotation)) > rotationEpsilon)
                 transform.rotation = targetRotation;
             else//else, we interpolate to make the rotation smooth
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);     
@@ -126,7 +133,7 @@ namespace Assets.Scripts.Player
             else
             {
                 //Debug.Log("At least one gravity field");
-                foreach (GravityField currField in myGravityFields)
+                foreach (GameObject currField in myGravityFields)
                 {
                     RaycastHit2D currRaycastHit2D = Physics2D.Raycast(myTransform.position,
                                                                       currField.transform.position - myTransform.position,
@@ -161,8 +168,11 @@ namespace Assets.Scripts.Player
         //Movement routines called by the input manager
         public void Move(MOVEMENT_DIRECTIONS movementDirection)
         {
+            if(!CanMove())
+                return;
+
             GravityField myGravityField = myGround.collider.GetComponent<GravityField>();
-            RaycastHit2D PlatformEdge;
+            RaycastHit2D platformEdge;
 
             Vector2 movementVersor, movementPerpendicularDown, whereGroundShouldBe, recalculatedNextPlayerPoint;
 
@@ -187,17 +197,22 @@ namespace Assets.Scripts.Player
             RaycastHit2D nextGroundCheck = Physics2D.Raycast(nextPlayerPoint, movementPerpendicularDown,
                                                                getCharacterCircleCollider2D().radius * EdgeCheckMultiplier,
                                                                LayerMask.GetMask("Walkable"));
+
             if (nextGroundCheck.collider == null && IsGrounded())//Edge detected
             {
                 whereGroundShouldBe = nextPlayerPoint + movementPerpendicularDown * getCharacterCircleCollider2D().radius * EdgeCheckMultiplier;
-                PlatformEdge = Physics2D.Raycast(whereGroundShouldBe, BackRaycastDirection, Mathf.Infinity, LayerMask.GetMask("Walkable"));
-                recalculatedNextPlayerPoint = PlatformEdge.point + PlatformEdge.normal * getCharacterCircleCollider2D().radius;
-                movementVersor = (recalculatedNextPlayerPoint - myPosition).normalized;
+                platformEdge = Physics2D.Raycast(whereGroundShouldBe, BackRaycastDirection, Mathf.Infinity, LayerMask.GetMask("Walkable"));
+                if (platformEdge.collider !=null && platformEdge.collider.gameObject.Equals(myGravityField.gameObject))
+                {
+                    Debug.Log("Myland!");
+                    recalculatedNextPlayerPoint = platformEdge.point + platformEdge.normal * getCharacterCircleCollider2D().radius;
+                    movementVersor = (recalculatedNextPlayerPoint - myPosition).normalized;
 
-                Debug.DrawLine(myTransform.position, nextPlayerPoint, Color.blue);
-                Debug.DrawLine(nextPlayerPoint, whereGroundShouldBe, Color.green);
-                Debug.DrawLine(whereGroundShouldBe, PlatformEdge.point, Color.yellow);
-                Debug.DrawLine(PlatformEdge.point, recalculatedNextPlayerPoint, Color.red);
+                    Debug.DrawLine(myTransform.position, nextPlayerPoint, Color.blue);
+                    Debug.DrawLine(nextPlayerPoint, whereGroundShouldBe, Color.green);
+                    Debug.DrawLine(whereGroundShouldBe, platformEdge.point, Color.yellow);
+                    Debug.DrawLine(platformEdge.point, recalculatedNextPlayerPoint, Color.red);
+                }
             }
 
             float distance = Vector2.Distance(myGround.point, myTransform.position);
@@ -210,14 +225,32 @@ namespace Assets.Scripts.Player
 
         public void Shoot()
         {
-            Debug.Log("BOOM!");
+            GameObject target= getNearestTarget();
+
+            if(target==null)
+            {
+                Debug.Log("No targets in my area!");
+                return;
+            }
+
+            GameObject rocket = (GameObject)Instantiate(Resources.Load("Prefabs/NPCs/Rocket"));
+
+            /*Vector3 rocketOffsetStart = (rocket.transform.position - myTransform.position).normalized * 
+                                         (getCharacterCircleCollider2D().radius + 
+                                         Mathf.Max(rocket.GetComponent<CapsuleCollider2D>().size.x, rocket.GetComponent<CapsuleCollider2D>().size.y));*/
+            rocket.transform.position = myTransform.position;// + rocketOffsetStart;
+            rocket.GetComponent<Rocket>().target = target;
+            rocket.GetComponent<Rocket>().playerWhoShot = gameObject;
+            rocket.gameObject.SetActive(true);
         }
 
         public void Jump()
         {
             if (IsGrounded())
             {
+                StartCoroutine(jumpControlStop());
                 RaycastHit2D myGround = GetMyGround();
+                //ApplyRotation(true);
                 GetComponent<Rigidbody2D>().AddForce(myTransform.up * jumpPower * Time.fixedDeltaTime);
                 //myRigidBody.velocity = myGround.normal * jumpPower;// * Time.fixedDeltaTime;
             }
@@ -225,20 +258,42 @@ namespace Assets.Scripts.Player
 
         private void OnTriggerEnter2D(Collider2D collider)
         {
-            GravityField newGravityField = collider.GetComponent<GravityField>();
-            myGravityFields.Add(newGravityField);
+            //Gravity Fields management
+            GravityField newGravityField = collider.GetComponent<GravityField>();           
+            if (newGravityField!=null)
+            {
+                myGravityFields.Add(newGravityField.gameObject);
 
-            if (myGravityFields.Count == 1)
-                safeGravityField = newGravityField;
+                if (myGravityFields.Count == 1)
+                    safeGravityField = newGravityField;
+            }
+
+            //Target management
+            Target newTarget = collider.GetComponent<Target>();
+            if (newTarget != null)
+                myTargets.Add(newTarget.gameObject);
+
         }
 
         private void OnTriggerExit2D(Collider2D collider)
         {
+            //Gravity Fields management
             GravityField exitGravityField = collider.GetComponent<GravityField>();
-            myGravityFields.Remove(exitGravityField);
+            if (exitGravityField != null)
+            {
+                exitGravityField = collider.GetComponent<GravityField>();
+                myGravityFields.Remove(exitGravityField.gameObject);
 
-            if (myGravityFields.Count == 0)
-                safeGravityField = exitGravityField;
+                if (myGravityFields.Count == 0)
+                    safeGravityField = exitGravityField;
+
+            }
+
+            //Target management
+            Target target = collider.GetComponent<Target>();
+            if (target != null)
+                myTargets.Remove(target.gameObject);
+
         }
 
         private CircleCollider2D getCharacterCircleCollider2D()
@@ -251,6 +306,38 @@ namespace Assets.Scripts.Player
                     return currCollider;
             }
             return null;
+        }
+
+        private GameObject getNearestTarget()
+        {
+            float candidateMinDistance = float.MaxValue;
+            GameObject candidateNearestTarget = null;
+
+            foreach (GameObject currTarget in myTargets)
+            {
+                float currDistance = Vector2.Distance(myTransform.position, currTarget.transform.position);
+
+                if (currDistance < candidateMinDistance)
+                {
+                    candidateNearestTarget = currTarget.gameObject;
+                    candidateMinDistance = currDistance;
+                }
+            }
+            return candidateNearestTarget;
+        }
+
+        private bool CanMove()
+        {
+            return freeFromJumpBlock;//Insert other booleans in && for other situations in which the player cannot move
+        }
+
+        IEnumerator<WaitForSeconds> jumpControlStop()
+        {
+            freeFromJumpBlock = false;
+            Debug.Log("disabling");
+            yield return new WaitForSeconds(jumpControlStopWindow);
+            Debug.Log("enabling");
+            freeFromJumpBlock = true;
         }
     }
 }

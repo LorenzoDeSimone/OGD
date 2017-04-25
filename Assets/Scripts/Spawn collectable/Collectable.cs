@@ -19,7 +19,7 @@ public class Collectable : MonoBehaviour {
         if(coll.gameObject.tag == "Player")
         {
             gameObject.SetActive(false);
-            coll.gameObject.GetComponent<PlayerPoints>().addPoint();
+            PointManager.instance.addPoint(coll.gameObject.transform, 1);
         }
     }
 }
