@@ -14,7 +14,6 @@ namespace Assets.Scripts.Networking
         [Header("Time of victory screen in seconds")]
         public float vicotoryScreenTime = 4;
 
-        public UnityEvent OnPlayerDisconnects;
         public UnityEvent OnMatchEnded;
 
         protected NetworkLobbyController lobbyController;
@@ -22,56 +21,37 @@ namespace Assets.Scripts.Networking
         void Start()
         {
             lobbyController = (NetworkLobbyController)NetworkManager.singleton;
-            NetworkLobbyController.PlayerDisconnectEvent += HandlePlayerDisconnection;
-
             StartCoroutine(StartMatchCountDown());
         }
 
-        private void OnDestroy()
+        public void EndMatchWrapper(string message)
         {
-            NetworkLobbyController.PlayerDisconnectEvent -= HandlePlayerDisconnection;
+            Debug.Log(message);
+            StartCoroutine(EndMatch());
         }
-        
+
         private IEnumerator StartMatchCountDown()
         {
             yield return new WaitForSeconds(matchTime);
+            EndMatchWrapper("Match ended after count down...");
+        }
 
+        private IEnumerator EndMatch()
+        {
             OnMatchEnded.Invoke();
             // This will make all physics related things to stop 
             Time.timeScale = 0;
             // unscaled time here!! see above
+
             yield return new WaitForSecondsRealtime(vicotoryScreenTime);
             Time.timeScale = 1;
-            StopMatch();
+            KillNetwork();
         }
 
-        private void HandlePlayerDisconnection(NetworkPlayer player, int playerCount)
-        {
-            Debug.LogWarning("Player: " + player + " dsconected! only "+playerCount+" little indians remains...");
-
-            if (playerCount==0)
-            {
-                Debug.LogError("Player lonely");
-                StopAllCoroutines();
-                StopMatch();
-            }
-            else
-            {
-                if( player.Equals(lobbyController.GetLocalPlayer()) )
-                {
-                    Debug.LogError("You disconnected");
-                }
-                else
-                {
-                    Debug.LogError("" + player.ToString() + " disconnected");
-                }
-            }
-        }
-
-        private void StopMatch()
+        private void KillNetwork()
         {
             Debug.LogError("Match Ended");
-            lobbyController.StopLobbyController();
+            lobbyController.StopNetwork();
         }
     }
 }

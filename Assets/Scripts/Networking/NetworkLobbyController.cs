@@ -122,7 +122,7 @@ namespace Assets.Scripts.Networking
             loadingPublicMatches = false;
         }
 
-        public void StopLobbyController()
+        public void StopNetwork()
         {
             StopAllCoroutines();
 
