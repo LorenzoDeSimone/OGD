@@ -18,6 +18,9 @@ namespace Assets.Scripts.Player
 
         private static readonly float rotationEpsilon = 0.999f;
         private Rigidbody2D myRigidBody;
+        private bool freeFromJumpBlock = true;
+
+        public float jumpControlStopWindow = 0.2f;
 
         private RaycastHit2D myGround;
         private Transform myTransform;
@@ -165,6 +168,9 @@ namespace Assets.Scripts.Player
         //Movement routines called by the input manager
         public void Move(MOVEMENT_DIRECTIONS movementDirection)
         {
+            if(!CanMove())
+                return;
+
             GravityField myGravityField = myGround.collider.GetComponent<GravityField>();
             RaycastHit2D platformEdge;
 
@@ -242,8 +248,9 @@ namespace Assets.Scripts.Player
         {
             if (IsGrounded())
             {
+                StartCoroutine(jumpControlStop());
                 RaycastHit2D myGround = GetMyGround();
-                ApplyRotation(true);
+                //ApplyRotation(true);
                 GetComponent<Rigidbody2D>().AddForce(myTransform.up * jumpPower * Time.fixedDeltaTime);
                 //myRigidBody.velocity = myGround.normal * jumpPower;// * Time.fixedDeltaTime;
             }
@@ -317,6 +324,20 @@ namespace Assets.Scripts.Player
                 }
             }
             return candidateNearestTarget;
+        }
+
+        private bool CanMove()
+        {
+            return freeFromJumpBlock;//Insert other booleans in && for other situations in which the player cannot move
+        }
+
+        IEnumerator<WaitForSeconds> jumpControlStop()
+        {
+            freeFromJumpBlock = false;
+            Debug.Log("disabling");
+            yield return new WaitForSeconds(jumpControlStopWindow);
+            Debug.Log("enabling");
+            freeFromJumpBlock = true;
         }
     }
 }
