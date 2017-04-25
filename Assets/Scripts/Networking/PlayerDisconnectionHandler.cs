@@ -26,9 +26,9 @@ namespace Assets.Scripts.Networking
             NetworkLobbyController.PlayerDisconnectEvent -= HandlePlayerDisconnection;
         }
 
-        private void HandlePlayerDisconnection(NetworkPlayer player, int playerCount)
+        private void HandlePlayerDisconnection(NetworkConnection conn, int playerCount)
         {
-            Debug.LogWarning("Player: " + player + " dsconected! only " + playerCount + " little indians remains...");
+            Debug.LogWarning("Player: " + conn + " dsconected! only " + playerCount + " little indians remains...");
 
             if (playerCount == 1)
             {
@@ -38,14 +38,7 @@ namespace Assets.Scripts.Networking
             }
             else
             {
-                if (player.Equals(lobbyController.GetLocalPlayer()))
-                {
-                    Debug.LogError("You disconnected");
-                }
-                else
-                {
-                    Debug.LogError("" + player.ToString() + " disconnected");
-                }
+                Debug.LogError("" + conn.ToString() + " disconnected");
             }
         }
     }

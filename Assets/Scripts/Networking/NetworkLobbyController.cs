@@ -19,7 +19,7 @@ namespace Assets.Scripts.Networking
         internal List<MatchInfoSnapshot> publicMatches;
         internal PlayMenu currentPlayMenu;
 
-        public delegate void OnPlayerDisconnectDelegate(NetworkPlayer player, int playerCount);
+        public delegate void OnPlayerDisconnectDelegate(NetworkConnection conn, int playerCount);
         public static event OnPlayerDisconnectDelegate PlayerDisconnectEvent;
 
         ulong netId;
@@ -80,18 +80,15 @@ namespace Assets.Scripts.Networking
             readyToReset = true;
         }
 
-        private void OnDisconnectedFromServer(NetworkDisconnection info)
+        public override void OnServerDisconnect(NetworkConnection conn)
         {
-            Debug.LogWarning("Player dsconected! "+info);
-        }
+            base.OnServerDisconnect(conn);
+            Debug.LogWarning("Player dsconected! " + conn);
 
-        private void OnPlayerDisconnected(NetworkPlayer player)
-        {
-            Debug.LogWarning("Player: "+player+" dsconected!");
-
-            if(PlayerDisconnectEvent!= null)
+            if (PlayerDisconnectEvent!= null)
             {
-                PlayerDisconnectEvent(player,numPlayers);
+                // num players is an inherited field 
+                PlayerDisconnectEvent(conn,numPlayers);
             }
         }
 
