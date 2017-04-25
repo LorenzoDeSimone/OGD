@@ -1109,8 +1109,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b76d8353ab6d6d5448b60d3ff09b5185, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  matchTime: 10
-  vicotoryScreenTime: 10
+  matchTime: 180
+  vicotoryScreenTime: 5
   OnMatchEnded:
     m_PersistentCalls:
       m_Calls:
