@@ -10,10 +10,11 @@ namespace Assets.Scripts.Networking
         void OnEnable()
         {
             lobbyController = (NetworkLobbyController)NetworkManager.singleton;
+            lobbyController.currentPlayMenu = this;
             InitMenu();
         }
 
-        void OnDisable()
+        internal void StopMatchSearch()
         {
             StopAllCoroutines();
         }

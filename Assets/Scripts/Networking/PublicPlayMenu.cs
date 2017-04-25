@@ -19,14 +19,15 @@ namespace Assets.Scripts.Networking
             StartCoroutine(SpinLoadingSpinner());
         }
 
-        public void JoinPublicMatch()
+        private void JoinPublicMatch()
         {
             lobbyController.StartMatchMaker();
             lobbyController.readyToReset = false;
-            StartCoroutine(JoinPublic());
+
+            StartCoroutine(SearchMatch());
         }
 
-        private IEnumerator JoinPublic()
+        private IEnumerator SearchMatch()
         {
             while (lobbyController.IsSearchingPublicMatch())
             {

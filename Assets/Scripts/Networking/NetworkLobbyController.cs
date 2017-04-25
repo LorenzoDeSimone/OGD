@@ -17,6 +17,7 @@ namespace Assets.Scripts.Networking
         internal bool searchingPublicMatch = true;
 
         internal List<MatchInfoSnapshot> publicMatches;
+        internal PlayMenu currentPlayMenu;
 
         public delegate void OnPlayerDisconnectDelegate(NetworkPlayer player, int playerCount);
         public static event OnPlayerDisconnectDelegate PlayerDisconnectEvent;
@@ -24,11 +25,6 @@ namespace Assets.Scripts.Networking
         ulong netId;
         ulong nodeId;
         ulong createdMatchID = (ulong)NetworkID.Invalid;
-
-        void Start()
-        {
-            ResetNetworkState();
-        }
 
         public override void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo)
         {
@@ -40,7 +36,7 @@ namespace Assets.Scripts.Networking
                 nodeId = (ulong)matchInfo.nodeId;
                 createdMatchID = (ulong)matchInfo.networkId;
                 searchingPublicMatch = false;
-                Debug.Log("Create and join at "+matchInfo.networkId);
+                Debug.LogWarning("Create and join at "+matchInfo.networkId);
             }
             else
             {
@@ -74,13 +70,14 @@ namespace Assets.Scripts.Networking
             base.OnDestroyMatch(success, extendedInfo);
             if(success)
             {
-                Debug.Log("Destoyed");
+                Debug.LogWarning("Destoyed "+extendedInfo);
             }
             else
             {
-                Debug.LogError("Destroy Fail");
+                Debug.LogError("Destroy Fail "+extendedInfo);
             }
-            ResetNetworkState();
+
+            readyToReset = true;
         }
 
         private void OnDisconnectedFromServer(NetworkDisconnection info)
@@ -122,22 +119,25 @@ namespace Assets.Scripts.Networking
             loadingPublicMatches = false;
         }
 
-        public void StopNetwork()
+        public void PrepareToReset()
         {
-            StopAllCoroutines();
-
-            if(createdMatchID != (ulong)NetworkID.Invalid)
+            if(createdMatchID != (ulong)NetworkID.Invalid && matchMaker)
             {
                 matchMaker.DestroyMatch((NetworkID)createdMatchID, 0, OnDestroyMatch);
                 createdMatchID = (ulong)NetworkID.Invalid;
             }
-
-            ResetNetworkState();
+            else
+            {
+                readyToReset = true;
+            }
         }
 
-        private void ResetNetworkState()
+        public void ResetNetworkState()
         {
-            readyToReset = true;
+            StopAllCoroutines();
+
+            if(currentPlayMenu)
+                currentPlayMenu.StopMatchSearch();
 
             if (matchMaker)
             {

@@ -38,11 +38,11 @@ namespace Assets.Scripts.Networking
 
         private IEnumerator EndMatch()
         {
+            lobbyController.PrepareToReset();
             OnMatchEnded.Invoke();
             // This will make all physics related things to stop 
             Time.timeScale = 0;
             // unscaled time here!! see above
-
             yield return new WaitForSecondsRealtime(vicotoryScreenTime);
             Time.timeScale = 1;
             KillNetwork();
@@ -51,7 +51,7 @@ namespace Assets.Scripts.Networking
         private void KillNetwork()
         {
             Debug.LogError("Match Ended");
-            lobbyController.StopNetwork();
+            lobbyController.ResetNetworkState();
         }
     }
 }

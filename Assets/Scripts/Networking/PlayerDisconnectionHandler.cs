@@ -26,11 +26,11 @@ namespace Assets.Scripts.Networking
             NetworkLobbyController.PlayerDisconnectEvent -= HandlePlayerDisconnection;
         }
 
-        private void HandlePlayerDisconnection(UnityEngine.NetworkPlayer player, int playerCount)
+        private void HandlePlayerDisconnection(NetworkPlayer player, int playerCount)
         {
             Debug.LogWarning("Player: " + player + " dsconected! only " + playerCount + " little indians remains...");
 
-            if (playerCount == 0)
+            if (playerCount == 1)
             {
                 Debug.LogError("Player lonely...");
                 StopAllCoroutines();

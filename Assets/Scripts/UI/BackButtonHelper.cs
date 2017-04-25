@@ -20,7 +20,7 @@ namespace Assets.Scripts.UI
         {
             if(resetLobbyController)
             {
-              lobbyController.StopNetwork();
+              lobbyController.PrepareToReset();
               StartCoroutine(ResetLobbyWhenReady());
             }
             else
@@ -32,6 +32,7 @@ namespace Assets.Scripts.UI
         private IEnumerator ResetLobbyWhenReady()
         {
             yield return new WaitUntil(lobbyController.IsReadyToReset);
+            lobbyController.ResetNetworkState();
             SetListsStates();
         }
 
