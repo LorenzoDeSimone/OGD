@@ -35,10 +35,9 @@ namespace Assets.Scripts.Networking
         private IEnumerator StartMatchCountDown()
         {
             yield return new WaitForSeconds(matchTime);
+
             OnMatchEnded.Invoke();
-            /*
-             * This will make all phisics related things to stop 
-             */
+            // This will make all physics related things to stop 
             Time.timeScale = 0;
             // unscaled time here!! see above
             yield return new WaitForSecondsRealtime(vicotoryScreenTime);
@@ -48,7 +47,9 @@ namespace Assets.Scripts.Networking
 
         private void HandlePlayerDisconnection(NetworkPlayer player, int playerCount)
         {
-            if(playerCount==0)
+            Debug.LogWarning("Player: " + player + " dsconected! only "+playerCount+" little indians remains...");
+
+            if (playerCount==0)
             {
                 Debug.LogError("Player lonely");
                 StopAllCoroutines();
@@ -70,7 +71,7 @@ namespace Assets.Scripts.Networking
         private void StopMatch()
         {
             Debug.LogError("Match Ended");
-            lobbyController.ResetAndStop();
+            lobbyController.StopLobbyController();
         }
     }
 }

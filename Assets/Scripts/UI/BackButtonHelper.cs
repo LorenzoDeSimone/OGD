@@ -20,7 +20,7 @@ namespace Assets.Scripts.UI
         {
             if(resetLobbyController)
             {
-              lobbyController.ResetAndStop();
+              lobbyController.StopLobbyController();
               StartCoroutine(ResetLobbyWhenReady());
             }
             else

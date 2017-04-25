@@ -25,6 +25,11 @@ namespace Assets.Scripts.Networking
         ulong nodeId;
         ulong createdMatchID = (ulong)NetworkID.Invalid;
 
+        void Start()
+        {
+            ResetNetworkState();
+        }
+
         public override void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo)
         {
             base.OnMatchCreate(success, extendedInfo, matchInfo);
@@ -75,11 +80,18 @@ namespace Assets.Scripts.Networking
             {
                 Debug.LogError("Destroy Fail");
             }
-            Stop();
+            ResetNetworkState();
+        }
+
+        private void OnDisconnectedFromServer(NetworkDisconnection info)
+        {
+            Debug.LogWarning("Player dsconected! "+info);
         }
 
         private void OnPlayerDisconnected(NetworkPlayer player)
         {
+            Debug.LogWarning("Player: "+player+" dsconected!");
+
             if(PlayerDisconnectEvent!= null)
             {
                 PlayerDisconnectEvent(player,numPlayers);
@@ -110,7 +122,7 @@ namespace Assets.Scripts.Networking
             loadingPublicMatches = false;
         }
 
-        public void ResetAndStop()
+        public void StopLobbyController()
         {
             StopAllCoroutines();
 
@@ -119,13 +131,11 @@ namespace Assets.Scripts.Networking
                 matchMaker.DestroyMatch((NetworkID)createdMatchID, 0, OnDestroyMatch);
                 createdMatchID = (ulong)NetworkID.Invalid;
             }
-            else
-            {
-                Stop();
-            }
+
+            ResetNetworkState();
         }
 
-        private void Stop()
+        private void ResetNetworkState()
         {
             readyToReset = true;
 
