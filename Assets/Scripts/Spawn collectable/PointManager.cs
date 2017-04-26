@@ -16,6 +16,7 @@ public class PointManager : NetworkBehaviour
     private GameObject go;
 
     // Use this for initialization
+    /*
     void Start()
     {
         int numPlayer = 0;
@@ -58,12 +59,7 @@ public class PointManager : NetworkBehaviour
             players[i].gameObject.GetComponent<SpriteRenderer>().color = PlayerColor.color[i];
         }
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
+    */
 
     public void addPoint(Transform player, int num)
     {

@@ -1,27 +1,17 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Networking;
 
 public class Collectable : NetworkBehaviour
 {
-
-    // Use this for initialization
-    void Start()
+    private void OnCollisionEnter2D(Collision2D coll)
     {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
+        if (coll.gameObject.CompareTag("Player"))
         {
+            NetworkManager.singleton.GetComponent<PointManager>().addPoint(
+                coll.gameObject.transform, 1);
             gameObject.SetActive(false);
-            PointManager.instance.addPoint(other.transform, 1);
         }
     }
 }

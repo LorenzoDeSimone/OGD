@@ -106,14 +106,14 @@ public class SpawnManager : NetworkBehaviour
         }
     }
 
-    [ClientCallback]
+    [Client]
     private void ActivateCollectable(Vector3 position, int chosen)
     {
         collectables[chosen].transform.position = position;
         collectables[chosen].SetActive(true);
     }
 
-    [ClientCallback]
+    [Client]
     private void ActivateSpawner(int i)
     {
         platformFixedSpawner[i].setEnabled(true);
