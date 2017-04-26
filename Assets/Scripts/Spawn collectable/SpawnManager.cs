@@ -14,6 +14,7 @@ public class SpawnManager : NetworkBehaviour
     private List<Transform> platforms = new List<Transform>();
     //private List<PlatformSpawner> platformSpawner = new List<PlatformSpawner>();
     private List<PlatformFixedSpawner> platformFixedSpawner = new List<PlatformFixedSpawner>();
+    
     private List<GameObject> collectables = new List<GameObject>();
     private List<GameObject> collectablesBig = new List<GameObject>();
     private GameObject go;
@@ -76,8 +77,7 @@ public class SpawnManager : NetworkBehaviour
         }
         if (chosen >= 0)
         {
-            collectables[chosen].transform.position = position;
-            collectables[chosen].SetActive(true);
+            ActivateCollectable(position, chosen);
         }
         else
         {
@@ -108,7 +108,20 @@ public class SpawnManager : NetworkBehaviour
 
         for (int i = 0; i < platformFixedSpawner.Count; i++)
         {
-            platformFixedSpawner[i].setEnabled(true);
+            ActivateSpawner(i);
         }
+    }
+
+    [ClientCallback]
+    private void ActivateCollectable(Vector3 position, int chosen)
+    {
+        collectables[chosen].transform.position = position;
+        collectables[chosen].SetActive(true);
+    }
+
+    [ClientCallback]
+    private void ActivateSpawner(int i)
+    {
+        platformFixedSpawner[i].setEnabled(true);
     }
 }
