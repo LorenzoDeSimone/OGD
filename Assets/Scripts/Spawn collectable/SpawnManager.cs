@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -35,7 +36,10 @@ public class SpawnManager : NetworkBehaviour
             go = Instantiate(CollectablePrefab, transform);
             NetworkServer.Spawn(go);
             collectables.Add(go);
+
             collectables[i].SetActive(false);
+            SetCollectableActiveOnClients(collectables[i], false);
+
             //collectablesBig.Add(Instantiate(CollectablePrefabBig, transform));
             //collectablesBig[i].SetActive(false);
         }
@@ -54,8 +58,8 @@ public class SpawnManager : NetworkBehaviour
 
         while (number > i)
         {
-            tr = platforms[Random.Range(0, platforms.Count)];
-            angle = Random.Range(0, 360) * Mathf.Deg2Rad;
+            tr = platforms[UnityEngine.Random.Range(0, platforms.Count)];
+            angle = UnityEngine.Random.Range(0, 360) * Mathf.Deg2Rad;
 
             Vector3 pos = tr.position + new Vector3((tr.gameObject.GetComponent<Collider2D>().bounds.size.x / 2 + 1) * Mathf.Cos(angle), (tr.gameObject.GetComponent<Collider2D>().bounds.size.y / 2 + 1) * Mathf.Sin(angle), 0);
             newCollectable(pos);
@@ -76,7 +80,10 @@ public class SpawnManager : NetworkBehaviour
         }
         if (chosen >= 0)
         {
-            ActivateCollectable(position, chosen);
+            collectables[chosen].transform.position = position;
+            collectables[chosen].SetActive(true);
+
+            SetCollectableActiveOnClients(collectables[chosen], true);
         }
         else
         {
@@ -101,26 +108,26 @@ public class SpawnManager : NetworkBehaviour
         countdownCounter.text = "";
         */
 
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(2);
         
         // Activation Player Movement
 
         for (int i = 0; i < platformFixedSpawner.Count; i++)
         {
-            ActivateSpawner(i);
+            platformFixedSpawner[i].setEnabled(true);
+            ActivateSpawnerOnClients(i);
         }
 
     }
 
-    [ClientCallback]
-    private void ActivateCollectable(Vector3 position, int chosen)
+    [Client]
+    private void SetCollectableActiveOnClients(GameObject gameObject, bool v)
     {
-        collectables[chosen].transform.position = position;
-        collectables[chosen].SetActive(true);
+        gameObject.SetActive(v);
     }
 
-    [ClientCallback]
-    private void ActivateSpawner(int i)
+    [Client]
+    private void ActivateSpawnerOnClients(int i)
     {
         platformFixedSpawner[i].setEnabled(true);
     }
