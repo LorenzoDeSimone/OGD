@@ -80,7 +80,11 @@ public class SpawnManager : NetworkBehaviour
             collectables[chosen].SetActive(true);
         }
         else
-            collectables.Add(Instantiate(CollectablePrefab, position, CollectablePrefab.transform.rotation, transform));
+        {
+            go = Instantiate(CollectablePrefab, position, CollectablePrefab.transform.rotation, transform);
+            collectables.Add(go);
+            NetworkServer.Spawn(go);
+        }
     }
 
     private IEnumerator startGame()
