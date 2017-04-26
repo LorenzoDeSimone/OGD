@@ -12,10 +12,16 @@ public class PointManager : NetworkBehaviour
 
     private List<Transform> players = new List<Transform>();
     private GameObject[] bar;
+
     private int[] points;
+
     private GameObject go;
 
-    // Use this for initialization
+    void Start()
+    {
+        points = new int[ NetworkManager.singleton.matchSize ];
+    }
+        
     /*
     void Start()
     {
@@ -61,14 +67,13 @@ public class PointManager : NetworkBehaviour
     }
     */
 
-    public void addPoint(Transform player, int num)
+    public void addPoint(int connID, int num)
     {
-        for (int i = 0; i < players.Count; i++)
-            if (player.Equals(players[i]))
-                points[i] += num;
-        updatePoints();
+        points[connID] += num;
+        //updatePoints();
     }
 
+    /*
     private void updatePoints()
     {
         float tot = 0;
@@ -89,6 +94,7 @@ public class PointManager : NetworkBehaviour
             oldDimension += dim;
         }
     }
+    */
 
     void Awake()
     {
