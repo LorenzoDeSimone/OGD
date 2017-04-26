@@ -9,9 +9,15 @@ public class Collectable : NetworkBehaviour
     {
         if (coll.gameObject.CompareTag("Player"))
         {
-            NetworkManager.singleton.GetComponent<PointManager>().addPoint(
-                coll.gameObject.transform, 1);
+            CallAddPointOnServer(coll);
             gameObject.SetActive(false);
         }
+    }
+
+    [Server]
+    private static void CallAddPointOnServer(Collision2D coll)
+    {
+        GameObject.FindGameObjectWithTag("OnlineGameManager").GetComponent<PointManager>().addPoint(
+            coll.gameObject.transform, 1);
     }
 }

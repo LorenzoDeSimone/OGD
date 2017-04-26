@@ -41,6 +41,7 @@ public class SpawnManager : NetworkBehaviour
         }
 
         StartCoroutine(rainOfCollectibles(10));
+
         StartCoroutine(startGame());
         //platformSpawner[Random.Range(0, platformSpawner.Count)].dropCollectables();
     }
@@ -50,13 +51,17 @@ public class SpawnManager : NetworkBehaviour
         int i = 0;
         float angle;
         Transform tr;
+
         while (number > i)
         {
             tr = platforms[Random.Range(0, platforms.Count)];
             angle = Random.Range(0, 360) * Mathf.Deg2Rad;
+
             Vector3 pos = tr.position + new Vector3((tr.gameObject.GetComponent<Collider2D>().bounds.size.x / 2 + 1) * Mathf.Cos(angle), (tr.gameObject.GetComponent<Collider2D>().bounds.size.y / 2 + 1) * Mathf.Sin(angle), 0);
             newCollectable(pos);
+
             yield return new WaitForSeconds(dropSpeed);
+
             i++;
         }
     }
@@ -96,7 +101,7 @@ public class SpawnManager : NetworkBehaviour
         countdownCounter.text = "";
         */
 
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(5);
         
         // Activation Player Movement
 
@@ -104,16 +109,17 @@ public class SpawnManager : NetworkBehaviour
         {
             ActivateSpawner(i);
         }
+
     }
 
-    [Client]
+    [ClientCallback]
     private void ActivateCollectable(Vector3 position, int chosen)
     {
         collectables[chosen].transform.position = position;
         collectables[chosen].SetActive(true);
     }
 
-    [Client]
+    [ClientCallback]
     private void ActivateSpawner(int i)
     {
         platformFixedSpawner[i].setEnabled(true);
