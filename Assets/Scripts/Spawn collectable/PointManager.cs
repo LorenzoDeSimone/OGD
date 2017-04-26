@@ -8,46 +8,55 @@ public class PointManager : NetworkBehaviour
 {
     public static PointManager instance = null;
 
+    public GameObject pointBar;
+
     private List<Transform> players = new List<Transform>();
-    private Vector3 barCenterPosition;
     private GameObject[] bar;
-    private float barWidth;
-    private float barHeight;
     private int[] points;
 
-	// Use this for initialization
-	void Start ()
+    // Use this for initialization
+    void Start()
     {
         int numPlayer = 0;
-		foreach (GameObject go in GameObject.FindGameObjectsWithTag("Player"))
+        foreach (GameObject go in GameObject.FindGameObjectsWithTag("Player"))
         {
             players.Add(go.GetComponent<Transform>());
             numPlayer++;
         }
         points = new int[numPlayer];
         bar = new GameObject[numPlayer];
-        bar[0] = transform.GetChild(0).GetChild(0).gameObject;
-        barWidth = bar[0].GetComponent<RectTransform>().sizeDelta.x / 100 * Screen.width;
-        barHeight = bar[0].GetComponent<RectTransform>().sizeDelta.y / 100 * Screen.height;
-        barCenterPosition = new Vector3(bar[0].transform.position.x, barHeight * 2, 0);
+        bar[0] = pointBar;
+
+        RectTransform rt = bar[0].GetComponent<RectTransform>();
+        Vector2 v2 = new Vector2();
+        float oldDimension = 0, dim = 1 / players.Count;
+        
         for (int i = 0; i < points.Length; i++)
         {
             points[i] = 0;
             if (i > 0)
                 bar[i] = Instantiate(bar[0], bar[0].transform.parent);
             bar[i].SetActive(true);
-            RectTransform rt = bar[i].GetComponent<RectTransform>();
-            rt.sizeDelta = new Vector2(barWidth / players.Count, barHeight);
-            rt.position = new Vector3(barCenterPosition.x - barWidth / 2 + (i + 1f) * barWidth / numPlayer - barWidth / 2 / numPlayer, barCenterPosition.y, barCenterPosition.z);
-            bar[i].gameObject.GetComponent<Image>().color = new PlayerColor().color[i];
+            rt = bar[i].GetComponent<RectTransform>();
+
+            v2 = rt.anchorMin;
+            v2.x = oldDimension;
+            rt.anchorMin = v2;
+            v2 = rt.anchorMax;
+            v2.x = oldDimension + dim;
+            rt.anchorMax = v2;
+            oldDimension += dim;
+
+            bar[i].gameObject.GetComponent<Image>().color = PlayerColor.color[i];
+            players[i].gameObject.GetComponent<SpriteRenderer>().color = PlayerColor.color[i];
         }
-	}
-	
-	// Update is called once per frame
-	void Update ()
+    }
+
+    // Update is called once per frame
+    void Update()
     {
-		
-	}
+
+    }
 
     public void addPoint(Transform player, int num)
     {
@@ -60,16 +69,21 @@ public class PointManager : NetworkBehaviour
     private void updatePoints()
     {
         float tot = 0;
-        float oldDimensions = 0;
+        Vector2 v2 = new Vector2();
+        float oldDimension = 0, dim = 0;
         for (int i = 0; i < players.Count; i++)
             tot += points[i];
         for (int i = 0; i < players.Count; i++)
         {
-            float dim =  points[i] / tot;
+            dim = points[i] / tot;
             RectTransform rt = bar[i].GetComponent<RectTransform>();
-            rt.sizeDelta = new Vector2(dim * barWidth, barHeight);
-            rt.position = new Vector3(barCenterPosition.x - barWidth / 2 + oldDimensions + dim * barWidth / 2, barCenterPosition.y, barCenterPosition.z);
-            oldDimensions += dim * barWidth;
+            v2 = rt.anchorMin;
+            v2.x = oldDimension;
+            rt.anchorMin = v2;
+            v2 = rt.anchorMax;
+            v2.x = oldDimension + dim;
+            rt.anchorMax = v2;
+            oldDimension += dim;
         }
     }
 

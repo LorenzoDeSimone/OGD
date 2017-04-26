@@ -82,6 +82,7 @@ public class SpawnManager : NetworkBehaviour
 
     private IEnumerator startGame()
     {
+        /*
         Text countdownCounter = GetComponentInChildren<Text>();
         countdownCounter.text = "3";
         yield return new WaitForSeconds(1);
@@ -92,7 +93,10 @@ public class SpawnManager : NetworkBehaviour
         countdownCounter.text = "GO";
         yield return new WaitForSeconds(1);
         countdownCounter.text = "";
+        */
 
+        yield return new WaitForSeconds(2);
+        
         // Activation Player Movement
 
         for (int i = 0; i < platformFixedSpawner.Count; i++)
