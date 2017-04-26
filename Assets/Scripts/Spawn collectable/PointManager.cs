@@ -13,6 +13,7 @@ public class PointManager : NetworkBehaviour
     private List<Transform> players = new List<Transform>();
     private GameObject[] bar;
     private int[] points;
+    private GameObject go;
 
     // Use this for initialization
     void Start()
@@ -22,6 +23,7 @@ public class PointManager : NetworkBehaviour
         {
             players.Add(go.GetComponent<Transform>());
             numPlayer++;
+            Debug.LogError("cacca");
         }
         points = new int[numPlayer];
         bar = new GameObject[numPlayer];
@@ -35,7 +37,12 @@ public class PointManager : NetworkBehaviour
         {
             points[i] = 0;
             if (i > 0)
-                bar[i] = Instantiate(bar[0], bar[0].transform.parent);
+            {
+
+                go = Instantiate(bar[0], bar[0].transform.parent);
+                NetworkServer.Spawn(go);
+                bar[i] = go;
+            }
             bar[i].SetActive(true);
             rt = bar[i].GetComponent<RectTransform>();
 

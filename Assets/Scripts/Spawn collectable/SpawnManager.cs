@@ -16,6 +16,7 @@ public class SpawnManager : NetworkBehaviour
     private List<PlatformFixedSpawner> platformFixedSpawner = new List<PlatformFixedSpawner>();
     private List<GameObject> collectables = new List<GameObject>();
     private List<GameObject> collectablesBig = new List<GameObject>();
+    private GameObject go;
 
     // Use this for initialization
     void Start()
@@ -30,10 +31,12 @@ public class SpawnManager : NetworkBehaviour
         }
         for (int i = 0; i < 10; i++)
         {
-            collectables.Add(Instantiate(CollectablePrefab, transform));
+            go = Instantiate(CollectablePrefab, transform);
+            NetworkServer.Spawn(go);
+            collectables.Add(go);
             collectables[i].SetActive(false);
-            collectablesBig.Add(Instantiate(CollectablePrefabBig, transform));
-            collectablesBig[i].SetActive(false);
+            //collectablesBig.Add(Instantiate(CollectablePrefabBig, transform));
+            //collectablesBig[i].SetActive(false);
         }
 
         StartCoroutine(rainOfCollectibles(10));
