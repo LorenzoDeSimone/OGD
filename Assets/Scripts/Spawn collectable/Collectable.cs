@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Networking;
 
 public class Collectable : NetworkBehaviour
@@ -18,12 +16,12 @@ public class Collectable : NetworkBehaviour
 
     }
 
-    private void OnCollisionEnter2D(Collision2D coll)
+    private void OnTriggerEnter(Collider other)
     {
-        if (coll.gameObject.tag == "Player")
+        if (other.CompareTag("Player"))
         {
             gameObject.SetActive(false);
-            PointManager.instance.addPoint(coll.gameObject.transform, 1);
+            PointManager.instance.addPoint(other.transform, 1);
         }
     }
 }

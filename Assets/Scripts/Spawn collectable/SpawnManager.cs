@@ -45,12 +45,6 @@ public class SpawnManager : NetworkBehaviour
         //platformSpawner[Random.Range(0, platformSpawner.Count)].dropCollectables();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     private IEnumerator rainOfCollectibles(int number)
     {
         int i = 0;
