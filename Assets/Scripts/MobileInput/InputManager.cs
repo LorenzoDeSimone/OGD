@@ -31,20 +31,22 @@ public class InputManager : NetworkBehaviour {
 
     //Setters value from buttons
     public void SetCounterclockwiseButton(bool isPressed)
-    { counterclockwisePressed = isPressed; }
-
-    public void SetClockwiseButton(bool isPressed)
-    { clockwisePressed = isPressed; }
-
-    public void SetRocketButton(bool isPressed)
     {
-        if (isPressed)
-            localPlayer.Shoot();
+        counterclockwisePressed = isPressed;
     }
 
-    public void SetJumpButton(bool isPressed)
+    public void SetClockwiseButton(bool isPressed)
     {
-        if (isPressed)
-          localPlayer.Jump();
+        clockwisePressed = isPressed;
+    }
+
+    public void SetRocketButton()
+    {
+        localPlayer.Shoot();
+    }
+
+    public void SetJumpButton()
+    {
+        localPlayer.Jump();
     }
 }
