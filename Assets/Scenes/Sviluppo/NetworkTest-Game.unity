@@ -125,7 +125,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &163136408
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1328,11 +1328,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4223467207675448, guid: 25cb73523442f584aa52cc61ecddb0e1, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 3.2
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 4223467207675448, guid: 25cb73523442f584aa52cc61ecddb0e1, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -8.9
+      value: -8.5
       objectReference: {fileID: 0}
     - target: {fileID: 4223467207675448, guid: 25cb73523442f584aa52cc61ecddb0e1, type: 2}
       propertyPath: m_LocalPosition.z
@@ -1358,15 +1358,15 @@ Prefab:
       propertyPath: m_RootOrder
       value: 7
       objectReference: {fileID: 0}
-    - target: {fileID: 1825933286919356, guid: 25cb73523442f584aa52cc61ecddb0e1, type: 2}
-      propertyPath: m_Name
-      value: Fake Rocket
-      objectReference: {fileID: 0}
     - target: {fileID: 114064576401541314, guid: 25cb73523442f584aa52cc61ecddb0e1,
         type: 2}
       propertyPath: target
       value: 
       objectReference: {fileID: 174349090}
+    - target: {fileID: 1825933286919356, guid: 25cb73523442f584aa52cc61ecddb0e1, type: 2}
+      propertyPath: m_Name
+      value: Fake Rocket
+      objectReference: {fileID: 0}
     - target: {fileID: 1825933286919356, guid: 25cb73523442f584aa52cc61ecddb0e1, type: 2}
       propertyPath: m_IsActive
       value: 0
@@ -1420,7 +1420,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1365839038
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1517,7 +1517,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1378861573
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1660,7 +1660,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1485215204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1976,7 +1976,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1686784273
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2073,7 +2073,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1702684367
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2170,7 +2170,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1738345368
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2272,7 +2272,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1818664395
 MonoBehaviour:
   m_ObjectHideFlags: 0

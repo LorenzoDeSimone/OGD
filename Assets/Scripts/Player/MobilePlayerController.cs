@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections.Generic;
-using Assets.Scripts.Player;
-
 
 namespace Assets.Scripts.Player
 {
@@ -54,8 +52,8 @@ namespace Assets.Scripts.Player
         {
             groundCheck1 = myTransform.Find("Ground Check 1").position;
             groundCheck2 = myTransform.Find("Ground Check 2").position;
-            if (IsGrounded())
-                Debug.Log("On Land!");
+            //if (IsGrounded())
+            //    Debug.Log("On Land!");
             myGround = GetMyGround();
             ApplyRotation(false);
         }
@@ -204,7 +202,7 @@ namespace Assets.Scripts.Player
                 platformEdge = Physics2D.Raycast(whereGroundShouldBe, BackRaycastDirection, Mathf.Infinity, LayerMask.GetMask("Walkable"));
                 if (platformEdge.collider !=null && platformEdge.collider.gameObject.Equals(myGravityField.gameObject))
                 {
-                    Debug.Log("Myland!");
+                    //Debug.Log("Myland!");
                     recalculatedNextPlayerPoint = platformEdge.point + platformEdge.normal * getCharacterCircleCollider2D().radius;
                     movementVersor = (recalculatedNextPlayerPoint - myPosition).normalized;
 
@@ -238,9 +236,9 @@ namespace Assets.Scripts.Player
             /*Vector3 rocketOffsetStart = (rocket.transform.position - myTransform.position).normalized * 
                                          (getCharacterCircleCollider2D().radius + 
                                          Mathf.Max(rocket.GetComponent<CapsuleCollider2D>().size.x, rocket.GetComponent<CapsuleCollider2D>().size.y));*/
-            rocket.transform.position = myTransform.position;// + rocketOffsetStart;
+            rocket.transform.position = myTransform.position; //+ rocketOffsetStart;
             rocket.GetComponent<Rocket>().target = target;
-            rocket.GetComponent<Rocket>().playerWhoShot = gameObject;
+            rocket.GetComponent<Rocket>().SetPlayerWhoShot(gameObject);
             rocket.gameObject.SetActive(true);
         }
 
@@ -334,9 +332,9 @@ namespace Assets.Scripts.Player
         IEnumerator<WaitForSeconds> jumpControlStop()
         {
             freeFromJumpBlock = false;
-            Debug.Log("disabling");
+            //Debug.Log("disabling");
             yield return new WaitForSeconds(jumpControlStopWindow);
-            Debug.Log("enabling");
+            //Debug.Log("enabling");
             freeFromJumpBlock = true;
         }
     }

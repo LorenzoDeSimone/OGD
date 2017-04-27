@@ -13,7 +13,17 @@ public class Rocket : MonoBehaviour
     private Vector2 targetDirection;
     private Transform myTransform;
 
-    public GameObject playerWhoShot;
+    private GameObject playerWhoShotMe;
+
+    public GameObject GetPlayerWhoShot()
+    {
+        return playerWhoShotMe;
+    }
+
+    public void SetPlayerWhoShot(GameObject player)
+    {
+        playerWhoShotMe = player;
+    }
 
     // Use this for initialization
     void Start ()
@@ -49,29 +59,44 @@ public class Rocket : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        //Target management
         MobilePlayerController newTargetPlayer = collider.GetComponent<MobilePlayerController>();
         Target target = collider.GetComponent<Target>();
         GravityField gravityField = collider.GetComponent<GravityField>();
 
+        //What to do if collider is a target
         if (target != null)
         {
             Debug.Log("Target Hit!");
             Destroy(this.gameObject);
         }
-        else if(gravityField !=null)
+
+        //What to do if collider is a gravity field
+        if (gravityField !=null)
         {
             Debug.Log("Platform Hit!");
             Destroy(this.gameObject);
         }
 
-        /*Player hit not working right now: it hits the player Who shot immediately =(
+        //What to do if collider is a player
         if (newTargetPlayer != null)
-        {
-            Debug.Log("Player Hit!");
-            //Insert methods for losing coins
-        }*/
-
+        { 
+            if (newTargetPlayer.gameObject.Equals(playerWhoShotMe))
+            {
+                Debug.Log("My rocket can do me no harm!");
+            }
+            else
+            {
+                Debug.Log("Other Player Hit!");
+                Destroy(this.gameObject);
+                //Insert methods for losing coins
+            }
+        }
     }
 
+    private void OnTriggerExit2D(Collider2D collider)
+    {
+        MobilePlayerController newTargetPlayer = collider.GetComponent<MobilePlayerController>();
+        if (newTargetPlayer != null && newTargetPlayer.gameObject.Equals(playerWhoShotMe))
+            playerWhoShotMe = null;
+    }
 }
