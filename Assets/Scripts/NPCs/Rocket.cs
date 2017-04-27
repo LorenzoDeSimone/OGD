@@ -66,14 +66,14 @@ public class Rocket : MonoBehaviour
         //What to do if collider is a target
         if (target != null)
         {
-            Debug.Log("Target Hit!");
+            //Debug.Log("Target Hit!");
             Destroy(this.gameObject);
         }
 
         //What to do if collider is a gravity field
         if (gravityField !=null)
         {
-            Debug.Log("Platform Hit!");
+            //Debug.Log("Platform Hit!");
             Destroy(this.gameObject);
         }
 
@@ -82,11 +82,11 @@ public class Rocket : MonoBehaviour
         { 
             if (newTargetPlayer.gameObject.Equals(playerWhoShotMe))
             {
-                Debug.Log("My rocket can do me no harm!");
+                //Debug.Log("My rocket can do me no harm!");
             }
             else
             {
-                Debug.Log("Other Player Hit!");
+                //Debug.Log("Other Player Hit!");
                 Destroy(this.gameObject);
                 //Insert methods for losing coins
             }
@@ -97,6 +97,6 @@ public class Rocket : MonoBehaviour
     {
         MobilePlayerController newTargetPlayer = collider.GetComponent<MobilePlayerController>();
         if (newTargetPlayer != null && newTargetPlayer.gameObject.Equals(playerWhoShotMe))
-            playerWhoShotMe = null;
+            playerWhoShotMe = null;//The rocket forgets who shot it and it can hit him too after it exits first time from the shooter player trigger
     }
 }

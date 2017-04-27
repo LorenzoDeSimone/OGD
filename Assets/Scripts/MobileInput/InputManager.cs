@@ -42,7 +42,7 @@ public class InputManager : NetworkBehaviour {
 
     public void SetRocketButton()
     {
-        Debug.Log("Shoot!");
+        //Debug.Log("Shoot!");
         localPlayer.Shoot();
     }
 

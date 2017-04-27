@@ -21,6 +21,7 @@ namespace Assets.Scripts.Player
         public float jumpControlStopWindow = 0.2f;
 
         private RaycastHit2D myGround;
+        private GameObject nearestTarget;
         private Transform myTransform;
 
         private Vector2 groundCheck1, groundCheck2;
@@ -32,6 +33,8 @@ namespace Assets.Scripts.Player
                
         public enum MOVEMENT_DIRECTIONS { COUNTERCLOCKWISE, CLOCKWISE, STOP }
 
+        private GameObject myTargetMarker;
+
         [ClientCallback]
         void Start()
         {
@@ -40,8 +43,10 @@ namespace Assets.Scripts.Player
 
             myGravityFields = new HashSet<GameObject>();
             myTargets = new HashSet<GameObject>();
+            myTargetMarker = (GameObject)Instantiate(Resources.Load("Prefabs/Player/Target Marker"));
 
             myGround = GetMyGround();
+            nearestTarget = getNearestTargetAndMarkIt();
 
             groundCheck1 = myTransform.Find("Ground Check 1").position;
             groundCheck2 = myTransform.Find("Ground Check 2").position;
@@ -52,9 +57,12 @@ namespace Assets.Scripts.Player
         {
             groundCheck1 = myTransform.Find("Ground Check 1").position;
             groundCheck2 = myTransform.Find("Ground Check 2").position;
-            //if (IsGrounded())
-            //    Debug.Log("On Land!");
+
+            if (IsGrounded())
+                Debug.Log("On Land!");
+            myTargetMarker.GetComponent<SpriteRenderer>().color = GetComponent<SpriteRenderer>().color;//REMOVE FROM UPDATE ASAP
             myGround = GetMyGround();
+            nearestTarget = getNearestTargetAndMarkIt();
             ApplyRotation(false);
         }
 
@@ -192,12 +200,21 @@ namespace Assets.Scripts.Player
             Vector2 BackRaycastDirection = -movementVersor;//(myGravityField.transform.position - myTransform.position).normalized;
 
 
+
+            //Edge detection code
+
+            //Casts a ray with the direction of the antinormal of the playne starting from the next predicted player position to see if there will be ground
             RaycastHit2D nextGroundCheck = Physics2D.Raycast(nextPlayerPoint, movementPerpendicularDown,
                                                                getCharacterCircleCollider2D().radius * EdgeCheckMultiplier,
                                                                LayerMask.GetMask("Walkable"));
 
-            if (nextGroundCheck.collider == null && IsGrounded())//Edge detected
+            if (nextGroundCheck.collider == null && IsGrounded())//Edge detected: we obtain the next position on the platform that is grounded
             {
+                /*Little Raycast scheme! P is player, arrows are raycasts, # is platform, N next player position corrected by the edge detection algorithm
+                P--------->              N-P  the new corrected direction. Debug.DrawLine should help to understand what is going on =)
+                ####<->N--|
+                ####
+                */
                 whereGroundShouldBe = nextPlayerPoint + movementPerpendicularDown * getCharacterCircleCollider2D().radius * EdgeCheckMultiplier;
                 platformEdge = Physics2D.Raycast(whereGroundShouldBe, BackRaycastDirection, Mathf.Infinity, LayerMask.GetMask("Walkable"));
                 if (platformEdge.collider !=null && platformEdge.collider.gameObject.Equals(myGravityField.gameObject))
@@ -215,29 +232,25 @@ namespace Assets.Scripts.Player
 
             float distance = Vector2.Distance(myGround.point, myTransform.position);
 
-            if (IsGrounded())
+            if (IsGrounded())//We apply movement vector directly is player is grounded
                 transform.position += new Vector3(movementVersor.x, movementVersor.y) * speed * Time.fixedDeltaTime;
-            else
+            else//Otherwise, we decrease air control proportionally to his distance to the ground
                 transform.position += new Vector3(movementVersor.x, movementVersor.y) * speed * 1/Mathf.Pow(distance, airResistance) * Time.fixedDeltaTime;
         }
 
         public void Shoot()
         {
-            GameObject target= getNearestTarget();
-
-            if(target==null)
+            if(nearestTarget==null)
             {
-                Debug.Log("No targets in my area!");
+                //Debug.Log("No targets in my area!");
                 return;
             }
 
             GameObject rocket = (GameObject)Instantiate(Resources.Load("Prefabs/NPCs/Rocket"));
 
-            /*Vector3 rocketOffsetStart = (rocket.transform.position - myTransform.position).normalized * 
-                                         (getCharacterCircleCollider2D().radius + 
-                                         Mathf.Max(rocket.GetComponent<CapsuleCollider2D>().size.x, rocket.GetComponent<CapsuleCollider2D>().size.y));*/
-            rocket.transform.position = myTransform.position; //+ rocketOffsetStart;
-            rocket.GetComponent<Rocket>().target = target;
+            rocket.transform.position = myTransform.position;
+            rocket.GetComponent<SpriteRenderer>().color = GetComponent<SpriteRenderer>().color;
+            rocket.GetComponent<Rocket>().target = nearestTarget;
             rocket.GetComponent<Rocket>().SetPlayerWhoShot(gameObject);
             rocket.gameObject.SetActive(true);
         }
@@ -246,11 +259,11 @@ namespace Assets.Scripts.Player
         {
             if (IsGrounded())
             {
-                StartCoroutine(jumpControlStop());
+                StartCoroutine(jumpControlStop());//We disable player movement input for a very small time in order to prevent some glitchy behaviour on critic situations
+                                                  //might need a better solution for the future, works not so bad for now.
                 RaycastHit2D myGround = GetMyGround();
                 //ApplyRotation(true);
                 GetComponent<Rigidbody2D>().AddForce(myTransform.up * jumpPower * Time.fixedDeltaTime);
-                //myRigidBody.velocity = myGround.normal * jumpPower;// * Time.fixedDeltaTime;
             }
         }
 
@@ -306,7 +319,7 @@ namespace Assets.Scripts.Player
             return null;
         }
 
-        private GameObject getNearestTarget()
+        private GameObject getNearestTargetAndMarkIt()
         {
             float candidateMinDistance = float.MaxValue;
             GameObject candidateNearestTarget = null;
@@ -321,6 +334,16 @@ namespace Assets.Scripts.Player
                     candidateMinDistance = currDistance;
                 }
             }
+
+            //Mark nearest target
+            if (candidateNearestTarget != null)
+            {
+                myTargetMarker.gameObject.SetActive(true);
+                myTargetMarker.transform.position = candidateNearestTarget.transform.position;
+            }
+            else
+                myTargetMarker.gameObject.SetActive(false);
+
             return candidateNearestTarget;
         }
 
