@@ -46,7 +46,7 @@ namespace Assets.Scripts.Player
             myTargetMarker = (GameObject)Instantiate(Resources.Load("Prefabs/Player/Target Marker"));
 
             myGround = GetMyGround();
-            nearestTarget = getNearestTargetAndMarkIt();
+            nearestTarget = GetNearestTargetAndMarkIt();
 
             groundCheck1 = myTransform.Find("Ground Check 1").position;
             groundCheck2 = myTransform.Find("Ground Check 2").position;
@@ -62,7 +62,7 @@ namespace Assets.Scripts.Player
                 Debug.Log("On Land!");
             myTargetMarker.GetComponent<SpriteRenderer>().color = GetComponent<SpriteRenderer>().color;//REMOVE FROM UPDATE ASAP
             myGround = GetMyGround();
-            nearestTarget = getNearestTargetAndMarkIt();
+            nearestTarget = GetNearestTargetAndMarkIt();
             ApplyRotation(false);
         }
 
@@ -78,7 +78,7 @@ namespace Assets.Scripts.Player
             Vector2 gravityVersor;
             GravityField myGravityField = myGround.collider.GetComponent<GravityField>();
 
-            if (Vector2.Distance(myTransform.position, myGround.point) > getCharacterCircleCollider2D().radius * 10f)
+            if (Vector2.Distance(myTransform.position, myGround.point) > GetCharacterCircleCollider2D().radius * 10f)
                 gravityVersor = (myGravityField.gameObject.transform.position - myTransform.position).normalized;
             else
                 gravityVersor = -myGround.normal;
@@ -205,7 +205,7 @@ namespace Assets.Scripts.Player
 
             //Casts a ray with the direction of the antinormal of the playne starting from the next predicted player position to see if there will be ground
             RaycastHit2D nextGroundCheck = Physics2D.Raycast(nextPlayerPoint, movementPerpendicularDown,
-                                                               getCharacterCircleCollider2D().radius * EdgeCheckMultiplier,
+                                                               GetCharacterCircleCollider2D().radius * EdgeCheckMultiplier,
                                                                LayerMask.GetMask("Walkable"));
 
             if (nextGroundCheck.collider == null && IsGrounded())//Edge detected: we obtain the next position on the platform that is grounded
@@ -215,12 +215,12 @@ namespace Assets.Scripts.Player
                 ####<->N--|
                 ####
                 */
-                whereGroundShouldBe = nextPlayerPoint + movementPerpendicularDown * getCharacterCircleCollider2D().radius * EdgeCheckMultiplier;
+                whereGroundShouldBe = nextPlayerPoint + movementPerpendicularDown * GetCharacterCircleCollider2D().radius * EdgeCheckMultiplier;
                 platformEdge = Physics2D.Raycast(whereGroundShouldBe, BackRaycastDirection, Mathf.Infinity, LayerMask.GetMask("Walkable"));
                 if (platformEdge.collider !=null && platformEdge.collider.gameObject.Equals(myGravityField.gameObject))
                 {
                     //Debug.Log("Myland!");
-                    recalculatedNextPlayerPoint = platformEdge.point + platformEdge.normal * getCharacterCircleCollider2D().radius;
+                    recalculatedNextPlayerPoint = platformEdge.point + platformEdge.normal * GetCharacterCircleCollider2D().radius;
                     movementVersor = (recalculatedNextPlayerPoint - myPosition).normalized;
 
                     Debug.DrawLine(myTransform.position, nextPlayerPoint, Color.blue);
@@ -307,7 +307,7 @@ namespace Assets.Scripts.Player
 
         }
 
-        private CircleCollider2D getCharacterCircleCollider2D()
+        public CircleCollider2D GetCharacterCircleCollider2D()
         {
             CircleCollider2D[] colliders = GetComponents<CircleCollider2D>();
 
@@ -319,7 +319,7 @@ namespace Assets.Scripts.Player
             return null;
         }
 
-        private GameObject getNearestTargetAndMarkIt()
+        private GameObject GetNearestTargetAndMarkIt()
         {
             float candidateMinDistance = float.MaxValue;
             GameObject candidateNearestTarget = null;

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
+using Assets.Scripts.Player;
 
 public class Collectable : NetworkBehaviour
 {
@@ -8,16 +9,22 @@ public class Collectable : NetworkBehaviour
     private bool activeState = true;
     */
 
-    private void OnCollisionEnter2D(Collision2D coll)
+    private void OnTriggerEnter2D(Collider2D coll)
     {
-        if (coll.gameObject.CompareTag("Player"))
+        MobilePlayerController player = coll.gameObject.GetComponent<MobilePlayerController>();
+
+        if (player && coll.Equals(player.GetCharacterCircleCollider2D()))
         {
-            if(isServer)
+            Debug.Log("Collision with Player");
+
+            if (isServer)
             {
+                Debug.Log("On Server");
                 RpcDeactivateThis();
             }
             else
             {
+                Debug.Log("On Client");
                 CmdDeactivateThis();
             }
         }
