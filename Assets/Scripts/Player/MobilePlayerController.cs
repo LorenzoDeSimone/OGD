@@ -233,9 +233,9 @@ namespace Assets.Scripts.Player
             float distance = Vector2.Distance(myGround.point, myTransform.position);
 
             if (IsGrounded())//We apply movement vector directly is player is grounded
-                transform.position += new Vector3(movementVersor.x, movementVersor.y) * speed * Time.fixedDeltaTime;
+                myRigidBody.MovePosition(myRigidBody.position + movementVersor * speed * Time.fixedDeltaTime);
             else//Otherwise, we decrease air control proportionally to his distance to the ground
-                transform.position += new Vector3(movementVersor.x, movementVersor.y) * speed * 1/Mathf.Pow(distance, airResistance) * Time.fixedDeltaTime;
+                myRigidBody.MovePosition(myRigidBody.position + movementVersor * speed * 1 / Mathf.Pow(distance, airResistance) * Time.fixedDeltaTime);
         }
 
         public void Shoot()
