@@ -50,7 +50,7 @@ namespace Assets.Scripts.Networking
 
         private void KillNetwork()
         {
-            Debug.LogError("Match Ended");
+            Debug.LogWarning("Match Ended");
             lobbyController.ResetNetworkState();
         }
     }

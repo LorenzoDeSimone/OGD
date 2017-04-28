@@ -7,6 +7,9 @@ using UnityEngine.UI;
 
 public class SpawnManager : NetworkBehaviour
 {
+
+    
+    /*
     public GameObject CollectablePrefab;
     public GameObject CollectablePrefabBig;
 
@@ -95,7 +98,6 @@ public class SpawnManager : NetworkBehaviour
 
     private IEnumerator startGame()
     {
-        /*
         Text countdownCounter = GetComponentInChildren<Text>();
         countdownCounter.text = "3";
         yield return new WaitForSeconds(1);
@@ -106,7 +108,6 @@ public class SpawnManager : NetworkBehaviour
         countdownCounter.text = "GO";
         yield return new WaitForSeconds(1);
         countdownCounter.text = "";
-        */
 
         yield return new WaitForSeconds(2);
         
@@ -131,4 +132,5 @@ public class SpawnManager : NetworkBehaviour
     {
         platformFixedSpawner[i].setEnabled(true);
     }
+    */
 }

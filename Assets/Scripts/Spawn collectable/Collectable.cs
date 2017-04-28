@@ -1,23 +1,56 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Networking;
 
 public class Collectable : NetworkBehaviour
 {
+    /*
+    [SyncVar]
+    private bool activeState = true;
+    */
+
     private void OnCollisionEnter2D(Collision2D coll)
     {
         if (coll.gameObject.CompareTag("Player"))
         {
-            CallAddPointOnServer( NetworkClient.allClients[0].connection.connectionId );
-            gameObject.SetActive(false);
+            if(isServer)
+            {
+                RpcDeactivateThis();
+            }
+            else
+            {
+                CmdDeactivateThis();
+            }
         }
     }
 
-    [Server]
-    private static void CallAddPointOnServer(int connID)
+    /*
+    private void Update()
     {
-        GameObject.FindGameObjectWithTag("OnlineGameManager").GetComponent<PointManager>().addPoint(
-            connID, 1);
+        gameObject.SetActive(activeState);
     }
+    */
+
+    [ClientRpc]
+    private void RpcDeactivateThis()
+    {
+        gameObject.SetActive(false);
+    }
+
+    [Command]
+    private void CmdDeactivateThis()
+    {
+        gameObject.SetActive(false);
+    }
+
+    /*
+    private void OnEnable()
+    {
+        activeState = true;
+    }
+
+    private void OnDisable()
+    {
+        activeState = false;
+    }
+    */
 }
