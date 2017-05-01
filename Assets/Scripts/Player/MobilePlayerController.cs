@@ -15,14 +15,15 @@ namespace Assets.Scripts.Player
         public float airResistance = 0.4f;
 
         private static readonly float rotationEpsilon = 0.999f;
-        private Rigidbody2D myRigidBody;
         private bool freeFromJumpBlock = true;
 
         public float jumpControlStopWindow = 0.2f;
 
         private RaycastHit2D myGround;
         private GameObject nearestTarget;
+
         private Transform myTransform;
+        private Rigidbody2D myRigidBody;
 
         private Vector2 groundCheck1, groundCheck2;
 
@@ -234,14 +235,15 @@ namespace Assets.Scripts.Player
 
             if (IsGrounded())//We apply movement vector directly is player is grounded
             {
-                //myRigidBody.MovePosition(myRigidBody.position + movementVersor * speed * Time.fixedDeltaTime);
-                myTransform.position = new Vector2(myTransform.position.x, myTransform.position.y) + movementVersor * speed * Time.fixedDeltaTime;
-
+                myRigidBody.position = (myRigidBody.position + movementVersor * speed * Time.fixedDeltaTime);
+                //myRigidBody.AddForce(movementVersor * speed * Time.fixedDeltaTime);
+                //myRigidBody.velocity = movementVersor * speed * Time.fixedDeltaTime;
+                //myTransform.position = new Vector2(myTransform.position.x, myTransform.position.y) + movementVersor * speed * Time.fixedDeltaTime;
             }
             else//Otherwise, we decrease air control proportionally to his distance to the ground
             {
-                //myRigidBody.MovePosition(myRigidBody.position + movementVersor * speed * 1 / Mathf.Pow(distance, airResistance) * Time.fixedDeltaTime);
-                myTransform.position = new Vector2(myTransform.position.x, myTransform.position.y) + movementVersor * speed * 1 / Mathf.Pow(distance, airResistance) * Time.fixedDeltaTime;
+                //myRigidBody.AddForce(movementVersor * speed * Time.fixedDeltaTime);
+                myRigidBody.position = new Vector2(myRigidBody.position.x, myRigidBody.position.y) + movementVersor * speed * 1 / Mathf.Pow(distance, airResistance) * Time.fixedDeltaTime;
             }
         }
 
