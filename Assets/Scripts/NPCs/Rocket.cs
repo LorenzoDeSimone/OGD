@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 using Assets.Scripts.Player;
 
-public class Rocket : MonoBehaviour
+public class Rocket : NetworkBehaviour
 {
     public GameObject target;
     [Range(0.0f, 1.0f)]
@@ -87,7 +88,7 @@ public class Rocket : MonoBehaviour
             else
             {
                 //Debug.Log("Other Player Hit!");
-                Destroy(this.gameObject);
+                //Destroy(this.gameObject);
                 //Insert methods for losing coins
             }
         }

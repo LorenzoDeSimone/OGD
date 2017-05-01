@@ -247,7 +247,8 @@ namespace Assets.Scripts.Player
             }
         }
 
-        public void Shoot()
+        [Command]
+        public void CmdShoot()
         {
             if(nearestTarget==null)
             {
@@ -262,6 +263,7 @@ namespace Assets.Scripts.Player
             rocket.GetComponent<Rocket>().target = nearestTarget;
             rocket.GetComponent<Rocket>().SetPlayerWhoShot(gameObject);
             rocket.gameObject.SetActive(true);
+            NetworkServer.Spawn(rocket);
         }
 
         public void Jump()

@@ -24,6 +24,8 @@ GameObject:
   - component: {fileID: 50122437641793268}
   - component: {fileID: 95584780411346106}
   - component: {fileID: 70803512253449226}
+  - component: {fileID: 114945957004123604}
+  - component: {fileID: 114536548182572266}
   m_Layer: 0
   m_Name: Rocket
   m_TagString: Untagged
@@ -110,6 +112,59 @@ MonoBehaviour:
   target: {fileID: 0}
   steeringMultiplier: 0.1
   speed: 10
+--- !u!114 &114536548182572266
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1825933286919356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.1
+  m_SyncRotationAxis: 3
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_VelocityThreshold: 0.0001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
+--- !u!114 &114945957004123604
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1825933286919356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 37
+    i1: 203
+    i2: 115
+    i3: 82
+    i4: 52
+    i5: 66
+    i6: 245
+    i7: 132
+    i8: 170
+    i9: 82
+    i10: 204
+    i11: 97
+    i12: 236
+    i13: 221
+    i14: 176
+    i15: 225
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!212 &212692074092020638
 SpriteRenderer:
   m_ObjectHideFlags: 1

@@ -592,8 +592,8 @@ PlayerSettings:
     UNet: 1
   facebookSdkVersion: 7.9.1
   apiCompatibilityLevel: 2
-  cloudProjectId: f6b5c6b6-fe9f-4619-937d-1a85a6eb13ac
-  projectName: OGD-2017
-  organizationId: splithorizon
+  cloudProjectId: 
+  projectName: 
+  organizationId: 
   cloudEnabled: 0
   enableNewInputSystem: 0
