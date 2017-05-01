@@ -174,7 +174,7 @@ namespace Assets.Scripts.Player
         //Movement routines called by the input manager
         public void Move(MOVEMENT_DIRECTIONS movementDirection)
         {
-            if(!CanMove())
+            if (!CanMove())
                 return;
 
             GravityField myGravityField = myGround.collider.GetComponent<GravityField>();
@@ -217,7 +217,7 @@ namespace Assets.Scripts.Player
                 */
                 whereGroundShouldBe = nextPlayerPoint + movementPerpendicularDown * GetCharacterCircleCollider2D().radius * EdgeCheckMultiplier;
                 platformEdge = Physics2D.Raycast(whereGroundShouldBe, BackRaycastDirection, Mathf.Infinity, LayerMask.GetMask("Walkable"));
-                if (platformEdge.collider !=null && platformEdge.collider.gameObject.Equals(myGravityField.gameObject))
+                if (platformEdge.collider != null && platformEdge.collider.gameObject.Equals(myGravityField.gameObject))
                 {
                     //Debug.Log("Myland!");
                     recalculatedNextPlayerPoint = platformEdge.point + platformEdge.normal * GetCharacterCircleCollider2D().radius;
@@ -233,9 +233,16 @@ namespace Assets.Scripts.Player
             float distance = Vector2.Distance(myGround.point, myTransform.position);
 
             if (IsGrounded())//We apply movement vector directly is player is grounded
-                myRigidBody.MovePosition(myRigidBody.position + movementVersor * speed * Time.fixedDeltaTime);
+            {
+                //myRigidBody.MovePosition(myRigidBody.position + movementVersor * speed * Time.fixedDeltaTime);
+                myTransform.position = new Vector2(myTransform.position.x, myTransform.position.y) + movementVersor * speed * Time.fixedDeltaTime;
+
+            }
             else//Otherwise, we decrease air control proportionally to his distance to the ground
-                myRigidBody.MovePosition(myRigidBody.position + movementVersor * speed * 1 / Mathf.Pow(distance, airResistance) * Time.fixedDeltaTime);
+            {
+                //myRigidBody.MovePosition(myRigidBody.position + movementVersor * speed * 1 / Mathf.Pow(distance, airResistance) * Time.fixedDeltaTime);
+                myTransform.position = new Vector2(myTransform.position.x, myTransform.position.y) + movementVersor * speed * 1 / Mathf.Pow(distance, airResistance) * Time.fixedDeltaTime;
+            }
         }
 
         public void Shoot()
