@@ -52,9 +52,7 @@ namespace Assets.Scripts.Networking
                         m += mis.networkId + "ner\n";
                         Debug.LogError(m);
 
-                        if (mis.currentSize > 0 
-                            && mis.hostNodeId != UnityEngine.Networking.Types.NodeID.Invalid
-                            && mis.networkId.ToString().Length > 4)
+                        if (mis.currentSize > 0)
                         {
                             lobbyController.joiningMatch = true;
                             lobbyController.matchMaker.JoinMatch(mis.networkId, "", "", "", 0, 0,

@@ -230,7 +230,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pointBarSegmentPrefab: {fileID: 0}
-  pointBarSpaceRoot: {fileID: 0}
 --- !u!114 &38238908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -447,7 +446,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pointBarSegmentPrefab: {fileID: 1147678074177196, guid: ec1d0aa644db5404e8ab00727121433c,
     type: 2}
-  pointBarSpaceRoot: {fileID: 0}
 --- !u!1 &221655971
 GameObject:
   m_ObjectHideFlags: 0
@@ -647,7 +645,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 480933418}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8.4, y: 2.6, z: 0}
+  m_LocalPosition: {x: 8.4, y: 1.94, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1642377074}
@@ -716,7 +714,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 671045237}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7.82, y: -10.8, z: 0}
+  m_LocalPosition: {x: -7.82, y: -6.28, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1642377074}
@@ -1167,7 +1165,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1203129037}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8.4, y: -10.8, z: 0}
+  m_LocalPosition: {x: 8.4, y: -6.19, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1642377074}

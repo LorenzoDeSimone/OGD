@@ -42,10 +42,10 @@ namespace Assets.Scripts.Spawn_collectable
                 RpcActivateCollactable(g);
             }
         }
+
         [ClientRpc]
         private void RpcActivateCollactable(GameObject g)
         {
-            Debug.Log("spawning");
             g.GetComponent<Collectable>().SetStateOverNetwork(true);
         }
     }
