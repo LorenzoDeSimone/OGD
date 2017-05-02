@@ -1,13 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using Assets.Scripts.Player;
+using System;
 
 public class Collectable : NetworkBehaviour
 {
-    /*
-    [SyncVar]
-    private bool activeState = true;
-    */
+    public int pointValue = 1;
+    public int pointScaler = 1;
 
     private void OnTriggerEnter2D(Collider2D coll)
     {
@@ -16,6 +15,15 @@ public class Collectable : NetworkBehaviour
         if (player && coll.Equals(player.GetCharacterCircleCollider2D()))
         {
             Debug.Log("Collision with Player");
+
+            try
+            {
+                AddPointsToPlayer(coll.gameObject.GetComponent<PlayerDataHolder>());
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning("Missing Player Data Holder or something really bad!!!\nMessage: "+e.Message);
+            }
 
             if (isServer)
             {
@@ -30,12 +38,10 @@ public class Collectable : NetworkBehaviour
         }
     }
 
-    /*
-    private void Update()
+    private void AddPointsToPlayer(PlayerDataHolder playerDataHolder)
     {
-        gameObject.SetActive(activeState);
+        playerDataHolder.AddPoints(pointValue * pointScaler);
     }
-    */
 
     [ClientRpc]
     private void RpcDeactivateThis()
@@ -48,16 +54,4 @@ public class Collectable : NetworkBehaviour
     {
         gameObject.SetActive(false);
     }
-
-    /*
-    private void OnEnable()
-    {
-        activeState = true;
-    }
-
-    private void OnDisable()
-    {
-        activeState = false;
-    }
-    */
 }

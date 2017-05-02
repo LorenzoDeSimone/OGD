@@ -1,106 +1,80 @@
-﻿using System.Collections;
+﻿using UnityEngine;
+using Assets.Scripts.Player;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Networking;
-using UnityEngine.UI;
 
-public class PointManager : NetworkBehaviour
+public class PointManager : MonoBehaviour
 {
-    public static PointManager instance = null;
+    public GameObject pointBarSegmentPrefab;
+    public GameObject pointBarSpaceRoot;
 
-    public GameObject pointBar;
+    Dictionary<int, RectTransform> ofPlayersAndBars;
+    Dictionary<int, int> ofPlayersAndPoints;
 
-    private List<Transform> players = new List<Transform>();
-    private GameObject[] bar;
+    int pointsTotal = 0;
 
-    private int[] points;
-
-    private GameObject go;
-
-    void Start()
+    private void Start()
     {
-        points = new int[ NetworkManager.singleton.matchSize ];
+        ofPlayersAndBars = new Dictionary<int, RectTransform>();
+        ofPlayersAndPoints = new Dictionary<int, int>();
+
+        PlayerDataHolder.PointSyncEvent += UpdateBar;
     }
-        
-    /*
-    void Start()
-    {
-        int numPlayer = 0;
-        foreach (GameObject go in GameObject.FindGameObjectsWithTag("Player"))
-        {
-            players.Add(go.GetComponent<Transform>());
-            numPlayer++;
-            Debug.LogError("cacca");
-        }
-        points = new int[numPlayer];
-        bar = new GameObject[numPlayer];
-        bar[0] = pointBar;
 
-        RectTransform rt = bar[0].GetComponent<RectTransform>();
-        Vector2 v2 = new Vector2();
-        float oldDimension = 0, dim = 1 / players.Count;
-        
-        for (int i = 0; i < points.Length; i++)
+    private void OnDestroy()
+    {
+        PlayerDataHolder.PointSyncEvent -= UpdateBar;
+    }
+
+    private void UpdateBar(int playerNetID, int playerPoints)
+    {
+        pointsTotal += playerPoints;
+
+        if (!ofPlayersAndBars.ContainsKey(playerNetID))
         {
-            points[i] = 0;
-            if (i > 0)
+            AddNewBar(playerNetID);
+        }
+
+        ofPlayersAndPoints[playerNetID] += playerPoints;
+
+        ScalePointsBars();
+    }
+
+    private void AddNewBar(int playerNetID)
+    {
+        GameObject go = Instantiate(pointBarSegmentPrefab, pointBarSpaceRoot.transform, false);
+        ofPlayersAndBars[playerNetID] = go.GetComponent<RectTransform>();
+        ofPlayersAndPoints[playerNetID] = 0;
+    }
+
+    private void ScalePointsBars()
+    {
+        float offSet = 0.0f;
+        RectTransform rect;
+        Vector3 newAnchorMin;
+        Vector3 newAnchorMax;
+
+        foreach(int k in ofPlayersAndBars.Keys)
+        {
+            rect = ofPlayersAndBars[k];
+
+            newAnchorMin = rect.anchorMin;
+            newAnchorMax = rect.anchorMax;
+
+            newAnchorMin.x = offSet;
+
+            if (ofPlayersAndPoints[k]>0)
             {
-
-                go = Instantiate(bar[0], bar[0].transform.parent);
-                NetworkServer.Spawn(go);
-                bar[i] = go;
+                offSet = (pointsTotal / ofPlayersAndPoints[k]); 
             }
-            bar[i].SetActive(true);
-            rt = bar[i].GetComponent<RectTransform>();
+            else
+            {
+                offSet = 0;
+            }
 
-            v2 = rt.anchorMin;
-            v2.x = oldDimension;
-            rt.anchorMin = v2;
-            v2 = rt.anchorMax;
-            v2.x = oldDimension + dim;
-            rt.anchorMax = v2;
-            oldDimension += dim;
+            newAnchorMax.x = offSet + newAnchorMin.x;
 
-            bar[i].gameObject.GetComponent<Image>().color = PlayerColor.color[i];
-            players[i].gameObject.GetComponent<SpriteRenderer>().color = PlayerColor.color[i];
+            rect.anchorMin = newAnchorMin;
+            rect.anchorMax = newAnchorMax;
         }
-    }
-    */
-
-    public void addPoint(int connID, int num)
-    {
-        points[connID] += num;
-        //updatePoints();
-    }
-
-    /*
-    private void updatePoints()
-    {
-        float tot = 0;
-        Vector2 v2 = new Vector2();
-        float oldDimension = 0, dim = 0;
-        for (int i = 0; i < players.Count; i++)
-            tot += points[i];
-        for (int i = 0; i < players.Count; i++)
-        {
-            dim = points[i] / tot;
-            RectTransform rt = bar[i].GetComponent<RectTransform>();
-            v2 = rt.anchorMin;
-            v2.x = oldDimension;
-            rt.anchorMin = v2;
-            v2 = rt.anchorMax;
-            v2.x = oldDimension + dim;
-            rt.anchorMax = v2;
-            oldDimension += dim;
-        }
-    }
-    */
-
-    void Awake()
-    {
-        if (instance == null)
-            instance = this;
-        else if (instance != this)
-            Destroy(gameObject);
     }
 }

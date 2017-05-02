@@ -40,7 +40,7 @@ namespace Assets.Scripts.Networking
             }
             else
             {
-                Debug.LogError("Create fail");
+                Debug.LogError("Create fail "+matchInfo);
             }
 
             creatingMatch = false;
