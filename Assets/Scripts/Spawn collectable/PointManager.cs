@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class PointManager : MonoBehaviour
 {
     public GameObject pointBarSegmentPrefab;
-    public GameObject pointBarSpaceRoot;
 
     Dictionary<int, RectTransform> ofPlayersAndBars;
     Dictionary<int, int> ofPlayersAndPoints;
@@ -45,7 +44,7 @@ public class PointManager : MonoBehaviour
 
     private void AddNewBar(int playerNetID)
     {
-        GameObject go = Instantiate(pointBarSegmentPrefab, pointBarSpaceRoot.transform, false);
+        GameObject go = Instantiate(pointBarSegmentPrefab, transform, false);
         go.GetComponent<Image>().color = PlayerColor.GetColor(playerNetID);
 
         ofPlayersAndBars[playerNetID] = go.GetComponent<RectTransform>();
@@ -71,12 +70,11 @@ public class PointManager : MonoBehaviour
 
             if (ofPlayersAndPoints[k] > 0)
             {
-                Debug.LogWarning("Bar update: " + k + " " + ofPlayersAndPoints[k] / (float)pointsTotal);
                 offSet = ofPlayersAndPoints[k] / (float)pointsTotal;
             }
             else
             {
-                offSet = 1 / (float) (pointsTotal + UnityEngine.Networking.NetworkManager.singleton.matchSize) ;
+                offSet = 1 / (float) (pointsTotal + ofPlayersAndBars.Keys.Count) ;
             }
 
             newAnchorMax.x = offSet + newAnchorMin.x;

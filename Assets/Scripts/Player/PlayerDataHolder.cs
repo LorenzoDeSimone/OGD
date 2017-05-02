@@ -32,14 +32,11 @@ namespace Assets.Scripts.Player
         public void AddPoints(int pointsToAdd)
         {
             points += pointsToAdd;
-            Debug.LogWarning(GetPlayerNetworkId()+": "+points);
         }
 
         public int GetPlayerNetworkId()
         {
-            Debug.Log(netId.Value);
-
-            return (int)netId.Value;
+            return GetComponent<NetworkIdentity>().playerControllerId;
         }
 
         //argument needed from sync var hook... -1 for bar init

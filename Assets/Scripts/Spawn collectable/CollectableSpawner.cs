@@ -20,7 +20,7 @@ namespace Assets.Scripts.Spawn_collectable
             //remove my tranform
             spawnPositions.Remove(transform);
             InitCollectables();
-            InvokeRepeating("InitCollectables", 2.0f, spawnTime);
+            InvokeRepeating("SpawnCoins", 2.0f, spawnTime);
         }
 
         private void InitCollectables()
@@ -33,8 +33,7 @@ namespace Assets.Scripts.Spawn_collectable
                 NetworkServer.Spawn(go);
             }
         }
-        /*
-        [Client]
+        
         private void SpawnCoins()
         {
             foreach( GameObject g in collectables )
@@ -42,6 +41,5 @@ namespace Assets.Scripts.Spawn_collectable
                 g.SetActive(true);
             }
         }
-        */
     }
 }
