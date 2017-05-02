@@ -36,14 +36,14 @@ namespace Assets.Scripts.Player
 
         public int GetPlayerNetworkId()
         {
-            return GetComponent<NetworkIdentity>().playerControllerId;
+            return (int)netId.Value;
         }
 
         //argument needed from sync var hook... -1 for bar init
         private void SendPointSyncEvent( int newValue )
         {
             if (newValue == -1)
-                points = -1;
+                PointSyncEvent.Invoke(GetPlayerNetworkId(), newValue);
 
             PointSyncEvent.Invoke(GetPlayerNetworkId(), points);
         }

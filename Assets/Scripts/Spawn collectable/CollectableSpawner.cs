@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -36,10 +37,16 @@ namespace Assets.Scripts.Spawn_collectable
         
         private void SpawnCoins()
         {
-            foreach( GameObject g in collectables )
+            foreach (GameObject g in collectables)
             {
-                g.SetActive(true);
+                RpcActivateCollactable(g);
             }
+        }
+        [ClientRpc]
+        private void RpcActivateCollactable(GameObject g)
+        {
+            Debug.Log("spawning");
+            g.GetComponent<Collectable>().SetStateOverNetwork(true);
         }
     }
 }

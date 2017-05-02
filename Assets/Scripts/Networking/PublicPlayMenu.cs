@@ -47,12 +47,14 @@ namespace Assets.Scripts.Networking
                     foreach (MatchInfoSnapshot mis in lobbyController.publicMatches)
                     {
                         string m = "";
-                        m += mis.currentSize + "\n";
-                        m += mis.hostNodeId + "\n";
-                        m += mis.networkId + "\n";
+                        m += mis.currentSize + "sz\n";
+                        m += mis.hostNodeId + "node\n";
+                        m += mis.networkId + "ner\n";
                         Debug.LogError(m);
 
-                        if (mis.currentSize > 0 && mis.hostNodeId != UnityEngine.Networking.Types.NodeID.Invalid )
+                        if (mis.currentSize > 0 
+                            && mis.hostNodeId != UnityEngine.Networking.Types.NodeID.Invalid
+                            && mis.networkId.ToString().Length > 4)
                         {
                             lobbyController.joiningMatch = true;
                             lobbyController.matchMaker.JoinMatch(mis.networkId, "", "", "", 0, 0,

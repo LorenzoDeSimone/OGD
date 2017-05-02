@@ -44,7 +44,17 @@ public class PointManager : MonoBehaviour
 
     private void AddNewBar(int playerNetID)
     {
-        GameObject go = Instantiate(pointBarSegmentPrefab, transform, false);
+        GameObject go;
+        try
+        {
+            go = Instantiate(pointBarSegmentPrefab, transform, false);
+        }
+        catch (System.Exception)
+        {
+            //Something unity won't the find prefab i put i the editor WTF?!!
+            go = Instantiate((GameObject)Resources.Load("Prefabs/UI/PointBarSegment"), transform, false);
+        }
+
         go.GetComponent<Image>().color = PlayerColor.GetColor(playerNetID);
 
         ofPlayersAndBars[playerNetID] = go.GetComponent<RectTransform>();
@@ -68,13 +78,20 @@ public class PointManager : MonoBehaviour
 
             newAnchorMin.x = offSet;
 
-            if (ofPlayersAndPoints[k] > 0)
+            if (pointsTotal < 0)
             {
-                offSet = ofPlayersAndPoints[k] / (float)pointsTotal;
+                offSet = 1/(float)UnityEngine.Networking.NetworkManager.singleton.matchSize;
             }
             else
             {
-                offSet = 1 / (float) (pointsTotal + ofPlayersAndBars.Keys.Count) ;
+                if (ofPlayersAndPoints[k] > 0)
+                {
+                    offSet = ofPlayersAndPoints[k] / (float)pointsTotal; 
+                }
+                else
+                {
+                    offSet = 0.1f;
+                }
             }
 
             newAnchorMax.x = offSet + newAnchorMin.x;

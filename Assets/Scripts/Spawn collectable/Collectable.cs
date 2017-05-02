@@ -2,6 +2,7 @@
 using UnityEngine.Networking;
 using Assets.Scripts.Player;
 using System;
+using System.Collections;
 
 public class Collectable : NetworkBehaviour
 {
@@ -25,16 +26,7 @@ public class Collectable : NetworkBehaviour
                 Debug.LogWarning("Missing Player Data Holder or something really bad!!!\nMessage: "+e.Message);
             }
 
-            if (isServer)
-            {
-                Debug.Log("On Server");
-                RpcDeactivateThis();
-            }
-            else
-            {
-                Debug.Log("On Client");
-                CmdDeactivateThis();
-            }
+            SetStateOverNetwork(false);
         }
     }
 
@@ -42,16 +34,31 @@ public class Collectable : NetworkBehaviour
     {
         playerDataHolder.AddPoints(pointValue * pointScaler);
     }
+    
+    public void SetStateOverNetwork(bool state)
+    {
+        if (isServer)
+        {
+            Debug.Log("On Server");
+            RpcChangeState(state);
+        }
+        else
+        {
+            Debug.Log("On Client");
+            CmdDeactivateThis(state);
+        }
+
+    }
 
     [ClientRpc]
-    private void RpcDeactivateThis()
+    private void RpcChangeState(bool state)
     {
-        gameObject.SetActive(false);
+        gameObject.SetActive(state);
     }
 
     [Command]
-    private void CmdDeactivateThis()
+    private void CmdDeactivateThis(bool state)
     {
-        gameObject.SetActive(false);
+        gameObject.SetActive(state);
     }
 }
