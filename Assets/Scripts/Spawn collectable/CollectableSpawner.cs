@@ -39,14 +39,15 @@ namespace Assets.Scripts.Spawn_collectable
         {
             foreach (GameObject g in collectables)
             {
-                RpcActivateCollactable(g);
+                if(!g.activeSelf)
+                    RpcActivateCollactable(g);
             }
         }
 
         [ClientRpc]
         private void RpcActivateCollactable(GameObject g)
         {
-            g.GetComponent<Collectable>().SetStateOverNetwork(true);
+            g.SetActive(true);
         }
     }
 }

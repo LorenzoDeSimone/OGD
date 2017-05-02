@@ -39,13 +39,10 @@ namespace Assets.Scripts.Player
             return (int)netId.Value;
         }
 
-        //argument needed from sync var hook... -1 for bar init
+        //argument needed from sync var PRE-hook... -1 for bar init
         private void SendPointSyncEvent( int newValue )
         {
-            if (newValue == -1)
-                PointSyncEvent.Invoke(GetPlayerNetworkId(), newValue);
-
-            PointSyncEvent.Invoke(GetPlayerNetworkId(), points);
+            PointSyncEvent.Invoke(GetPlayerNetworkId(), newValue);
         }
     }
 }

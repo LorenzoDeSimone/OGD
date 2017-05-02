@@ -54,6 +54,12 @@ namespace Assets.Scripts.Networking
 
                         if (mis.currentSize > 0)
                         {
+                            m = "";
+                            m += mis.currentSize + "sz\n";
+                            m += mis.hostNodeId + "node\n";
+                            m += mis.networkId + "ner\n";
+                            Debug.LogError(m);
+
                             lobbyController.joiningMatch = true;
                             lobbyController.matchMaker.JoinMatch(mis.networkId, "", "", "", 0, 0,
                                 lobbyController.OnMatchJoined);

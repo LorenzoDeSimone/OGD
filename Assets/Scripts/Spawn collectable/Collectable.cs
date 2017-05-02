@@ -32,6 +32,7 @@ public class Collectable : NetworkBehaviour
 
     private void AddPointsToPlayer(PlayerDataHolder playerDataHolder)
     {
+        Debug.Log("Point added");
         playerDataHolder.AddPoints(pointValue * pointScaler);
     }
     

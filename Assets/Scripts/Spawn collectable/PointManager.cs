@@ -35,6 +35,7 @@ public class PointManager : MonoBehaviour
 
         if (playerPoints > 0)
         {
+            Debug.Log("Updating points " + playerNetID + " " + playerPoints);
             ofPlayersAndPoints[playerNetID] = playerPoints; 
             pointsTotal = CalculateTotalPoints();
         }
@@ -69,6 +70,7 @@ public class PointManager : MonoBehaviour
     private void ScalePointsBars()
     {
         offSet = 0.0f;
+        Debug.Log("Scaling bar");
         foreach (int k in ofPlayersAndBars.Keys)
         {
             rect = ofPlayersAndBars[k];
