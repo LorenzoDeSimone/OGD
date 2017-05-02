@@ -26,16 +26,19 @@ public class PointManager : MonoBehaviour
         PlayerDataHolder.PointSyncEvent -= UpdateBar;
     }
 
+    //player uses -1 as points for bar init
     private void UpdateBar(int playerNetID, int playerPoints)
     {
-        pointsTotal += playerPoints;
-
         if (!ofPlayersAndBars.ContainsKey(playerNetID))
         {
             AddNewBar(playerNetID);
         }
 
-        ofPlayersAndPoints[playerNetID] += playerPoints;
+        if (playerPoints > 0)
+        {
+            ofPlayersAndPoints[playerNetID] = playerPoints; 
+            pointsTotal = CalculateTotalPoints();
+        }
 
         ScalePointsBars();
     }
@@ -44,18 +47,20 @@ public class PointManager : MonoBehaviour
     {
         GameObject go = Instantiate(pointBarSegmentPrefab, pointBarSpaceRoot.transform, false);
         go.GetComponent<Image>().color = PlayerColor.GetColor(playerNetID);
+
         ofPlayersAndBars[playerNetID] = go.GetComponent<RectTransform>();
         ofPlayersAndPoints[playerNetID] = 0;
     }
 
+    float offSet;
+    RectTransform rect;
+    Vector3 newAnchorMin;
+    Vector3 newAnchorMax;
+
     private void ScalePointsBars()
     {
-        float offSet = 0.0f;
-        RectTransform rect;
-        Vector3 newAnchorMin;
-        Vector3 newAnchorMax;
-
-        foreach(int k in ofPlayersAndBars.Keys)
+        offSet = 0.0f;
+        foreach (int k in ofPlayersAndBars.Keys)
         {
             rect = ofPlayersAndBars[k];
 
@@ -64,13 +69,14 @@ public class PointManager : MonoBehaviour
 
             newAnchorMin.x = offSet;
 
-            if (ofPlayersAndPoints[k]>0)
+            if (ofPlayersAndPoints[k] > 0)
             {
-                offSet = (ofPlayersAndPoints[k]/ pointsTotal); 
+                Debug.LogWarning("Bar update: " + k + " " + ofPlayersAndPoints[k] / (float)pointsTotal);
+                offSet = ofPlayersAndPoints[k] / (float)pointsTotal;
             }
             else
             {
-                offSet = 0;
+                offSet = 1 / (float) (pointsTotal + UnityEngine.Networking.NetworkManager.singleton.matchSize) ;
             }
 
             newAnchorMax.x = offSet + newAnchorMin.x;
@@ -78,5 +84,17 @@ public class PointManager : MonoBehaviour
             rect.anchorMin = newAnchorMin;
             rect.anchorMax = newAnchorMax;
         }
+    }
+
+    private int CalculateTotalPoints()
+    {
+        int sum = 0;
+
+        foreach(int n in ofPlayersAndPoints.Values)
+        {
+            sum += n;
+        }
+
+        return sum;
     }
 }

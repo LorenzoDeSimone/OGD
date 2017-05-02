@@ -46,7 +46,7 @@ namespace Assets.Scripts.Networking
                 {
                     foreach (MatchInfoSnapshot mis in lobbyController.publicMatches)
                     {
-                        if (mis.currentSize > 0)
+                        if (mis.directConnectInfos.Count > 0)
                         {
                             lobbyController.joiningMatch = true;
                             lobbyController.matchMaker.JoinMatch(mis.networkId, "", "", "", 0, 0,

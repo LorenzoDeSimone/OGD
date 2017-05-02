@@ -25,14 +25,14 @@ namespace Assets.Scripts.Player
                 { /*is this so bad*/}
             }
 
-            //Send event for bar init
-            SendPointSyncEvent(0);
+            //Send event with -1 for bar init
+            SendPointSyncEvent(-1);
         }
 
         public void AddPoints(int pointsToAdd)
         {
             points += pointsToAdd;
-            Debug.Log(GetPlayerNetworkId()+": "+points);
+            Debug.LogWarning(GetPlayerNetworkId()+": "+points);
         }
 
         public int GetPlayerNetworkId()
@@ -42,9 +42,12 @@ namespace Assets.Scripts.Player
             return (int)netId.Value;
         }
 
-        //argument needed from sync var hook... is it of any use?
+        //argument needed from sync var hook... -1 for bar init
         private void SendPointSyncEvent( int newValue )
         {
+            if (newValue == -1)
+                points = -1;
+
             PointSyncEvent.Invoke(GetPlayerNetworkId(), points);
         }
     }
