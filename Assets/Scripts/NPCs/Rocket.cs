@@ -73,14 +73,16 @@ public class Rocket : NetworkBehaviour
         if (target != null)
         {
             //Debug.Log("Target Hit!");
-            Destroy(this.gameObject);
+            NetworkServer.UnSpawn(gameObject);
+            gameObject.SetActive(false);
         }
 
         //What to do if collider is a gravity field
         if (gravityField !=null)
         {
             //Debug.Log("Platform Hit!");
-            Destroy(this.gameObject);
+            NetworkServer.UnSpawn(gameObject);
+            gameObject.SetActive(false);
         }
 
         //What to do if collider is a player
@@ -93,7 +95,8 @@ public class Rocket : NetworkBehaviour
             else
             {
                 //Debug.Log("Other Player Hit!");
-                //Destroy(this.gameObject);
+                //NetworkServer.UnSpawn(gameObject);
+                //gameObject.SetActive(false);
                 //Insert methods for losing coins
             }
         }
