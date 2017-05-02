@@ -12,6 +12,7 @@ public class Rocket : NetworkBehaviour
     public float speed = 10.0f;
 
     private Vector2 targetDirection;
+    private Rigidbody2D myRigidBody;
     private Transform myTransform;
 
     private GameObject playerWhoShotMe;
@@ -29,8 +30,11 @@ public class Rocket : NetworkBehaviour
     // Use this for initialization
     void Start ()
     {
+        myRigidBody = GetComponent<Rigidbody2D>();
         myTransform = GetComponent<Transform>();
-        targetDirection = (target.transform.position - myTransform.position).normalized;
+
+        Vector2 targetPosition = new Vector2(target.transform.position.x, target.transform.position.y);
+        targetDirection = (targetPosition - myRigidBody.position).normalized;
         myTransform.right = targetDirection;
     }
 
@@ -38,23 +42,24 @@ public class Rocket : NetworkBehaviour
     void Update ()
     {
         float actualSteeringMultiplier = speed * steeringMultiplier;
-
+   
         //currentDirection = (target.transform.position - myTransform.position).normalized;
         //myTransform.position = new Vector2(myTransform.position.x, myTransform.position.y) + currentDirection * speed;
         Vector2 currentDirection = myTransform.right;
+        Vector2 targetPosition = new Vector2(target.transform.position.x, target.transform.position.y);
 
-        targetDirection = (target.transform.position - myTransform.position).normalized;
-        Debug.DrawRay(myTransform.position, currentDirection * speed, Color.green);//Pre Steering velocity
-        Debug.DrawRay(myTransform.position, targetDirection * speed, Color.gray);//Desired velocity
+        targetDirection = (targetPosition - myRigidBody.position).normalized;
+        Debug.DrawRay(myRigidBody.position, currentDirection * speed, Color.green);//Pre Steering velocity
+        Debug.DrawRay(myRigidBody.position, targetDirection * speed, Color.gray);//Desired velocity
 
         Vector2 steeringVector = (targetDirection - currentDirection) * actualSteeringMultiplier;
-        Debug.DrawRay(new Vector2(myTransform.position.x, myTransform.position.y) + currentDirection * speed, steeringVector, Color.red);
+        Debug.DrawRay(new Vector2(myRigidBody.position.x, myRigidBody.position.y) + currentDirection * speed, steeringVector, Color.red);
 
         //currentDirection = currentDirection + steeringVector;
 
-        Debug.DrawRay(myTransform.position, (currentDirection * speed + steeringVector) * Time.deltaTime, Color.yellow);//Post Steering velocity
+        Debug.DrawRay(myRigidBody.position, (currentDirection * speed + steeringVector) * Time.deltaTime, Color.yellow);//Post Steering velocity
 
-        myTransform.position = (new Vector2(myTransform.position.x, myTransform.position.y) + (currentDirection * speed + steeringVector)*Time.deltaTime);
+        myRigidBody.position = (new Vector2(myRigidBody.position.x, myRigidBody.position.y) + (currentDirection * speed + steeringVector)*Time.deltaTime);
         myTransform.right = (currentDirection * speed + steeringVector).normalized;
     }
 
