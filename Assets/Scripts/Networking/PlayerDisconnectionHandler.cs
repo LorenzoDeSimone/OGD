@@ -30,9 +30,10 @@ namespace Assets.Scripts.Networking
         {
             Debug.LogWarning("Player: " + conn + " dsconected! only " + playerCount + " little indians remains...");
 
+            OnPlayerDisconnects.Invoke();
             if (playerCount == 1)
             {
-                Debug.LogError("Player lonely...");
+                Debug.LogWarning("Player lonely...");
                 StopAllCoroutines();
                 onlineGameManager.EndMatchWrapper("Match ended because player lonely...");
             }

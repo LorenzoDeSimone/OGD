@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Assets.Scripts.Player;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class PointManager : MonoBehaviour
 {
@@ -42,6 +43,7 @@ public class PointManager : MonoBehaviour
     private void AddNewBar(int playerNetID)
     {
         GameObject go = Instantiate(pointBarSegmentPrefab, pointBarSpaceRoot.transform, false);
+        go.GetComponent<Image>().color = PlayerColor.GetColor(playerNetID);
         ofPlayersAndBars[playerNetID] = go.GetComponent<RectTransform>();
         ofPlayersAndPoints[playerNetID] = 0;
     }
@@ -64,7 +66,7 @@ public class PointManager : MonoBehaviour
 
             if (ofPlayersAndPoints[k]>0)
             {
-                offSet = (pointsTotal / ofPlayersAndPoints[k]); 
+                offSet = (ofPlayersAndPoints[k]/ pointsTotal); 
             }
             else
             {

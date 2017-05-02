@@ -43,7 +43,6 @@ namespace Assets.Scripts.Player
         }
 
         //argument needed from sync var hook... is it of any use?
-        [Client]
         private void SendPointSyncEvent( int newValue )
         {
             PointSyncEvent.Invoke(GetPlayerNetworkId(), points);
