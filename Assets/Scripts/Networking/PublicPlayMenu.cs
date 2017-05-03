@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.Networking.Match;
 using UnityEngine.UI;
 
@@ -47,15 +48,14 @@ namespace Assets.Scripts.Networking
                     foreach (MatchInfoSnapshot mis in lobbyController.publicMatches)
                     {
                         string m = "";
-                        m += mis.currentSize + "sz\n";
                         m += mis.hostNodeId + "node\n";
                         m += mis.networkId + "ner\n";
+                        m += netId;
                         Debug.LogError(m);
 
                         if (mis.currentSize > 0)
                         {
                             m = "";
-                            m += mis.currentSize + "sz\n";
                             m += mis.hostNodeId + "node\n";
                             m += mis.networkId + "ner\n";
                             Debug.LogError(m);

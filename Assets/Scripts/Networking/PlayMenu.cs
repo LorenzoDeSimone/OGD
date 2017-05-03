@@ -3,7 +3,7 @@ using UnityEngine.Networking;
 
 namespace Assets.Scripts.Networking
 {
-    abstract class PlayMenu : MonoBehaviour
+    abstract class PlayMenu : NetworkBehaviour
     {
         protected NetworkLobbyController lobbyController;
 

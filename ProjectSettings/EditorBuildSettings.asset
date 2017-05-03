@@ -17,3 +17,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Sviluppo/GameTest3.unity
     guid: d9662647301610343bc3684e798b06ed
+  - enabled: 1
+    path: Assets/Scenes/Sviluppo/NetworkTest-InGameMenus.unity
+    guid: e30584796d69b794b86e231aa08c1067

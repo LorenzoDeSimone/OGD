@@ -1,6 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class CollectableBig : Collectable {
+﻿namespace Assets.Scripts.Spawn_collectable
+{
+    public class CollectableBig : Collectable
+    {
+    } 
 }

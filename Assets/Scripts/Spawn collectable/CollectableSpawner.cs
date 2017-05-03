@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -29,25 +28,26 @@ namespace Assets.Scripts.Spawn_collectable
             GameObject go;
             foreach( Transform t in spawnPositions )
             {
-                go = Instantiate(collectablePrefab, t.position, Quaternion.identity);
+                go = Instantiate(collectablePrefab, t.position, Quaternion.identity, transform);
                 collectables.Add(go);
                 NetworkServer.Spawn(go);
             }
         }
-        
+
         private void SpawnCoins()
         {
+            Collectable c;
             foreach (GameObject g in collectables)
             {
-                if(!g.activeSelf)
-                    RpcActivateCollactable(g);
+                c = g.GetComponent<Collectable>();
+                if (!c.GetNetworkActiveState())
+                    ChangeCollactableState(c, true);
             }
         }
-
-        [ClientRpc]
-        private void RpcActivateCollactable(GameObject g)
+        
+        private void ChangeCollactableState(Collectable c, bool b)
         {
-            g.SetActive(true);
+            c.UpdateNetworkState(b);
         }
     }
 }
