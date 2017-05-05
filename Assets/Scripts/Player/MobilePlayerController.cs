@@ -45,13 +45,16 @@ namespace Assets.Scripts.Player
         [SyncVar(hook = "SyncEndPosition")]
         public Vector3 syncEndPosition;
 
+
+        public int predictionIterations=3;
+
         private void SyncEndPosition(Vector3 newSyncEndPosition)
         {
-            syncEndPosition = newSyncEndPosition;
             syncTime = 0f;
             syncDelay = Time.time - lastSynchronizationTime;
             lastSynchronizationTime = Time.time;
             syncStartPosition = myTransform.position;
+            syncEndPosition = newSyncEndPosition;
             //Debug.Log("SyncDelay " + syncDelay);
             //Debug.LogError("ARRRRRR, HOOK!    New sync end position: "+ newSyncEndPosition);
         }
@@ -92,16 +95,16 @@ namespace Assets.Scripts.Player
             {
                 if (Input.GetKey(KeyCode.LeftArrow))
                 {
-                    myTransform.position = Move(myTransform.position, MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE);
-                    syncEndPosition = Move(myTransform.position, MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE);
+                    myTransform.position = Move(myTransform.position, MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE, Time.deltaTime);
+                    syncEndPosition = predictNextPosition(predictionIterations, MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE);//Move(myTransform.position, MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE, Time.deltaTime);
                 }
                 else if (Input.GetKey(KeyCode.RightArrow))
                 {
-                    myTransform.position = Move(myTransform.position, MOVEMENT_DIRECTIONS.CLOCKWISE);
-                    syncEndPosition = Move(myTransform.position, MOVEMENT_DIRECTIONS.CLOCKWISE);
+                    myTransform.position = Move(myTransform.position, MOVEMENT_DIRECTIONS.CLOCKWISE, Time.deltaTime);
+                    syncEndPosition = predictNextPosition(predictionIterations, MOVEMENT_DIRECTIONS.CLOCKWISE);//Move(myTransform.position, MOVEMENT_DIRECTIONS.CLOCKWISE, Time.deltaTime);
                 }
-                //else
-                //    syncEndPosition = myTransform.position;
+                else
+                    syncEndPosition = myTransform.position;
 
                 if (Input.GetKeyDown(KeyCode.Space))
                     Jump();
@@ -114,12 +117,22 @@ namespace Assets.Scripts.Player
             ApplyRotation(false);
         }
 
+        private Vector2 predictNextPosition(int iterations, MOVEMENT_DIRECTIONS movementDirection)
+        {
+            Vector2 currPosition = myTransform.position;
+            for (int i = 1; i <= iterations; i++)
+            {
+                currPosition = Move(currPosition, movementDirection, Time.deltaTime);
+            }
+            return currPosition;
+        }
+
+
         private void SyncedMovement()
         {
             syncTime += Time.deltaTime;
             //Debug.LogError("syncTime: " + syncTime + "||syncDelay: " + syncDelay + "||syncTime/syncDelay " + syncTime / syncDelay);
             myTransform.position = Vector3.Slerp(syncStartPosition, syncEndPosition, syncTime/syncDelay);
-
             //Debug.LogError("syncStart: " + syncStartPosition + "|| syncEnd: "+syncEndPosition);
         }
 
@@ -229,7 +242,7 @@ namespace Assets.Scripts.Player
 
 
         //Movement routines called by the input manager
-        public Vector3 Move(Vector2 startPosition, MOVEMENT_DIRECTIONS movementDirection)
+        public Vector3 Move(Vector2 startPosition, MOVEMENT_DIRECTIONS movementDirection, float deltaTime)
         {
             //if (!CanMove())
             //return myTransform.position;
@@ -291,14 +304,14 @@ namespace Assets.Scripts.Player
 
             if (IsGrounded())//We apply movement vector directly is player is grounded
             {
-                return startPosition + movementVersor * speed * Time.deltaTime;
+                return startPosition + movementVersor * speed * deltaTime;
                 //myRigidBody.AddForce(movementVersor * speed * Time.fixedDeltaTime);
                 //myRigidBody.velocity = movementVersor * speed * Time.fixedDeltaTime;
                 //myTransform.position = new Vector2(myTransform.position.x, myTransform.position.y) + movementVersor * speed * Time.fixedDeltaTime;
             }
             else//Otherwise, we decrease air control proportionally to his distance to the ground
             {
-                return startPosition + movementVersor * speed * Time.deltaTime;
+                return startPosition + movementVersor * speed * deltaTime;
                 //myRigidBody.AddForce(movementVersor * speed * Time.fixedDeltaTime);
                 //myRigidBody.position = new Vector2(myRigidBody.position.x, myRigidBody.position.y) + movementVersor * speed * 1 / Mathf.Pow(distance, airResistance) * Time.fixedDeltaTime;
             }
