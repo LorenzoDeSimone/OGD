@@ -57,13 +57,13 @@ namespace Assets.Scripts.Spawn_collectable
 
         private void ChangeNetworkState(bool state)
         {
+            networkActiveState = state;
             sprite.enabled = state;
             coll.enabled = state;
         }
 
         private void AddPointsToPlayer(PlayerDataHolder playerDataHolder)
         {
-            Debug.Log("Point added");
             playerDataHolder.AddPoints(pointValue * pointScaler);
         }
     }
