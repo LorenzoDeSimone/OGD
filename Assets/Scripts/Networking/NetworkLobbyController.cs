@@ -59,7 +59,7 @@ namespace Assets.Scripts.Networking
             }
             else
             {
-                Debug.LogError("Join fail");
+                Debug.LogWarning("Join fail");
             }
 
             joiningMatch = false;

@@ -7,7 +7,7 @@ namespace Assets.Scripts.Spawn_collectable
 {
     public class Collectable : NetworkBehaviour
     {
-        [SyncVar( hook = "ChangeNetworkState")]
+        [SyncVar( hook = "UpdateNetworkState")]
         bool networkActiveState;
 
         public int pointValue = 1;
@@ -20,7 +20,6 @@ namespace Assets.Scripts.Spawn_collectable
         {
             sprite = GetComponent<SpriteRenderer>();
             coll = GetComponent<Collider2D>();
-            UpdateNetworkState(false);
         }
 
         private void OnTriggerEnter2D(Collider2D coll)
@@ -39,15 +38,17 @@ namespace Assets.Scripts.Spawn_collectable
                 {
                     Debug.LogWarning("Missing Player Data Holder or something really bad!!!\nMessage: " + e.Message);
                 }
-
-                UpdateNetworkState(false);
+                Debug.LogWarning("Set false network state");
+                networkActiveState = false;
             }
         }
 
-        public void UpdateNetworkState(bool b)
+        private void UpdateNetworkState(bool b)
         {
-            networkActiveState = b;
-            ChangeNetworkState(b);
+            if (isServer)
+                RpcChangeNetworkState(b);
+            else
+                networkActiveState = b;
         }
 
         public bool GetNetworkActiveState()
@@ -55,11 +56,12 @@ namespace Assets.Scripts.Spawn_collectable
             return networkActiveState;
         }
 
-        private void ChangeNetworkState(bool state)
+        [ClientRpc]
+        public void RpcChangeNetworkState(bool b)
         {
-            networkActiveState = state;
-            sprite.enabled = state;
-            coll.enabled = state;
+            networkActiveState = b;
+            sprite.enabled = b;
+            coll.enabled = b;
         }
 
         private void AddPointsToPlayer(PlayerDataHolder playerDataHolder)

@@ -41,13 +41,8 @@ namespace Assets.Scripts.Spawn_collectable
             {
                 c = g.GetComponent<Collectable>();
                 if (!c.GetNetworkActiveState())
-                    ChangeCollactableState(c, true);
+                    c.RpcChangeNetworkState(true);
             }
-        }
-        
-        private void ChangeCollactableState(Collectable c, bool b)
-        {
-            c.UpdateNetworkState(b);
         }
     }
 }
