@@ -63,6 +63,7 @@ public class PointManager : MonoBehaviour
     }
 
     float offSet;
+    int numZeroPointPlayer;
     RectTransform rect;
     Vector3 newAnchorMin;
     Vector3 newAnchorMax;
@@ -70,7 +71,11 @@ public class PointManager : MonoBehaviour
     private void ScalePointsBars()
     {
         offSet = 0.0f;
+        numZeroPointPlayer = 0;
         Debug.Log("Scaling bar");
+        foreach (int k in ofPlayersAndBars.Keys)
+            if (ofPlayersAndPoints[k] == 0)
+                numZeroPointPlayer++;
         foreach (int k in ofPlayersAndBars.Keys)
         {
             rect = ofPlayersAndBars[k];
@@ -80,23 +85,23 @@ public class PointManager : MonoBehaviour
 
             newAnchorMin.x = offSet;
 
-            if (pointsTotal < 0)
+            if (pointsTotal <= 0)
             {
-                offSet = 1/(float)UnityEngine.Networking.NetworkManager.singleton.matchSize;
+                newAnchorMax.x = newAnchorMin.x + 1 / (float)ofPlayersAndBars.Count;
             }
             else
             {
                 if (ofPlayersAndPoints[k] > 0)
                 {
-                    offSet = ofPlayersAndPoints[k] / (float)pointsTotal; 
+                    newAnchorMax.x = newAnchorMin.x + (ofPlayersAndPoints[k] / (float)pointsTotal) * (1f - (0.05f * numZeroPointPlayer));
                 }
                 else
                 {
-                    offSet = 0.1f;
+                    newAnchorMax.x = newAnchorMin.x + 0.05f;
                 }
             }
-
-            newAnchorMax.x = offSet + newAnchorMin.x;
+            
+            offSet = newAnchorMax.x;
 
             rect.anchorMin = newAnchorMin;
             rect.anchorMax = newAnchorMax;
