@@ -29,7 +29,8 @@ namespace Assets.Scripts.Player
             SendPointSyncEvent(-1);
         }
 
-        public void AddPoints(int pointsToAdd)
+        [Command]
+        public void CmdAddPoints(int pointsToAdd)
         {
             points += pointsToAdd;
         }
@@ -42,8 +43,18 @@ namespace Assets.Scripts.Player
         //argument needed from sync var PRE-hook... -1 for bar init
         private void SendPointSyncEvent( int newValue )
         {
-            points = newValue;
+            if (isServer)
+            {
+                RpcSyncPoints(newValue);
+            }
+
             PointSyncEvent.Invoke(GetPlayerNetworkId(), newValue);
+        }
+
+        [ClientRpc]
+        private void RpcSyncPoints(int newValue)
+        {
+            points = newValue;
         }
     }
 }

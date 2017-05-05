@@ -10,7 +10,7 @@ namespace Assets.Scripts.Spawn_collectable
         /*
          * Sync var flow:
          * client -Command: Can i update this variable? -> Server if yes updates the sync var -> the var is sync from client to server
-         * syncvar - calls the hook on server and client -> only the server then calls an rpc  
+         * syncvar - calls the hook on server and client -> only the server then calls an rpc on the clients   
          * the hook  
          */
         [SyncVar( hook = "UpdateNetworkState")]
@@ -80,7 +80,7 @@ namespace Assets.Scripts.Spawn_collectable
 
         private void AddPointsToPlayer(PlayerDataHolder playerDataHolder)
         {
-            playerDataHolder.AddPoints(pointValue * pointScaler);
+            playerDataHolder.CmdAddPoints(pointValue * pointScaler);
         }
     }
 }
