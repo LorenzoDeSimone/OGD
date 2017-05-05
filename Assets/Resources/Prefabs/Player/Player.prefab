@@ -230,6 +230,8 @@ MonoBehaviour:
   EdgeCheckMultiplier: 1.1
   airResistance: 0.4
   jumpControlStopWindow: 0.1
+  syncEndPosition: {x: 0, y: 0, z: 0}
+  predictionIterations: 2
 --- !u!212 &212783235714675410
 SpriteRenderer:
   m_ObjectHideFlags: 1
