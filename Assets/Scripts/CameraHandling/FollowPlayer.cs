@@ -16,7 +16,7 @@ namespace Assets.Scripts.CameraHandling
             newPosition = new Vector3(0, 0, zOffset);
         }
 
-        void FixedUpdate()
+        void Update()
         {
             newPosition.x = playerTransform.position.x;
             newPosition.y = playerTransform.position.y;

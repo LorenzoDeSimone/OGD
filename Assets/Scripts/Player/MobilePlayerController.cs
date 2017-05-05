@@ -31,16 +31,39 @@ namespace Assets.Scripts.Player
         private HashSet<GameObject> myTargets;//A collection of hittable targets currently in player's trigger
 
         private GravityField safeGravityField;//In case no GravityField is present in player's collider, this is used for attraction
-               
+
         public enum MOVEMENT_DIRECTIONS { COUNTERCLOCKWISE, CLOCKWISE, STOP }
 
         private GameObject myTargetMarker;
+
+        //Network prediction and interpolation variables
+        private float lastSynchronizationTime = 0f;
+        private float syncDelay = 0f;
+        private float syncTime = 0f;
+
+        private Vector3 syncStartPosition;
+        [SyncVar(hook = "SyncEndPosition")]
+        public Vector3 syncEndPosition;
+
+        private void SyncEndPosition(Vector3 newSyncEndPosition)
+        {
+            syncEndPosition = newSyncEndPosition;
+            syncTime = 0f;
+            syncDelay = Time.time - lastSynchronizationTime;
+            lastSynchronizationTime = Time.time;
+            syncStartPosition = myTransform.position;
+            //Debug.Log("SyncDelay " + syncDelay);
+            //Debug.LogError("ARRRRRR, HOOK!    New sync end position: "+ newSyncEndPosition);
+        }
 
         [ClientCallback]
         void Start()
         {
             myRigidBody = GetComponent<Rigidbody2D>();
             myTransform = GetComponent<Transform>();
+
+            syncEndPosition = myTransform.position;
+            syncStartPosition = myTransform.position;
 
             myGravityFields = new HashSet<GameObject>();
             myTargets = new HashSet<GameObject>();
@@ -59,12 +82,45 @@ namespace Assets.Scripts.Player
             groundCheck1 = myTransform.Find("Ground Check 1").position;
             groundCheck2 = myTransform.Find("Ground Check 2").position;
 
-            if (IsGrounded())
-                Debug.Log("On Land!");
+            //Debug.Log(syncTime / syncDelay);
+
             myTargetMarker.GetComponent<SpriteRenderer>().color = GetComponent<SpriteRenderer>().color;//REMOVE FROM UPDATE ASAP
             myGround = GetMyGround();
             nearestTarget = GetNearestTargetAndMarkIt();
+
+            if (isLocalPlayer)
+            {
+                if (Input.GetKey(KeyCode.LeftArrow))
+                {
+                    myTransform.position = Move(myTransform.position, MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE);
+                    syncEndPosition = Move(myTransform.position, MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE);
+                }
+                else if (Input.GetKey(KeyCode.RightArrow))
+                {
+                    myTransform.position = Move(myTransform.position, MOVEMENT_DIRECTIONS.CLOCKWISE);
+                    syncEndPosition = Move(myTransform.position, MOVEMENT_DIRECTIONS.CLOCKWISE);
+                }
+                //else
+                //    syncEndPosition = myTransform.position;
+
+                if (Input.GetKeyDown(KeyCode.Space))
+                    Jump();
+            }
+            else
+            {
+                SyncedMovement();
+            }
+
             ApplyRotation(false);
+        }
+
+        private void SyncedMovement()
+        {
+            syncTime += Time.deltaTime;
+            //Debug.LogError("syncTime: " + syncTime + "||syncDelay: " + syncDelay + "||syncTime/syncDelay " + syncTime / syncDelay);
+            myTransform.position = Vector3.Slerp(syncStartPosition, syncEndPosition, syncTime/syncDelay);
+
+            //Debug.LogError("syncStart: " + syncStartPosition + "|| syncEnd: "+syncEndPosition);
         }
 
         [ClientCallback]
@@ -84,7 +140,7 @@ namespace Assets.Scripts.Player
             else
                 gravityVersor = -myGround.normal;
 
-            Debug.DrawRay(myTransform.position, gravityVersor,Color.red);
+            Debug.DrawRay(myTransform.position, gravityVersor, Color.red);
             GetComponent<Rigidbody2D>().AddForce(gravityVersor * myGravityField.mass);///distance);
         }
 
@@ -116,7 +172,7 @@ namespace Assets.Scripts.Player
             if (forceTargetRotation || Mathf.Abs(Quaternion.Dot(transform.rotation, targetRotation)) > rotationEpsilon)
                 transform.rotation = targetRotation;
             else//else, we interpolate to make the rotation smooth
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);     
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
 
         private RaycastHit2D GetMyGround()
@@ -173,10 +229,10 @@ namespace Assets.Scripts.Player
 
 
         //Movement routines called by the input manager
-        public void Move(MOVEMENT_DIRECTIONS movementDirection)
+        public Vector3 Move(Vector2 startPosition, MOVEMENT_DIRECTIONS movementDirection)
         {
-            if (!CanMove())
-                return;
+            //if (!CanMove())
+            //return myTransform.position;
 
             GravityField myGravityField = myGround.collider.GetComponent<GravityField>();
             RaycastHit2D platformEdge;
@@ -196,8 +252,8 @@ namespace Assets.Scripts.Player
                 movementPerpendicularDown = -myGround.normal;// new Vector2(movementVersor.y, -movementVersor.x).normalized;
             }
 
-            Vector2 nextPlayerPoint = new Vector2(transform.position.x, transform.position.y) + movementVersor * speed * 0.2f;
-            Vector2 myPosition = new Vector2(myTransform.position.x, myTransform.position.y);
+            Vector2 nextPlayerPoint = new Vector2(startPosition.x, startPosition.y) + movementVersor * speed * 0.2f;
+            Vector2 myPosition = new Vector2(startPosition.x, startPosition.y);
             Vector2 BackRaycastDirection = -movementVersor;//(myGravityField.transform.position - myTransform.position).normalized;
 
 
@@ -235,22 +291,23 @@ namespace Assets.Scripts.Player
 
             if (IsGrounded())//We apply movement vector directly is player is grounded
             {
-                myRigidBody.position = (myRigidBody.position + movementVersor * speed * Time.fixedDeltaTime);
+                return startPosition + movementVersor * speed * Time.deltaTime;
                 //myRigidBody.AddForce(movementVersor * speed * Time.fixedDeltaTime);
                 //myRigidBody.velocity = movementVersor * speed * Time.fixedDeltaTime;
                 //myTransform.position = new Vector2(myTransform.position.x, myTransform.position.y) + movementVersor * speed * Time.fixedDeltaTime;
             }
             else//Otherwise, we decrease air control proportionally to his distance to the ground
             {
+                return startPosition + movementVersor * speed * Time.deltaTime;
                 //myRigidBody.AddForce(movementVersor * speed * Time.fixedDeltaTime);
-                myRigidBody.position = new Vector2(myRigidBody.position.x, myRigidBody.position.y) + movementVersor * speed * 1 / Mathf.Pow(distance, airResistance) * Time.fixedDeltaTime;
+                //myRigidBody.position = new Vector2(myRigidBody.position.x, myRigidBody.position.y) + movementVersor * speed * 1 / Mathf.Pow(distance, airResistance) * Time.fixedDeltaTime;
             }
         }
 
         [Command]
         public void CmdShoot()
         {
-            if(nearestTarget==null)
+            if (nearestTarget == null)
             {
                 //Debug.Log("No targets in my area!");
                 return;
@@ -281,8 +338,8 @@ namespace Assets.Scripts.Player
         private void OnTriggerEnter2D(Collider2D collider)
         {
             //Gravity Fields management
-            GravityField newGravityField = collider.GetComponent<GravityField>();           
-            if (newGravityField!=null)
+            GravityField newGravityField = collider.GetComponent<GravityField>();
+            if (newGravityField != null)
             {
                 myGravityFields.Add(newGravityField.gameObject);
 

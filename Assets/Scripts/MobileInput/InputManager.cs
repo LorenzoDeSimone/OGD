@@ -18,15 +18,15 @@ public class InputManager : NetworkBehaviour {
     }
 
     //Handles continous movement
-    void FixedUpdate()
+    void Update()
     {
-        if (counterclockwisePressed || Input.GetKey(KeyCode.LeftArrow))
+        /*if (counterclockwisePressed || Input.GetKey(KeyCode.LeftArrow))
             localPlayer.Move(MobilePlayerController.MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE);
         else if (clockwisePressed || Input.GetKey(KeyCode.RightArrow))
             localPlayer.Move(MobilePlayerController.MOVEMENT_DIRECTIONS.CLOCKWISE);
 
         if (Input.GetKeyDown(KeyCode.Space))
-            localPlayer.Jump();
+            localPlayer.Jump();*/
     }
 
     //Setters value from buttons
