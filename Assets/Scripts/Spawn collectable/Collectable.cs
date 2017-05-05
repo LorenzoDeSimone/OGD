@@ -7,19 +7,25 @@ namespace Assets.Scripts.Spawn_collectable
 {
     public class Collectable : NetworkBehaviour
     {
+        /*
+         * Sync var flow:
+         * client -Command: Can i update this variable? -> Server if yes updates the sync var -> the var is sync from client to server
+         * syncvar - calls the hook on server and client -> only the server then calls an rpc  
+         * the hook  
+         */
         [SyncVar( hook = "UpdateNetworkState")]
         bool networkActiveState;
 
         public int pointValue = 1;
         public int pointScaler = 1;
 
-        SpriteRenderer sprite;
-        Collider2D coll;
+        SpriteRenderer mySprite;
+        Collider2D myCollider;
 
         private void Start()
         {
-            sprite = GetComponent<SpriteRenderer>();
-            coll = GetComponent<Collider2D>();
+            mySprite = GetComponent<SpriteRenderer>();
+            myCollider = GetComponent<Collider2D>();
         }
 
         private void OnTriggerEnter2D(Collider2D coll)
@@ -38,8 +44,11 @@ namespace Assets.Scripts.Spawn_collectable
                 {
                     Debug.LogWarning("Missing Player Data Holder or something really bad!!!\nMessage: " + e.Message);
                 }
-                Debug.LogWarning("Set false network state");
-                networkActiveState = false;
+
+                /*
+                 *  When a client needs to update the syn 
+                 */
+                CmdUpdateServerState(false);
             }
         }
 
@@ -47,8 +56,14 @@ namespace Assets.Scripts.Spawn_collectable
         {
             if (isServer)
                 RpcChangeNetworkState(b);
-            else
-                networkActiveState = b;
+        }
+
+        [Command]
+        private void CmdUpdateServerState(bool b)
+        {
+            networkActiveState = b;
+            mySprite.enabled = b;
+            myCollider.enabled = b;
         }
 
         public bool GetNetworkActiveState()
@@ -59,9 +74,8 @@ namespace Assets.Scripts.Spawn_collectable
         [ClientRpc]
         public void RpcChangeNetworkState(bool b)
         {
-            networkActiveState = b;
-            sprite.enabled = b;
-            coll.enabled = b;
+            mySprite.enabled = b;
+            myCollider.enabled = b;
         }
 
         private void AddPointsToPlayer(PlayerDataHolder playerDataHolder)
