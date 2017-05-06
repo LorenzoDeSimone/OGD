@@ -65,14 +65,14 @@ public class PointManager : MonoBehaviour
     float offSet;
     int numZeroPointPlayer;
     RectTransform rect;
-    Vector3 newAnchorMin;
-    Vector3 newAnchorMax;
+    Vector2 newAnchorMin;
+    Vector2 newAnchorMax;
 
     private void ScalePointsBars()
     {
         offSet = 0.0f;
         numZeroPointPlayer = 0;
-        Debug.Log("Scaling bar");
+
         foreach (int k in ofPlayersAndBars.Keys)
             if (ofPlayersAndPoints[k] == 0)
                 numZeroPointPlayer++;
@@ -87,21 +87,21 @@ public class PointManager : MonoBehaviour
 
             if (pointsTotal <= 0)
             {
-                newAnchorMax.x = newAnchorMin.x + 1 / (float)ofPlayersAndBars.Count;
+                offSet += 1 / (float)ofPlayersAndBars.Count;
             }
             else
             {
                 if (ofPlayersAndPoints[k] > 0)
                 {
-                    newAnchorMax.x = newAnchorMin.x + (ofPlayersAndPoints[k] / (float)pointsTotal) * (1f - (0.05f * numZeroPointPlayer));
+                    offSet += (ofPlayersAndPoints[k] / (float)pointsTotal) * (1f - (0.05f * numZeroPointPlayer));
                 }
                 else
                 {
-                    newAnchorMax.x = newAnchorMin.x + 0.05f;
+                    offSet += 0.05f;
                 }
             }
             
-            offSet = newAnchorMax.x;
+            newAnchorMax.x = offSet;
 
             rect.anchorMin = newAnchorMin;
             rect.anchorMax = newAnchorMax;
