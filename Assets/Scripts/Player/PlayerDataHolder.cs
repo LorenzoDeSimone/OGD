@@ -11,6 +11,9 @@ namespace Assets.Scripts.Player
         [SyncVar (hook = "SendPointSyncEvent")]
         int points = 0;
 
+        [SyncVar(hook = "SyncId")]
+        int myRealId;
+
         public bool paintsThePlayer = true;
 
         void Start()
@@ -25,8 +28,27 @@ namespace Assets.Scripts.Player
                 { /*is this so bad*/}
             }
 
+            if(isLocalPlayer)
+            {
+                CmdSendNewId();
+            }
+
             //Send event with -1 for bar init
             SendPointSyncEvent(-1);
+        }
+
+        public int GetPlayerNetworkId()
+        {
+            if (isLocalPlayer)
+            {
+                Debug.LogWarning(playerControllerId);
+                return playerControllerId;
+            }
+            else
+            {
+                Debug.LogWarning(myRealId);
+                return myRealId;
+            }
         }
 
         [Command]
@@ -35,20 +57,10 @@ namespace Assets.Scripts.Player
             points += pointsToAdd;
         }
 
-        public int GetPlayerNetworkId()
+        [Command]
+        private void CmdSendNewId()
         {
-            return (int)netId.Value;
-        }
-
-        //argument needed from sync var PRE-hook... -1 for bar init
-        private void SendPointSyncEvent( int newValue )
-        {
-            if (isServer)
-            {
-                RpcSyncPoints(newValue);
-            }
-
-            PointSyncEvent.Invoke(GetPlayerNetworkId(), newValue);
+            myRealId = playerControllerId;
         }
 
         [ClientRpc]
@@ -56,5 +68,38 @@ namespace Assets.Scripts.Player
         {
             points = newValue;
         }
+
+        [ClientRpc]
+        private void RpcSyncId(int newId)
+        {
+            Debug.LogWarning("AAAAA!");
+            myRealId = newId;
+        }
+
+        private void SyncId(int newId)
+        {
+            if (newId != myRealId)
+            {
+                if (isServer)
+                {
+                    RpcSyncId(newId);
+                } 
+            }
+        }
+        
+        //argument needed from sync var PRE-hook... -1 for bar init
+        private void SendPointSyncEvent(int newValue)
+        {
+            if (newValue != points)
+            {
+                if (isServer)
+                {
+                    RpcSyncPoints(newValue);
+                }
+
+                PointSyncEvent.Invoke(GetPlayerNetworkId(), newValue); 
+            }
+        }
+
     }
 }

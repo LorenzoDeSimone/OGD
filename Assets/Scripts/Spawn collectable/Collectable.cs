@@ -54,8 +54,11 @@ namespace Assets.Scripts.Spawn_collectable
 
         private void UpdateNetworkState(bool b)
         {
-            if (isServer)
-                RpcChangeNetworkState(b);
+            if (b != networkActiveState)
+            {
+                if (isServer)
+                    RpcChangeNetworkState(b); 
+            }
         }
 
         [Command]
