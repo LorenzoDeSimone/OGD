@@ -76,7 +76,6 @@ namespace Assets.Scripts.Spawn_collectable
         [ClientRpc]
         public void RpcChangeNetworkState(bool b)
         {
-            Debug.LogWarning("cakes...");
             mySprite.enabled = b;
             myCollider.enabled = b;
         }

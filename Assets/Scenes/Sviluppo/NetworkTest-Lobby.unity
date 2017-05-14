@@ -2668,6 +2668,7 @@ MonoBehaviour:
   m_SpawnPrefabs:
   - {fileID: 1392533751142890, guid: 88889e0d99b205d49a9a7e1b44a4c2dd, type: 2}
   - {fileID: 1825933286919356, guid: 25cb73523442f584aa52cc61ecddb0e1, type: 2}
+  - {fileID: 1648704762638588, guid: cd1a61dd02ee4004bb1e2140860baf1a, type: 2}
   m_CustomConfig: 0
   m_MaxConnections: 4
   m_ConnectionConfig:
@@ -2726,7 +2727,7 @@ MonoBehaviour:
   m_ShowLobbyGUI: 1
   m_MaxPlayers: 4
   m_MaxPlayersPerConnection: 1
-  m_MinPlayers: 4
+  m_MinPlayers: 2
   m_LobbyPlayerPrefab: {fileID: 114380445389110200, guid: f2a55bb9c6c84e64988637225db0de6f,
     type: 2}
   m_GamePlayerPrefab: {fileID: 1582415777413702, guid: 890ee3d1764f1584c87df9061563aeeb,

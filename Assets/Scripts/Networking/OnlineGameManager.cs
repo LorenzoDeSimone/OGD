@@ -11,47 +11,23 @@ namespace Assets.Scripts.Networking
         [Header("Time of a match in seconds")]
         public float matchTime = 180;
 
-        [Header("Time of victory screen in seconds")]
-        public float vicotoryScreenTime = 4;
-
-        protected NetworkLobbyController lobbyController;
-
-        public GameObject scoreboardPrefab;
-        public GameObject idMasterPrefab;
+        public GameObject victoryScreenHolder;
         
         void Start()
         {
-            lobbyController = (NetworkLobbyController)NetworkManager.singleton;
-            StartCoroutine(StartMatchCountDown());
-        }
-
-        public void EndMatchWrapper(string message)
-        {
-            Debug.Log(message);
-            StartCoroutine(EndMatch());
+            //StartCoroutine(StartMatchCountDown());
         }
 
         private IEnumerator StartMatchCountDown()
         {
             yield return new WaitForSeconds(matchTime);
-            EndMatchWrapper("Match ended after count down...");
+            EndMatch();
         }
 
-        private IEnumerator EndMatch()
+        public void EndMatch()
         {
-            lobbyController.PrepareToReset();
-            // This will make all physics related things to stop 
-            Time.timeScale = 0;
-            // unscaled time here!! see above
-            yield return new WaitForSecondsRealtime(vicotoryScreenTime);
-            Time.timeScale = 1;
-            KillNetwork();
-        }
-
-        private void KillNetwork()
-        {
-            Debug.LogWarning("Match Ended");
-            lobbyController.ResetNetworkState();
+            GameObject go = Instantiate(victoryScreenHolder);
+            NetworkServer.Spawn(go);
         }
     }
 }

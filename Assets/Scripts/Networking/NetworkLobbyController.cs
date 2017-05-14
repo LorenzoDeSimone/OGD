@@ -76,7 +76,7 @@ namespace Assets.Scripts.Networking
             }
             else
             {
-                Debug.LogError("Destroy Fail "+extendedInfo);
+                Debug.LogWarning("Destroy Fail "+extendedInfo);
             }
 
             readyToReset = true;
@@ -158,17 +158,6 @@ namespace Assets.Scripts.Networking
             searchingPublicMatch = true;
             joiningMatch = false;
             creatingMatch = true;
-        }
-
-        public NetworkPlayer GetLocalPlayer()
-        {
-            foreach( UnityEngine.Networking.PlayerController pC in singleton.client.connection.playerControllers )
-            {
-                if (pC.unetView.isLocalPlayer)
-                    return pC.unetView.GetComponent<NetworkPlayer>();
-            }
-
-            return new NetworkPlayer();
         }
 
         public bool IsSearchingPublicMatch()

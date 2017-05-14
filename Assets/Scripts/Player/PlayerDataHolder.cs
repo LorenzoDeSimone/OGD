@@ -21,11 +21,6 @@ namespace Assets.Scripts.Player
             InitPlayer();
         }
 
-        private void Update()
-        {
-            Debug.LogWarning(string.Format("{0} {1}",GetPlayerNetworkId(),syncPoints));
-        }
-
         [Command]
         public void CmdAddPoints(int pointsToAdd)
         {
