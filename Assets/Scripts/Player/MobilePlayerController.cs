@@ -41,22 +41,34 @@ namespace Assets.Scripts.Player
         private float syncDelay = 0f;
         private float syncTime = 0f;
 
+        private float timeStamp;
+
         private Vector3 syncStartPosition;
-        [SyncVar(hook = "SyncEndPosition")]
+
+        [SyncVar]//(hook = "SyncEndPosition")]
         public Vector3 syncEndPosition;
 
+        int i = 0;
 
         public int predictionIterations=3;
 
         private void SyncEndPosition(Vector3 newSyncEndPosition)
         {
-            syncTime = 0f;
-            syncDelay = Time.time - lastSynchronizationTime;
-            lastSynchronizationTime = Time.time;
-            syncStartPosition = myTransform.position;
-            syncEndPosition = newSyncEndPosition;
+            //syncTime = 0f;
+            //syncDelay = Time.time - lastSynchronizationTime;
+            //lastSynchronizationTime = Time.time;
+            //syncStartPosition = myTransform.position;
+            Debug.LogError("Bau!");
+            RpcUpdatePosition(newSyncEndPosition);
+             //myTransform.position = syncEndPosition = newSyncEndPosition;
             //Debug.Log("SyncDelay " + syncDelay);
             //Debug.LogError("ARRRRRR, HOOK!    New sync end position: "+ newSyncEndPosition);
+        }
+
+        [ClientRpc]
+        private void RpcUpdatePosition(Vector3 position)
+        {
+            myTransform.position = position;
         }
 
         [ClientCallback]
@@ -77,14 +89,20 @@ namespace Assets.Scripts.Player
 
             groundCheck1 = myTransform.Find("Ground Check 1").position;
             groundCheck2 = myTransform.Find("Ground Check 2").position;
+
+            timeStamp = 0;
+
+            /*if (isLocalPlayer)
+            {
+                Debug.Log("local player");
+                StartCoroutine(SendNetworkPositionLoop());
+            }*/
         }
 
-        [ClientCallback]
         void Update()
         {
             groundCheck1 = myTransform.Find("Ground Check 1").position;
             groundCheck2 = myTransform.Find("Ground Check 2").position;
-
             //Debug.Log(syncTime / syncDelay);
 
             myTargetMarker.GetComponent<SpriteRenderer>().color = GetComponent<SpriteRenderer>().color;//REMOVE FROM UPDATE ASAP
@@ -93,21 +111,8 @@ namespace Assets.Scripts.Player
 
             if (isLocalPlayer)
             {
-                if (Input.GetKey(KeyCode.LeftArrow))
-                {
-                    myTransform.position = Move(myTransform.position, MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE, Time.deltaTime);
-                    syncEndPosition = predictNextPosition(predictionIterations, MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE);//Move(myTransform.position, MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE, Time.deltaTime);
-                }
-                else if (Input.GetKey(KeyCode.RightArrow))
-                {
-                    myTransform.position = Move(myTransform.position, MOVEMENT_DIRECTIONS.CLOCKWISE, Time.deltaTime);
-                    syncEndPosition = predictNextPosition(predictionIterations, MOVEMENT_DIRECTIONS.CLOCKWISE);//Move(myTransform.position, MOVEMENT_DIRECTIONS.CLOCKWISE, Time.deltaTime);
-                }
-                else
-                    syncEndPosition = myTransform.position;
-
-                if (Input.GetKeyDown(KeyCode.Space))
-                    Jump();
+                LocalMovement();
+                CmdSendServerMyPosition(myTransform.position);
             }
             else
             {
@@ -115,6 +120,17 @@ namespace Assets.Scripts.Player
             }
 
             ApplyRotation(false);
+        }
+
+        void FixedUpdate()
+        {
+            ApplyGravity();
+        }
+
+        [Command]
+        private void CmdSendServerMyPosition(Vector3 position)
+        {
+            syncEndPosition = position;
         }
 
         private Vector2 predictNextPosition(int iterations, MOVEMENT_DIRECTIONS movementDirection)
@@ -127,19 +143,32 @@ namespace Assets.Scripts.Player
             return currPosition;
         }
 
+        private void LocalMovement()
+        {
+            if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                myTransform.position = Move(myTransform.position, MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE, Time.deltaTime);
+                //syncEndPosition = predictNextPosition(predictionIterations, MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE);//Move(myTransform.position, MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE, Time.deltaTime);
+            }
+            else if (Input.GetKey(KeyCode.RightArrow))
+            {
+                myTransform.position = Move(myTransform.position, MOVEMENT_DIRECTIONS.CLOCKWISE, Time.deltaTime);
+                //syncEndPosition = predictNextPosition(predictionIterations, MOVEMENT_DIRECTIONS.CLOCKWISE);//Move(myTransform.position, MOVEMENT_DIRECTIONS.CLOCKWISE, Time.deltaTime);
+            }
+            //else
+                //syncEndPosition = myTransform.position;
+
+            if (Input.GetKeyDown(KeyCode.Space))
+                Jump();
+        }
 
         private void SyncedMovement()
         {
-            syncTime += Time.deltaTime;
+            //syncTime += Time.deltaTime;
             //Debug.LogError("syncTime: " + syncTime + "||syncDelay: " + syncDelay + "||syncTime/syncDelay " + syncTime / syncDelay);
-            myTransform.position = Vector3.Slerp(syncStartPosition, syncEndPosition, syncTime/syncDelay);
+            //myTransform.position = Vector3.Slerp(syncStartPosition, syncEndPosition, syncTime/syncDelay);
+            myTransform.position = syncEndPosition;
             //Debug.LogError("syncStart: " + syncStartPosition + "|| syncEnd: "+syncEndPosition);
-        }
-
-        [ClientCallback]
-        void FixedUpdate()
-        {
-            ApplyGravity();
         }
 
         private void ApplyGravity()
@@ -344,7 +373,7 @@ namespace Assets.Scripts.Player
                                                   //might need a better solution for the future, works not so bad for now.
                 RaycastHit2D myGround = GetMyGround();
                 //ApplyRotation(true);
-                GetComponent<Rigidbody2D>().AddForce(myTransform.up * jumpPower * Time.fixedDeltaTime);
+                GetComponent<Rigidbody2D>().AddForce(myGround.normal * jumpPower * Time.fixedDeltaTime);
             }
         }
 
@@ -440,6 +469,13 @@ namespace Assets.Scripts.Player
             yield return new WaitForSeconds(jumpControlStopWindow);
             //Debug.Log("enabling");
             freeFromJumpBlock = true;
+        }
+
+        IEnumerator<WaitForSeconds> SendNetworkPositionLoop()
+        {
+            Debug.Log("sENDING MY TRANSFORM");
+            CmdSendServerMyPosition(myTransform.position);
+            yield return new WaitForSeconds(0.5f);
         }
     }
 }
