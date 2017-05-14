@@ -54,11 +54,10 @@ namespace Assets.Scripts.Spawn_collectable
 
         private void UpdateNetworkState(bool b)
         {
-            if (b != networkActiveState)
-            {
-                if (isServer)
-                    RpcChangeNetworkState(b); 
-            }
+            Debug.LogWarning("Sync net state hook of " + netId.Value);
+
+            if (isServer)
+                RpcChangeNetworkState(b); 
         }
 
         [Command]
@@ -77,6 +76,7 @@ namespace Assets.Scripts.Spawn_collectable
         [ClientRpc]
         public void RpcChangeNetworkState(bool b)
         {
+            Debug.LogWarning("cakes...");
             mySprite.enabled = b;
             myCollider.enabled = b;
         }

@@ -14,6 +14,7 @@ public static class PlayerColor
 
     public static Color GetColor(int color_num)
     {
+        color_num = Mathf.Abs(color_num);
         return color[color_num % color.Length];
     }
 }

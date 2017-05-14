@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
+using System;
 
 namespace Assets.Scripts.Player
 {
@@ -9,14 +10,42 @@ namespace Assets.Scripts.Player
         public static event OnPointSyncEvent PointSyncEvent;
 
         [SyncVar (hook = "SendPointSyncEvent")]
-        int points = 0;
-
-        [SyncVar(hook = "SyncId")]
-        int myRealId;
-
+        int syncPoints = 0;
+        
+        [SyncVar]
+        public int playerId = 0;
         public bool paintsThePlayer = true;
 
-        void Start()
+        private void Start()
+        {
+            InitPlayer();
+        }
+
+        private void Update()
+        {
+            Debug.LogWarning(string.Format("{0} {1}",GetPlayerNetworkId(),syncPoints));
+        }
+
+        [Command]
+        public void CmdAddPoints(int pointsToAdd)
+        {
+            syncPoints += pointsToAdd;
+        }
+
+        //argument needed from sync var PRE-hook... -1 for bar init
+        private void SendPointSyncEvent(int newValue)
+        {
+            PointSyncEvent.Invoke(GetPlayerNetworkId(), newValue);
+        }
+
+        private void InitPlayer()
+        {
+            TryToPaintPlayer();
+            //Send event with -1 for bar init
+            SendPointSyncEvent(-1);
+        }
+
+        private void TryToPaintPlayer()
         {
             if (paintsThePlayer)
             {
@@ -27,79 +56,11 @@ namespace Assets.Scripts.Player
                 catch
                 { /*is this so bad*/}
             }
-
-            if(isLocalPlayer)
-            {
-                CmdSendNewId();
-            }
-
-            //Send event with -1 for bar init
-            SendPointSyncEvent(-1);
         }
 
         public int GetPlayerNetworkId()
         {
-            if (isLocalPlayer)
-            {
-                Debug.LogWarning(playerControllerId);
-                return playerControllerId;
-            }
-            else
-            {
-                Debug.LogWarning(myRealId);
-                return myRealId;
-            }
+            return playerId;
         }
-
-        [Command]
-        public void CmdAddPoints(int pointsToAdd)
-        {
-            points += pointsToAdd;
-        }
-
-        [Command]
-        private void CmdSendNewId()
-        {
-            myRealId = playerControllerId;
-        }
-
-        [ClientRpc]
-        private void RpcSyncPoints(int newValue)
-        {
-            points = newValue;
-        }
-
-        [ClientRpc]
-        private void RpcSyncId(int newId)
-        {
-            Debug.LogWarning("AAAAA!");
-            myRealId = newId;
-        }
-
-        private void SyncId(int newId)
-        {
-            if (newId != myRealId)
-            {
-                if (isServer)
-                {
-                    RpcSyncId(newId);
-                } 
-            }
-        }
-        
-        //argument needed from sync var PRE-hook... -1 for bar init
-        private void SendPointSyncEvent(int newValue)
-        {
-            if (newValue != points)
-            {
-                if (isServer)
-                {
-                    RpcSyncPoints(newValue);
-                }
-
-                PointSyncEvent.Invoke(GetPlayerNetworkId(), newValue); 
-            }
-        }
-
     }
 }

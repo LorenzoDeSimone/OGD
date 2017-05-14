@@ -4,6 +4,8 @@ using UnityEngine.Networking;
 using UnityEngine.Networking.Match;
 using UnityEngine.Networking.Types;
 using UnityEngine.Events;
+using Assets.Scripts.Player;
+
 namespace Assets.Scripts.Networking
 {
     public class NetworkLobbyController : NetworkLobbyManager {
@@ -90,6 +92,15 @@ namespace Assets.Scripts.Networking
                 // num players is an inherited field 
                 PlayerDisconnectEvent(conn,numPlayers);
             }
+        }
+
+        int i = 0;
+        public override bool OnLobbyServerSceneLoadedForPlayer(GameObject lobbyPlayer, GameObject gamePlayer)
+        {
+            bool ret =  base.OnLobbyServerSceneLoadedForPlayer(lobbyPlayer, gamePlayer);
+            gamePlayer.GetComponent<PlayerDataHolder>().playerId = i;
+            i += 1;
+            return ret;
         }
 
         public void CreateMatch(string matchName)

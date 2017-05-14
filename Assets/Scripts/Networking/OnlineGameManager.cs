@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Events;
-
+using Assets.Scripts.Player;
 
 namespace Assets.Scripts.Networking
 {
@@ -14,9 +14,10 @@ namespace Assets.Scripts.Networking
         [Header("Time of victory screen in seconds")]
         public float vicotoryScreenTime = 4;
 
-        public UnityEvent OnMatchEnded;
-
         protected NetworkLobbyController lobbyController;
+
+        public GameObject scoreboardPrefab;
+        public GameObject idMasterPrefab;
         
         void Start()
         {
@@ -39,7 +40,6 @@ namespace Assets.Scripts.Networking
         private IEnumerator EndMatch()
         {
             lobbyController.PrepareToReset();
-            OnMatchEnded.Invoke();
             // This will make all physics related things to stop 
             Time.timeScale = 0;
             // unscaled time here!! see above
