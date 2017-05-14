@@ -50,16 +50,14 @@ namespace Assets.Scripts.Networking
                         string m = "";
                         m += mis.hostNodeId + "node\n";
                         m += mis.networkId + "ner\n";
-                        m += netId;
-                        Debug.LogError(m);
+                        m += "my\n";
+                        m +=  lobbyController.networkAddress + "node\n";
+                        m += lobbyController.networkPort + "ner\n";
+                        m += netId + "ntd\n";
+                        Debug.LogWarning(m);
 
                         if (mis.currentSize > 0)
                         {
-                            m = "";
-                            m += mis.hostNodeId + "node\n";
-                            m += mis.networkId + "ner\n";
-                            Debug.LogError(m);
-
                             lobbyController.joiningMatch = true;
                             lobbyController.matchMaker.JoinMatch(mis.networkId, "", "", "", 0, 0,
                                 lobbyController.OnMatchJoined);

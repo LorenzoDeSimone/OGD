@@ -1,8 +1,7 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.Player;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
-using Assets.Scripts.Player;
 
 public class InputManager : NetworkBehaviour {
 
@@ -13,8 +12,14 @@ public class InputManager : NetworkBehaviour {
     void Start ()
     {
         //Searches for local player Game Object and stores it
-        List<UnityEngine.Networking.PlayerController> players = NetworkManager.singleton.client.connection.playerControllers;
-        localPlayer = players[0].gameObject.GetComponent<MobilePlayerController>();
+        foreach(GameObject go in GameObject.FindGameObjectsWithTag("Player"))
+        {
+            if(go.GetComponent<NetworkIdentity>().isLocalPlayer)
+            {
+                localPlayer = go.GetComponent<MobilePlayerController>();
+                break;
+            }
+        }
     }
 
     //Handles continous movement

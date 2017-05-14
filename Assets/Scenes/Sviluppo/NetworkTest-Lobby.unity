@@ -2654,7 +2654,7 @@ MonoBehaviour:
   m_NetworkPort: 10000
   m_ServerBindToIP: 0
   m_ServerBindAddress: 
-  m_NetworkAddress: 192.168.1.6
+  m_NetworkAddress: localhost
   m_DontDestroyOnLoad: 1
   m_RunInBackground: 1
   m_ScriptCRCCheck: 1
@@ -2668,6 +2668,7 @@ MonoBehaviour:
   m_SpawnPrefabs:
   - {fileID: 1392533751142890, guid: 88889e0d99b205d49a9a7e1b44a4c2dd, type: 2}
   - {fileID: 1825933286919356, guid: 25cb73523442f584aa52cc61ecddb0e1, type: 2}
+  - {fileID: 1648704762638588, guid: cd1a61dd02ee4004bb1e2140860baf1a, type: 2}
   m_CustomConfig: 0
   m_MaxConnections: 4
   m_ConnectionConfig:
@@ -2732,7 +2733,7 @@ MonoBehaviour:
   m_GamePlayerPrefab: {fileID: 1582415777413702, guid: 890ee3d1764f1584c87df9061563aeeb,
     type: 2}
   m_LobbyScene: NetworkTest-Lobby
-  m_PlayScene: TestLorenzo
+  m_PlayScene: GameTest3
   lobbySlots: []
   publicMatchWaitTime: 10
 --- !u!114 &2108872119

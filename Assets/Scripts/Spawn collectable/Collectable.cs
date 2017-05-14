@@ -7,20 +7,25 @@ namespace Assets.Scripts.Spawn_collectable
 {
     public class Collectable : NetworkBehaviour
     {
-        [SyncVar( hook = "ChangeNetworkState")]
+        /*
+         * Sync var flow:
+         * client -Command: Can i update this variable? -> Server if yes updates the sync var -> the var is sync from client to server
+         * syncvar - calls the hook on server and client -> only the server then calls an rpc on the clients   
+         * the hook  
+         */
+        [SyncVar( hook = "UpdateNetworkState")]
         bool networkActiveState;
 
         public int pointValue = 1;
         public int pointScaler = 1;
 
-        SpriteRenderer sprite;
-        Collider2D coll;
+        SpriteRenderer mySprite;
+        Collider2D myCollider;
 
         private void Start()
         {
-            sprite = GetComponent<SpriteRenderer>();
-            coll = GetComponent<Collider2D>();
-            UpdateNetworkState(false);
+            mySprite = GetComponent<SpriteRenderer>();
+            myCollider = GetComponent<Collider2D>();
         }
 
         private void OnTriggerEnter2D(Collider2D coll)
@@ -40,14 +45,27 @@ namespace Assets.Scripts.Spawn_collectable
                     Debug.LogWarning("Missing Player Data Holder or something really bad!!!\nMessage: " + e.Message);
                 }
 
-                UpdateNetworkState(false);
+                /*
+                 *  When a client needs to update the syn 
+                 */
+                CmdUpdateServerState(false);
             }
         }
 
-        public void UpdateNetworkState(bool b)
+        private void UpdateNetworkState(bool b)
+        {
+            Debug.LogWarning("Sync net state hook of " + netId.Value);
+
+            if (isServer)
+                RpcChangeNetworkState(b); 
+        }
+
+        [Command]
+        private void CmdUpdateServerState(bool b)
         {
             networkActiveState = b;
-            ChangeNetworkState(b);
+            mySprite.enabled = b;
+            myCollider.enabled = b;
         }
 
         public bool GetNetworkActiveState()
@@ -55,16 +73,16 @@ namespace Assets.Scripts.Spawn_collectable
             return networkActiveState;
         }
 
-        private void ChangeNetworkState(bool state)
+        [ClientRpc]
+        public void RpcChangeNetworkState(bool b)
         {
-            networkActiveState = state;
-            sprite.enabled = state;
-            coll.enabled = state;
+            mySprite.enabled = b;
+            myCollider.enabled = b;
         }
 
         private void AddPointsToPlayer(PlayerDataHolder playerDataHolder)
         {
-            playerDataHolder.AddPoints(pointValue * pointScaler);
+            playerDataHolder.CmdAddPoints(pointValue * pointScaler);
         }
     }
 }

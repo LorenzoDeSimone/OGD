@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
+using System;
 
 namespace Assets.Scripts.Player
 {
@@ -9,11 +10,37 @@ namespace Assets.Scripts.Player
         public static event OnPointSyncEvent PointSyncEvent;
 
         [SyncVar (hook = "SendPointSyncEvent")]
-        int points = 0;
-
+        int syncPoints = 0;
+        
+        [SyncVar]
+        public int playerId = 0;
         public bool paintsThePlayer = true;
 
-        void Start()
+        private void Start()
+        {
+            InitPlayer();
+        }
+
+        [Command]
+        public void CmdAddPoints(int pointsToAdd)
+        {
+            syncPoints += pointsToAdd;
+        }
+
+        //argument needed from sync var PRE-hook... -1 for bar init
+        private void SendPointSyncEvent(int newValue)
+        {
+            PointSyncEvent.Invoke(GetPlayerNetworkId(), newValue);
+        }
+
+        private void InitPlayer()
+        {
+            TryToPaintPlayer();
+            //Send event with -1 for bar init
+            SendPointSyncEvent(-1);
+        }
+
+        private void TryToPaintPlayer()
         {
             if (paintsThePlayer)
             {
@@ -24,26 +51,11 @@ namespace Assets.Scripts.Player
                 catch
                 { /*is this so bad*/}
             }
-
-            //Send event with -1 for bar init
-            SendPointSyncEvent(-1);
-        }
-
-        public void AddPoints(int pointsToAdd)
-        {
-            points += pointsToAdd;
         }
 
         public int GetPlayerNetworkId()
         {
-            return (int)netId.Value;
-        }
-
-        //argument needed from sync var PRE-hook... -1 for bar init
-        private void SendPointSyncEvent( int newValue )
-        {
-            points = newValue;
-            PointSyncEvent.Invoke(GetPlayerNetworkId(), newValue);
+            return playerId;
         }
     }
 }

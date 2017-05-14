@@ -8,10 +8,7 @@ namespace Assets.Scripts.Networking
     class PlayerDisconnectionHandler : NetworkBehaviour
     {
         OnlineGameManager onlineGameManager;
-
         protected NetworkLobbyController lobbyController;
-
-        public UnityEvent OnPlayerDisconnects;
 
         void Start()
         {
@@ -29,17 +26,12 @@ namespace Assets.Scripts.Networking
         private void HandlePlayerDisconnection(NetworkConnection conn, int playerCount)
         {
             Debug.LogWarning("Player: " + conn + " dsconected! only " + playerCount + " little indians remains...");
+            
 
-            OnPlayerDisconnects.Invoke();
             if (playerCount == 1)
             {
-                Debug.LogWarning("Player lonely...");
                 StopAllCoroutines();
-                onlineGameManager.EndMatchWrapper("Match ended because player lonely...");
-            }
-            else
-            {
-                Debug.LogError("" + conn.ToString() + " disconnected");
+                onlineGameManager.EndMatch();
             }
         }
     }
