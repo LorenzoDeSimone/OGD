@@ -25,12 +25,16 @@ namespace Assets.Scripts.UI
             StartCoroutine(PrepareToDisconnect());
         }
 
+        /*
+         * May Lorenzo forgive me...
+         */
         private void FillScoreboard()
         {
             PlayerDataHolder playerData;
             GameObject newPlayerScore;
             GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
             int totalPoints = 0;
+            int playerPoints = 0;
             float offset = 0.0f;
             Vector2 newAnchorMax;
             Vector2 newAnchorMin;
@@ -46,12 +50,26 @@ namespace Assets.Scripts.UI
                 newPlayerScore = Instantiate(playerScorePrefab, scoresHolder);
                 playerData = players[i].GetComponent<PlayerDataHolder>();
                 newPlayerScore.GetComponent<Image>().color = PlayerColor.GetColor(playerData.GetPlayerNetworkId());
+
                 newAnchorMax = ((RectTransform)newPlayerScore.transform).anchorMax;
                 newAnchorMin = ((RectTransform)newPlayerScore.transform).anchorMin;
                 newAnchorMin.x = offset;
-                newAnchorMax.x = offset + 1/players.Length;
+                newAnchorMax.x = offset + 1/(float)players.Length;
                 offset = newAnchorMax.x;
-                newAnchorMax.y = totalPoints / (float)playerData.GetPoints();
+
+                if (totalPoints > 0)
+                {
+                    playerPoints = playerData.GetPoints();
+                    if (playerPoints <= 0)
+                    {
+                        playerPoints = 1;
+                    }
+                    newAnchorMax.y = totalPoints / (float)playerPoints;
+                }
+                else
+                {
+                    newAnchorMax.y = 1 / (float)players.Length;
+                }
                 ((RectTransform)newPlayerScore.transform).anchorMax = newAnchorMax;
                 ((RectTransform)newPlayerScore.transform).anchorMin = newAnchorMin;
             }
