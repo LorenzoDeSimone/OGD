@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Assets.Scripts.Player;
 
 namespace Assets.Scripts.CameraHandling
 {
@@ -6,21 +7,32 @@ namespace Assets.Scripts.CameraHandling
     {
         public Transform playerTransform;
         public float zOffset = -10;
-
         Transform tr;
-        Vector3 newPosition;
+        bool firstSnap = true;
+        public float snapThreshold = 0.1f;
+
+        [Range(0.01f, 1.0f)]
+        public float cameraLerp = 0.1f;
 
         void Start()
         {
             tr = GetComponent<Transform>();
-            newPosition = new Vector3(0, 0, zOffset);
         }
 
-        void Update()
+        void LateUpdate()
         {
+            Vector3 newPosition;
             newPosition.x = playerTransform.position.x;
             newPosition.y = playerTransform.position.y;
-            tr.position = newPosition;
+            newPosition.z = zOffset;
+
+            if (firstSnap)
+            {
+                tr.position = newPosition;
+                firstSnap = false;
+            }
+            else
+                tr.position = Vector3.Lerp(tr.position, newPosition, cameraLerp);
         }
     }
 }
