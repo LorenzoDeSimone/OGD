@@ -15,7 +15,7 @@ namespace Assets.Scripts.Networking
         
         void Start()
         {
-            //StartCoroutine(StartMatchCountDown());
+            StartCoroutine(StartMatchCountDown());
         }
 
         private IEnumerator StartMatchCountDown()
