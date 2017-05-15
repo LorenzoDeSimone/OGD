@@ -18,9 +18,12 @@ namespace Assets.Scripts.CameraHandling
 
         void Update()
         {
-            newPosition.x = playerTransform.position.x;
-            newPosition.y = playerTransform.position.y;
-            tr.position = newPosition;
+            if (playerTransform)
+            {
+                newPosition.x = playerTransform.position.x;
+                newPosition.y = playerTransform.position.y;
+                tr.position = newPosition; 
+            }
         }
     }
 }

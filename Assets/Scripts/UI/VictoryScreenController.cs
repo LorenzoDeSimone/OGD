@@ -60,11 +60,15 @@ namespace Assets.Scripts.UI
                 if (totalPoints > 0)
                 {
                     playerPoints = playerData.GetPoints();
+
                     if (playerPoints <= 0)
                     {
-                        playerPoints = 1;
+                        newAnchorMax.y = 0.1f;
                     }
-                    newAnchorMax.y = totalPoints / (float)playerPoints;
+                    else
+                    {
+                        newAnchorMax.y = playerPoints/ (float)totalPoints;
+                    }
                 }
                 else
                 {
@@ -78,26 +82,15 @@ namespace Assets.Scripts.UI
         private IEnumerator PrepareToDisconnect()
         {
             lobbyController.PrepareToReset();
-            // This will make all physics related things to stop 
-            Time.timeScale = 0;
-            // unscaled time here!! see above
-            yield return new WaitForSecondsRealtime(vicotoryScreenTime);
-            Time.timeScale = 1;
+            yield return new WaitForSeconds(vicotoryScreenTime);
+
             DisconnectFromMatch();
         }
 
         private void DisconnectFromMatch()
         {
-            Debug.LogWarning("Match Ended");
-            if(isServer)
-            {
-                lobbyController.StopServer();
-                lobbyController.ResetNetworkState();
-            }
-            else
-            {
-                lobbyController.StopClient();
-            }
+            Network.Disconnect();
+            lobbyController.ResetNetworkState();
         }
     }
 }
