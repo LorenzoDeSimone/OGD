@@ -148,7 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b76d8353ab6d6d5448b60d3ff09b5185, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  matchTime: 10
+  matchTime: 180
   victoryScreenHolder: {fileID: 1648704762638588, guid: cd1a61dd02ee4004bb1e2140860baf1a,
     type: 2}
 --- !u!114 &38238905
@@ -365,7 +365,7 @@ GameObject:
   - component: {fileID: 204101839}
   m_Layer: 5
   m_Name: PointBarHolder
-  m_TagString: Untagged
+  m_TagString: PointBarHolder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

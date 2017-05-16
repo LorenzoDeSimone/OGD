@@ -84,13 +84,20 @@ namespace Assets.Scripts.Networking
 
         public override void OnServerDisconnect(NetworkConnection conn)
         {
-            base.OnServerDisconnect(conn);
-            Debug.LogWarning("Player dsconected! " + conn);
-
-            if (PlayerDisconnectEvent!= null)
+            try
             {
-                // num players is an inherited field 
-                PlayerDisconnectEvent(conn,numPlayers);
+                base.OnServerDisconnect(conn);
+                Debug.LogWarning("Player dsconected! " + conn);
+
+                if (PlayerDisconnectEvent != null)
+                {
+                    // num players is an inherited field 
+                    PlayerDisconnectEvent(conn, numPlayers);
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning("Player dsconnection error " + e.Message);
             }
         }
 

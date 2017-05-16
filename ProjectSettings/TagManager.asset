@@ -8,6 +8,7 @@ TagManager:
   - Platform
   - Bar
   - OnlineGameManager
+  - PointBarHolder
   layers:
   - Default
   - TransparentFX

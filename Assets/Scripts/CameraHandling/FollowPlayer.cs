@@ -10,6 +10,7 @@ namespace Assets.Scripts.CameraHandling
         Transform tr;
         bool firstSnap = true;
         public float snapThreshold = 0.1f;
+        Vector3 newPosition;
 
         [Range(0.01f, 1.0f)]
         public float cameraLerp = 0.1f;
@@ -21,18 +22,23 @@ namespace Assets.Scripts.CameraHandling
 
         void LateUpdate()
         {
-            Vector3 newPosition;
-            newPosition.x = playerTransform.position.x;
-            newPosition.y = playerTransform.position.y;
-            newPosition.z = zOffset;
-
-            if (firstSnap)
+            if (playerTransform)
             {
-                tr.position = newPosition;
-                firstSnap = false;
+
+                newPosition.x = playerTransform.position.x;
+                newPosition.y = playerTransform.position.y;
+                newPosition.z = zOffset;
+
+                if (firstSnap)
+                {
+                    tr.position = newPosition;
+                    firstSnap = false;
+                }
+                else
+                {
+                    tr.position = Vector3.Lerp(tr.position, newPosition, cameraLerp);
+                }
             }
-            else
-                tr.position = Vector3.Lerp(tr.position, newPosition, cameraLerp);
         }
     }
 }

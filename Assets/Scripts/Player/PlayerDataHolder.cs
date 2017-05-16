@@ -10,7 +10,7 @@ namespace Assets.Scripts.Player
         public static event OnPointSyncEvent PointSyncEvent;
 
         [SyncVar (hook = "SendPointSyncEvent")]
-        int syncPoints = 0;
+        int playerPoints = 0;
         
         [SyncVar]
         public int playerId = 0;
@@ -24,7 +24,7 @@ namespace Assets.Scripts.Player
         [Command]
         public void CmdAddPoints(int pointsToAdd)
         {
-            syncPoints += pointsToAdd;
+            playerPoints += pointsToAdd;
         }
 
         //argument needed from sync var PRE-hook... -1 for bar init
@@ -51,6 +51,11 @@ namespace Assets.Scripts.Player
                 catch
                 { /*is this so bad*/}
             }
+        }
+
+        public int GetPoints()
+        {
+            return playerPoints;
         }
 
         public int GetPlayerNetworkId()
