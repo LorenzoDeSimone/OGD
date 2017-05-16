@@ -5,9 +5,15 @@ namespace Assets.Scripts.Networking
 {
     class LobbyControllerResetter : MonoBehaviour
     {
-        void Start()
+        bool first = true;
+
+        private void OnEnable()
         {
-            ((NetworkLobbyController)NetworkManager.singleton).ResetNetworkState();
+            if (!first)
+            {
+                ((NetworkLobbyController)NetworkManager.singleton).ResetNetworkState();
+                first = false;
+            }
         }
     }
 }
