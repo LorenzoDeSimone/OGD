@@ -13,6 +13,7 @@ namespace Assets.Scripts.Player
         public float movementReduction = 10;
         public float EdgeCheckMultiplier = 1.1f;
         public float airResistance = 0.4f;
+        public float timing = 0.01f;
 
         private static readonly float rotationEpsilon = 0.999f;
         private bool freeFromJumpBlock = true;
@@ -40,13 +41,10 @@ namespace Assets.Scripts.Player
         private float lastSynchronizationTime = 0f;
         private float syncDelay = 0f;
         private float syncTime = 0f;
-
         private float timeStamp;
 
-        private Vector3 syncStartPosition;
-        private LinkedList<PlayerInput> InputHistory;
-         
-        //private SortedList<float, MOVEMENT_DIRECTIONS> InputHistory; 
+        //private Vector3 syncStartPosition;
+        private List<PlayerInput> InputHistorySentToServer, LocalInputHistory, InputBuffer; 
 
         private struct PlayerInput
         {
@@ -54,11 +52,11 @@ namespace Assets.Scripts.Player
             public bool clockwise;
             public bool jump;
             public bool shoot;
-            public float timestamp;
+            public double timestamp;
         }
 
-        [SyncVar(hook = "SyncEndPosition")]
-        public Vector3 syncEndPosition;
+        //[SyncVar(hook = "SyncEndPosition")]
+        //public Vector3 syncEndPosition;
 
         int i = 0;
 
@@ -66,7 +64,7 @@ namespace Assets.Scripts.Player
 
         private void SyncEndPosition(Vector3 newSyncEndPosition)
         {
-            syncEndPosition = newSyncEndPosition;
+            //syncEndPosition = newSyncEndPosition;
             //syncTime = 0f;
             //syncDelay = Time.time - lastSynchronizationTime;
             //lastSynchronizationTime = Time.time;
@@ -83,8 +81,8 @@ namespace Assets.Scripts.Player
             myRigidBody = GetComponent<Rigidbody2D>();
             myTransform = GetComponent<Transform>();
 
-            syncEndPosition = myTransform.position;
-            syncStartPosition = myTransform.position;
+            //syncEndPosition = myTransform.position;
+            //syncStartPosition = myTransform.position;
 
             myGravityFields = new HashSet<GameObject>();
             myTargets = new HashSet<GameObject>();
@@ -97,58 +95,71 @@ namespace Assets.Scripts.Player
             groundCheck2 = myTransform.Find("Ground Check 2").position;
 
             timeStamp = 0;
-            InputHistory = new LinkedList<PlayerInput>();
-        //InputHistory = new SortedList<float, MOVEMENT_DIRECTIONS>();
+            InputHistorySentToServer = new List<PlayerInput>();
+            LocalInputHistory = new List<PlayerInput>();
+            InputBuffer = new List<PlayerInput>();
 
-        /*if (isLocalPlayer)
-        {
-            Debug.Log("local player");
-            StartCoroutine(SendNetworkPositionLoop());
-        }*/
-    }
+            StartCoroutine(SendServerMyInputBuffer());
+        }
 
-    void Update()
+        void Update()
         {
             //Debug.LogError("Velocity:" + myRigidBody.velocity);
             groundCheck1 = myTransform.Find("Ground Check 1").position;
             groundCheck2 = myTransform.Find("Ground Check 2").position;
             //Debug.Log(syncTime / syncDelay);
-
-            myTargetMarker.GetComponent<SpriteRenderer>().color = GetComponent<SpriteRenderer>().color;//REMOVE FROM UPDATE ASAP
             myGround = GetMyGround();
             nearestTarget = GetNearestTargetAndMarkIt();
 
-            if (isLocalPlayer)
+            if(isLocalPlayer)
             {
-                LocalMovement();
-                //CmdSendServerMyInput(myTransform.position);
+                LocalMoveAndSendInputToServer();
             }
-            //else
-            //{
-            //    SyncedMovement();
-            //}
+
             ApplyRotation(false);
 
             if (isServer)//Updates the client with input received
             {
-                foreach(PlayerInput currInput in InputHistory)
+                List<PlayerInput> History;
+
+                //if (isLocalPlayer)
+                //    History = LocalInputHistory;
+                //else
+                History = InputHistorySentToServer;
+                foreach(PlayerInput currInput in History)
                 {
-                    myTransform.position = ExecuteClientInput(currInput);
+                    myTransform.position = ExecuteInput(myTransform.position, currInput);//Server updates position on its machine
                 }
-                InputHistory.Clear();
-                RpcSendPositionToClient(myTransform.position);
+                History.Clear();
+                RpcSendPositionToClient(myTransform.position, Network.time);//Server updates position on all clients on a different machine than server
             }
         }
 
         [ClientRpc]
-        private void RpcSendPositionToClient(Vector2 position)
+        private void RpcSendPositionToClient(Vector3 position, double timestampFromServer)
         {
-            myTransform.position = position;
+            LinkedList<PlayerInput> LocalInputHistoryCopy = new LinkedList<PlayerInput>(LocalInputHistory);
+            Vector2 newPosition = position;
+
+            //Debug.Log("Time sent by server: " + Network.time);
+
+            foreach (PlayerInput currInput in LocalInputHistoryCopy)
+            {
+                //Debug.Log("CurrTimestamp: " + currInput.timestamp);
+                if (currInput.timestamp < timestampFromServer)//Older input to be discarded, it's done and it's ok
+                    LocalInputHistory.Remove(currInput);
+                else//Input that is newer from last known server validated position (Not removed!)
+                {
+                    newPosition = ExecuteInput(newPosition, currInput);//From last validated position, we apply recent player input
+                }
+            }
+            myTransform.position = newPosition;
         }
 
-        private Vector2 ExecuteClientInput(PlayerInput input)
+        private Vector2 ExecuteInput(Vector3 startPosition, PlayerInput input)
         {
-            Vector2 position = myTransform.position;
+            Vector2 position = startPosition;
+
             if (input.counterClockwise)
                 position = Move(position, MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE);
             else if (input.clockwise)
@@ -166,9 +177,10 @@ namespace Assets.Scripts.Player
         }
 
         [Command]
-        private void CmdSendServerMyInput(PlayerInput input)
+        private void CmdSendServerMyInput(PlayerInput[] InputBuffer)
         {
-            InputHistory.AddFirst(input);
+            foreach(PlayerInput currInput in InputBuffer)
+                InputHistorySentToServer.Add(currInput);
         }
 
         private Vector2 predictNextPosition(int iterations, MOVEMENT_DIRECTIONS movementDirection)
@@ -181,22 +193,24 @@ namespace Assets.Scripts.Player
             return currPosition;
         }
 
-        private void LocalMovement()
+        private void LocalMoveAndSendInputToServer()
         {
             PlayerInput input;
             input.counterClockwise = input.clockwise = input.jump = input.shoot = false;
-            input.timestamp = Time.time;
+            input.timestamp = Network.time;
 
             if (Input.GetKey(KeyCode.LeftArrow))
             {
-                //myTransform.position = Move(myTransform.position, MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE);
+                if(!isServer)
+                    myTransform.position = Move(myTransform.position, MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE);
                 input.counterClockwise = true;
                 //InputHistory.Add(Time.time, MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE);
                 //syncEndPosition = predictNextPosition(predictionIterations, MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE);//Move(myTransform.position, MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE, Time.deltaTime);
             }
             else if (Input.GetKey(KeyCode.RightArrow))
             {
-                //myTransform.position = Move(myTransform.position, MOVEMENT_DIRECTIONS.CLOCKWISE);
+                if (!isServer)
+                    myTransform.position = Move(myTransform.position, MOVEMENT_DIRECTIONS.CLOCKWISE);
                 input.clockwise = true;
                 //InputHistory.Add(Time.time, MOVEMENT_DIRECTIONS.CLOCKWISE);
                 //syncEndPosition = predictNextPosition(predictionIterations, MOVEMENT_DIRECTIONS.CLOCKWISE);//Move(myTransform.position, MOVEMENT_DIRECTIONS.CLOCKWISE, Time.deltaTime);
@@ -210,14 +224,20 @@ namespace Assets.Scripts.Player
                 input.jump = true;
                 //InputHistory.Add(Time.time, MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE);
             }
-            CmdSendServerMyInput(input);
+
+            if (input.clockwise || input.counterClockwise || input.jump)
+            {
+                if (!isServer)
+                    LocalInputHistory.Add(input);
+                InputBuffer.Add(input);
+            }
         }
 
         private void SyncedMovement()
         {
             //syncTime += Time.deltaTime;
             //Debug.LogError("syncTime: " + syncTime + "||syncDelay: " + syncDelay + "||syncTime/syncDelay " + syncTime / syncDelay);
-            myTransform.position = Vector3.Slerp(myTransform.position, syncEndPosition, 0.1f);
+            //myTransform.position = Vector3.Slerp(myTransform.position, syncEndPosition, 0.1f);
             //myTransform.position = syncEndPosition;
             //Debug.LogError("syncStart: " + syncStartPosition + "|| syncEnd: "+syncEndPosition);
         }
@@ -521,5 +541,17 @@ namespace Assets.Scripts.Player
             //Debug.Log("enabling");
             freeFromJumpBlock = true;
         }
+
+        IEnumerator<WaitForSeconds> SendServerMyInputBuffer()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(timing);
+                CmdSendServerMyInput(InputBuffer.ToArray());
+                InputBuffer.Clear();
+                Debug.LogError("Input Sent to Server!");
+            }
+        }
+
     }
 }
