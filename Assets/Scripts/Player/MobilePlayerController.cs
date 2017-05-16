@@ -14,7 +14,7 @@ namespace Assets.Scripts.Player
         public float EdgeCheckMultiplier = 1.1f;
         public float airResistance = 0.4f;
         public float timing = 0.01f;
-
+        private float deltaPos;
         private static readonly float rotationEpsilon = 0.999f;
         private bool freeFromJumpBlock = true;
 
@@ -55,6 +55,7 @@ namespace Assets.Scripts.Player
             public bool jump;
             public bool shoot;
             public double timestamp;
+            //public Vector2 position;
         }
 
         int i = 0;
@@ -80,10 +81,12 @@ namespace Assets.Scripts.Player
             myRigidBody = GetComponent<Rigidbody2D>();
             myTransform = GetComponent<Transform>();
 
-            //syncEndPosition = myTransform.position;
-            //syncStartPosition = myTransform.position;
+            syncEndPosition = myTransform.position;
+            syncStartPosition = myTransform.position;
 
-            myGravityFields = new HashSet<GameObject>();
+            //deltaPos = speed * 5 / Mathf.Pow(speed, 3);
+
+;           myGravityFields = new HashSet<GameObject>();
             myTargets = new HashSet<GameObject>();
             myTargetMarker = (GameObject)Instantiate(Resources.Load("Prefabs/Player/Target Marker"));
 
@@ -114,6 +117,10 @@ namespace Assets.Scripts.Player
             {
                 LocalMoveAndSendInputToServer();
             }
+            else if(!isServer)
+            {
+                SyncedMovement();
+            }
 
             ApplyRotation(false);
 
@@ -141,6 +148,7 @@ namespace Assets.Scripts.Player
             {
                 LinkedList<PlayerInput> LocalInputHistoryCopy = new LinkedList<PlayerInput>(LocalInputHistory);
                 Vector2 newPosition = position;
+                //bool FoundFirstNewerTimestamp = false;
 
                 //Debug.Log("Time sent by server: " + Network.time);
 
@@ -151,6 +159,12 @@ namespace Assets.Scripts.Player
                         LocalInputHistory.Remove(currInput);
                     else//Input that is newer from last known server validated position (Not removed!)
                     {
+                        /*if(!FoundFirstNewerTimestamp)
+                        {
+                            FoundFirstNewerTimestamp = true;
+                            if (Vector2.Distance(position, currInput.position) < deltaPos)
+                                return;
+                        }*/
                         newPosition = ExecuteInput(newPosition, currInput);//From last validated position, we apply recent player input
                     }
                 }
@@ -158,7 +172,11 @@ namespace Assets.Scripts.Player
             }
             else
             {
-                
+                syncTime = 0f;
+                syncDelay = Time.time - lastSynchronizationTime;
+                lastSynchronizationTime = Time.time;
+                syncStartPosition = myTransform.position;
+                syncEndPosition = position;
             }
         }
 
@@ -231,6 +249,8 @@ namespace Assets.Scripts.Player
                 //InputHistory.Add(Time.time, MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE);
             }
 
+            //input.position = myTransform.position;
+
             if (input.clockwise || input.counterClockwise || input.jump)
             {
                 if (!isServer)
@@ -241,9 +261,9 @@ namespace Assets.Scripts.Player
 
         private void SyncedMovement()
         {
-            //syncTime += Time.deltaTime;
-            //Debug.LogError("syncTime: " + syncTime + "||syncDelay: " + syncDelay + "||syncTime/syncDelay " + syncTime / syncDelay);
-            //myTransform.position = Vector3.Slerp(myTransform.position, syncEndPosition, 0.1f);
+            syncTime += Time.deltaTime;
+            Debug.Log("syncTime: " + syncTime + "||syncDelay: " + syncDelay + "||CLAMP01 syncTime/syncDelay " + Mathf.Clamp01(syncTime / syncDelay));
+            myTransform.position = Vector3.Slerp(syncStartPosition, syncEndPosition, Mathf.Clamp01(syncTime / syncDelay));
             //myTransform.position = syncEndPosition;
             //Debug.LogError("syncStart: " + syncStartPosition + "|| syncEnd: "+syncEndPosition);
         }
