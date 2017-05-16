@@ -549,7 +549,7 @@ namespace Assets.Scripts.Player
                 yield return new WaitForSeconds(timing);
                 CmdSendServerMyInput(InputBuffer.ToArray());
                 InputBuffer.Clear();
-                Debug.LogError("Input Sent to Server!");
+                //Debug.LogError("Input Sent to Server!");
             }
         }
 

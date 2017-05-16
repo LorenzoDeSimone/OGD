@@ -270,6 +270,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   vicotoryScreenTime: 4
+  poinbarHolderTag: PointBarHolder
+  controlsHolderTag: ControlsHolder
   scoresHolder: {fileID: 224094763331568978}
   playerScorePrefab: {fileID: 1677395357304050, guid: 17ffd3b33769c1247ad1f0528cbd4b9c,
     type: 2}
