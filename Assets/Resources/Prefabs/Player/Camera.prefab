@@ -107,6 +107,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerTransform: {fileID: 0}
   zOffset: -10
+  snapThreshold: 0.1
+  cameraLerp: 0.1
 --- !u!124 &124314956444555104
 Behaviour:
   m_ObjectHideFlags: 1

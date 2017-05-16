@@ -34,45 +34,39 @@ namespace Assets.Scripts.UI
         private void FillScoreboard()
         {
             PointManager pointManager = GameObject.FindGameObjectWithTag(poinbarHolderTag).GetComponent<PointManager>();
-            
+            GameObject newPlayerScore;
+            Dictionary<int, int> ofPlayersAndPoints = pointManager.GetPointsForPlayers();
             float offset = 0.0f;
             Vector2 newAnchorMax;
             Vector2 newAnchorMin;
 
-            foreach (GameObject go in players)
-            {
-                playerData = go.GetComponent<PlayerDataHolder>();
-                totalPoints += playerData.GetPoints();
-            }
-
-            for(int i = 0; i < players.Length; i++)
+            foreach(int i in ofPlayersAndPoints.Keys)
             {
                 newPlayerScore = Instantiate(playerScorePrefab, scoresHolder);
-                playerData = players[i].GetComponent<PlayerDataHolder>();
-                newPlayerScore.GetComponent<Image>().color = PlayerColor.GetColor(playerData.GetPlayerNetworkId());
+
+                newPlayerScore.GetComponent<Image>().color = PlayerColor.GetColor(ofPlayersAndPoints[i]);
 
                 newAnchorMax = ((RectTransform)newPlayerScore.transform).anchorMax;
                 newAnchorMin = ((RectTransform)newPlayerScore.transform).anchorMin;
                 newAnchorMin.x = offset;
-                newAnchorMax.x = offset + 1/(float)players.Length;
+                newAnchorMax.x = offset + 1/(float)ofPlayersAndPoints.Count;
                 offset = newAnchorMax.x;
 
-                if (totalPoints > 0)
+                if (pointManager.GetTotalPoints() > 0)
                 {
-                    playerPoints = playerData.GetPoints();
 
-                    if (playerPoints <= 0)
+                    if (ofPlayersAndPoints[i] <= 0)
                     {
                         newAnchorMax.y = 0.1f;
                     }
                     else
                     {
-                        newAnchorMax.y = playerPoints/ (float)totalPoints;
+                        newAnchorMax.y = ofPlayersAndPoints[i] / (float)pointManager.GetTotalPoints();
                     }
                 }
                 else
                 {
-                    newAnchorMax.y = 1 / (float)players.Length;
+                    newAnchorMax.y = 1 / (float)ofPlayersAndPoints.Count;
                 }
                 ((RectTransform)newPlayerScore.transform).anchorMax = newAnchorMax;
                 ((RectTransform)newPlayerScore.transform).anchorMin = newAnchorMin;

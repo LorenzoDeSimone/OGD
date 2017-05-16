@@ -365,7 +365,7 @@ GameObject:
   - component: {fileID: 204101839}
   m_Layer: 5
   m_Name: PointBarHolder
-  m_TagString: Untagged
+  m_TagString: PointBarHolder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
