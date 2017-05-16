@@ -48,7 +48,7 @@ namespace Assets.Scripts.Player
 
         private List<PlayerInput> InputHistorySentToServer, LocalInputHistory, InputBuffer; 
 
-        private struct PlayerInput
+        public struct PlayerInput
         {
             public bool counterClockwise;
             public bool clockwise;
@@ -113,11 +113,7 @@ namespace Assets.Scripts.Player
             myGround = GetMyGround();
             nearestTarget = GetNearestTargetAndMarkIt();
 
-            if(isLocalPlayer)
-            {
-                LocalMoveAndSendInputToServer();
-            }
-            else if(!isServer)
+            if(!isLocalPlayer && !isServer)
             {
                 SyncedMovement();
             }
@@ -217,45 +213,34 @@ namespace Assets.Scripts.Player
             return currPosition;
         }
 
-        private void LocalMoveAndSendInputToServer()
+        public void LocalMoveandStoreInputInBuffer(PlayerInput input)
         {
-            PlayerInput input;
-            input.counterClockwise = input.clockwise = input.jump = input.shoot = false;
-            input.timestamp = Network.time;
-
-            if (Input.GetKey(KeyCode.LeftArrow))
+            if (isLocalPlayer)
             {
-                if(!isServer)
-                    myTransform.position = Move(myTransform.position, MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE);
-                input.counterClockwise = true;
-                //InputHistory.Add(Time.time, MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE);
-                //syncEndPosition = predictNextPosition(predictionIterations, MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE);//Move(myTransform.position, MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE, Time.deltaTime);
-            }
-            else if (Input.GetKey(KeyCode.RightArrow))
-            {
-                if (!isServer)
-                    myTransform.position = Move(myTransform.position, MOVEMENT_DIRECTIONS.CLOCKWISE);
-                input.clockwise = true;
-                //InputHistory.Add(Time.time, MOVEMENT_DIRECTIONS.CLOCKWISE);
-                //syncEndPosition = predictNextPosition(predictionIterations, MOVEMENT_DIRECTIONS.CLOCKWISE);//Move(myTransform.position, MOVEMENT_DIRECTIONS.CLOCKWISE, Time.deltaTime);
-            }
-            //else
-            //syncEndPosition = myTransform.position;
+                if (input.counterClockwise)
+                {
+                    if (!isServer)
+                        myTransform.position = Move(myTransform.position, MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE);
+                }
+                else if (input.clockwise)
+                {
+                    if (!isServer)
+                        myTransform.position = Move(myTransform.position, MOVEMENT_DIRECTIONS.CLOCKWISE);
+                }
+                if (input.jump)
+                {
+                    if (!isServer)
+                        Jump();
+                }
 
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                //Jump();
-                input.jump = true;
-                //InputHistory.Add(Time.time, MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE);
-            }
-
-            //input.position = myTransform.position;
-
-            if (input.clockwise || input.counterClockwise || input.jump)
-            {
-                if (!isServer)
-                    LocalInputHistory.Add(input);
-                InputBuffer.Add(input);
+                //Safe programming redundant check: input is meaningless if every button is set to false (not pressed)
+                //therefore should not be stored in the input buffer
+                if (input.clockwise || input.counterClockwise || input.jump)
+                {
+                    if (!isServer)
+                        LocalInputHistory.Add(input);
+                    InputBuffer.Add(input);
+                } 
             }
         }
 

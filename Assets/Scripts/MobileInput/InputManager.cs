@@ -25,10 +25,26 @@ public class InputManager : NetworkBehaviour {
     //Handles continous movement
     void Update()
     {
-        if (counterclockwisePressed)
-            localPlayer.Move(localPlayer.transform.position, MobilePlayerController.MOVEMENT_DIRECTIONS.COUNTERCLOCKWISE);
-        else if (clockwisePressed)
-            localPlayer.Move(localPlayer.transform.position,MobilePlayerController.MOVEMENT_DIRECTIONS.CLOCKWISE);
+        MobilePlayerController.PlayerInput input;
+        input.counterClockwise = input.clockwise = input.jump = input.shoot = false;
+        input.timestamp = Network.time;
+
+        if (counterclockwisePressed || Input.GetKey(KeyCode.LeftArrow))
+        {
+            input.counterClockwise = true;
+            localPlayer.LocalMoveandStoreInputInBuffer(input);
+        }
+        else if (clockwisePressed   || Input.GetKey(KeyCode.RightArrow))
+        {
+            input.clockwise = true;
+            localPlayer.LocalMoveandStoreInputInBuffer(input);
+        }
+
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            input.jump = true;
+            localPlayer.LocalMoveandStoreInputInBuffer(input);
+        }
     }
 
     //Setters value from buttons
@@ -44,12 +60,16 @@ public class InputManager : NetworkBehaviour {
 
     public void SetRocketButton()
     {
-        //Debug.Log("Shoot!");
-        localPlayer.CmdShoot();
+        Debug.Log("Shoot!");
+        //localPlayer.CmdShoot();
     }
 
     public void SetJumpButton()
     {
-        localPlayer.Jump();
+        MobilePlayerController.PlayerInput input;
+        input.counterClockwise = input.clockwise = input.shoot = false;
+        input.jump = true;
+        input.timestamp = Network.time;
+        localPlayer.LocalMoveandStoreInputInBuffer(input);
     }
 }
