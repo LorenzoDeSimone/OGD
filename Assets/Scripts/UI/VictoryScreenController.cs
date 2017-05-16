@@ -13,6 +13,9 @@ namespace Assets.Scripts.UI
     {
         [Header("Time of victory screen in seconds")]
         public float vicotoryScreenTime = 4;
+
+        public string poinbarHolderTag = "PointBarHolder";
+
         public RectTransform scoresHolder;
         public GameObject playerScorePrefab;
 
@@ -30,11 +33,8 @@ namespace Assets.Scripts.UI
          */
         private void FillScoreboard()
         {
-            PlayerDataHolder playerData;
-            GameObject newPlayerScore;
-            GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-            int totalPoints = 0;
-            int playerPoints = 0;
+            PointManager pointManager = GameObject.FindGameObjectWithTag(poinbarHolderTag).GetComponent<PointManager>();
+            
             float offset = 0.0f;
             Vector2 newAnchorMax;
             Vector2 newAnchorMin;
@@ -89,6 +89,10 @@ namespace Assets.Scripts.UI
 
         private void DisconnectFromMatch()
         {
+            if(isServer)
+            {
+                MasterServer.UnregisterHost();
+            }
             Network.Disconnect();
             lobbyController.ResetNetworkState();
         }

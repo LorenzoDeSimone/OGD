@@ -119,4 +119,14 @@ public class PointManager : MonoBehaviour
 
         return sum;
     }
+
+    public int GetTotalPoints()
+    {
+        return pointsTotal;
+    }
+
+    public Dictionary<int,int> GetPointsForPlayers()
+    {
+        return ofPlayersAndPoints;
+    }
 }
