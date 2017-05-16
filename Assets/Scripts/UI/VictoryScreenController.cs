@@ -83,6 +83,7 @@ namespace Assets.Scripts.UI
 
         private void DisconnectFromMatch()
         {
+            Debug.LogWarning("Disconnection...");
             if(isServer)
             {
                 MasterServer.UnregisterHost();

@@ -54,8 +54,6 @@ namespace Assets.Scripts.Spawn_collectable
 
         private void UpdateNetworkState(bool b)
         {
-            Debug.LogWarning("Sync net state hook of " + netId.Value);
-
             if (isServer)
                 RpcChangeNetworkState(b); 
         }
