@@ -21,8 +21,12 @@ namespace Assets.Scripts.Player
             InitPlayer();
         }
 
-        [Command]
-        public void CmdAddPoints(int pointsToAdd)
+        private void OnGUI()
+        {
+            GUI.Box(new Rect(10, 10*playerId, 100, 90), string.Format("{0} {1}", playerPoints, playerId));
+        }
+
+        public void AddPoints(int pointsToAdd)
         {
             playerPoints += pointsToAdd;
         }
@@ -30,6 +34,9 @@ namespace Assets.Scripts.Player
         //argument needed from sync var PRE-hook... -1 for bar init
         private void SendPointSyncEvent(int newValue)
         {
+            Debug.LogWarning("Sync points");
+            if(newValue > 0)
+                playerPoints = newValue;
             PointSyncEvent.Invoke(GetPlayerNetworkId(), newValue);
         }
 

@@ -9,6 +9,7 @@ TagManager:
   - Bar
   - OnlineGameManager
   - PointBarHolder
+  - ControlsHolder
   layers:
   - Default
   - TransparentFX

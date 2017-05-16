@@ -15,6 +15,7 @@ namespace Assets.Scripts.UI
         public float vicotoryScreenTime = 4;
 
         public string poinbarHolderTag = "PointBarHolder";
+        public string controlsHolderTag = "ControlsHolder";
 
         public RectTransform scoresHolder;
         public GameObject playerScorePrefab;
@@ -24,6 +25,8 @@ namespace Assets.Scripts.UI
         void Start()
         {
             lobbyController = (NetworkLobbyController)NetworkManager.singleton;
+            
+            GameObject.FindGameObjectWithTag(controlsHolderTag).SetActive(false);
             FillScoreboard();
             StartCoroutine(PrepareToDisconnect());
         }
@@ -83,12 +86,10 @@ namespace Assets.Scripts.UI
 
         private void DisconnectFromMatch()
         {
-            if(isServer)
-            {
-                MasterServer.UnregisterHost();
-            }
             Network.Disconnect();
+            MasterServer.UnregisterHost();
             lobbyController.ResetNetworkState();
+            lobbyController.ServerReturnToLobby();
         }
     }
 }

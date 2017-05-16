@@ -157,9 +157,9 @@ namespace Assets.Scripts.Networking
             if (matchMaker)
             {
                 StopMatchMaker();
-                StopHost();
-                StopClient();
             }
+            StopClient();
+            StopHost();
 
             loadingPublicMatches = true;
             searchingPublicMatch = true;

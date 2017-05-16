@@ -14,7 +14,7 @@ namespace Assets.Scripts.Spawn_collectable
          * the hook  
          */
         [SyncVar( hook = "UpdateNetworkState")]
-        bool networkActiveState;
+        bool networkActiveState = true;
 
         public int pointValue = 1;
         public int pointScaler = 1;
@@ -34,38 +34,32 @@ namespace Assets.Scripts.Spawn_collectable
 
             if (player && coll.Equals(player.GetCharacterCircleCollider2D()))
             {
-                Debug.Log("Collision with Player");
-
-                try
-                {
-                    AddPointsToPlayer(coll.gameObject.GetComponent<PlayerDataHolder>());
-                }
-                catch (Exception e)
-                {
-                    Debug.LogWarning("Missing Player Data Holder or something really bad!!!\nMessage: " + e.Message);
-                }
-
-                /*
-                 *  When a client needs to update the syn 
-                 */
-                CmdUpdateServerState(false);
+                CmdUpdateServerState(false, coll.gameObject.GetComponent<PlayerDataHolder>().playerId);
             }
         }
 
         private void UpdateNetworkState(bool b)
         {
-            Debug.LogWarning("Sync net state hook of " + netId.Value);
-
+            networkActiveState = b;
             if (isServer)
                 RpcChangeNetworkState(b); 
         }
 
         [Command]
-        private void CmdUpdateServerState(bool b)
+        private void CmdUpdateServerState(bool b, int id)
         {
             networkActiveState = b;
             mySprite.enabled = b;
             myCollider.enabled = b;
+            foreach (GameObject go in GameObject.FindGameObjectsWithTag("Player"))
+            {
+                PlayerDataHolder pDH = go.GetComponent<PlayerDataHolder>();
+                if (pDH.playerId == id)
+                {
+                    pDH.AddPoints(pointValue * pointScaler);
+                    break;
+                }
+            }
         }
 
         public bool GetNetworkActiveState()
@@ -82,7 +76,7 @@ namespace Assets.Scripts.Spawn_collectable
 
         private void AddPointsToPlayer(PlayerDataHolder playerDataHolder)
         {
-            playerDataHolder.CmdAddPoints(pointValue * pointScaler);
+            playerDataHolder.AddPoints(pointValue * pointScaler);
         }
     }
 }
