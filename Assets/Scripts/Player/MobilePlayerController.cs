@@ -43,7 +43,9 @@ namespace Assets.Scripts.Player
         private float syncTime = 0f;
         private float timeStamp;
 
-        //private Vector3 syncStartPosition;
+        private Vector3 syncStartPosition;
+        public Vector3 syncEndPosition;
+
         private List<PlayerInput> InputHistorySentToServer, LocalInputHistory, InputBuffer; 
 
         private struct PlayerInput
@@ -54,9 +56,6 @@ namespace Assets.Scripts.Player
             public bool shoot;
             public double timestamp;
         }
-
-        //[SyncVar(hook = "SyncEndPosition")]
-        //public Vector3 syncEndPosition;
 
         int i = 0;
 
@@ -138,22 +137,29 @@ namespace Assets.Scripts.Player
         [ClientRpc]
         private void RpcSendPositionToClient(Vector3 position, double timestampFromServer)
         {
-            LinkedList<PlayerInput> LocalInputHistoryCopy = new LinkedList<PlayerInput>(LocalInputHistory);
-            Vector2 newPosition = position;
-
-            //Debug.Log("Time sent by server: " + Network.time);
-
-            foreach (PlayerInput currInput in LocalInputHistoryCopy)
+            if (isLocalPlayer)
             {
-                //Debug.Log("CurrTimestamp: " + currInput.timestamp);
-                if (currInput.timestamp < timestampFromServer)//Older input to be discarded, it's done and it's ok
-                    LocalInputHistory.Remove(currInput);
-                else//Input that is newer from last known server validated position (Not removed!)
+                LinkedList<PlayerInput> LocalInputHistoryCopy = new LinkedList<PlayerInput>(LocalInputHistory);
+                Vector2 newPosition = position;
+
+                //Debug.Log("Time sent by server: " + Network.time);
+
+                foreach (PlayerInput currInput in LocalInputHistoryCopy)
                 {
-                    newPosition = ExecuteInput(newPosition, currInput);//From last validated position, we apply recent player input
+                    //Debug.Log("CurrTimestamp: " + currInput.timestamp);
+                    if (currInput.timestamp < timestampFromServer)//Older input to be discarded, it's done and it's ok
+                        LocalInputHistory.Remove(currInput);
+                    else//Input that is newer from last known server validated position (Not removed!)
+                    {
+                        newPosition = ExecuteInput(newPosition, currInput);//From last validated position, we apply recent player input
+                    }
                 }
+                myTransform.position = newPosition;
             }
-            myTransform.position = newPosition;
+            else
+            {
+                
+            }
         }
 
         private Vector2 ExecuteInput(Vector3 startPosition, PlayerInput input)
@@ -549,7 +555,7 @@ namespace Assets.Scripts.Player
                 yield return new WaitForSeconds(timing);
                 CmdSendServerMyInput(InputBuffer.ToArray());
                 InputBuffer.Clear();
-                Debug.LogError("Input Sent to Server!");
+                //Debug.LogError("Input Sent to Server!");
             }
         }
 
