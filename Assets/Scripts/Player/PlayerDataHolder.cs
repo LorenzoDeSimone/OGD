@@ -34,7 +34,6 @@ namespace Assets.Scripts.Player
         //argument needed from sync var PRE-hook... -1 for bar init
         private void SendPointSyncEvent(int newValue)
         {
-            Debug.LogWarning("Sync points");
             if(newValue > 0)
                 playerPoints = newValue;
             PointSyncEvent.Invoke(GetPlayerNetworkId(), newValue);

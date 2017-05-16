@@ -270,9 +270,9 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: c12e7ac56336d0f4fa0b7c27ece022a1, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 06f9c9bc4b27d9246b5ea255d2d6ce31, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -327,7 +327,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 344707481}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 58371c69e58482d4a807b0e2ff95ab79, type: 3}
   m_Name: 
@@ -2727,7 +2727,7 @@ MonoBehaviour:
   m_ShowLobbyGUI: 1
   m_MaxPlayers: 4
   m_MaxPlayersPerConnection: 1
-  m_MinPlayers: 3
+  m_MinPlayers: 4
   m_LobbyPlayerPrefab: {fileID: 114380445389110200, guid: f2a55bb9c6c84e64988637225db0de6f,
     type: 2}
   m_GamePlayerPrefab: {fileID: 1582415777413702, guid: 890ee3d1764f1584c87df9061563aeeb,

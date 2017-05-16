@@ -77,7 +77,7 @@ namespace Assets.Scripts.Networking
         {
             while(true)
             {
-                loadingSpinner.transform.Rotate(loadingSpinner.transform.forward,2.0f);
+                loadingSpinner.transform.Rotate(loadingSpinner.transform.forward,-2.0f);
                 yield return new WaitForEndOfFrame();
             }
         }
