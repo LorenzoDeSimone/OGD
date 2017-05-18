@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections.Generic;
+using System;
+using System.Collections;
 
 namespace Assets.Scripts.Player
 {
@@ -13,7 +15,7 @@ namespace Assets.Scripts.Player
         public float movementReduction = 10;
         public float EdgeCheckMultiplier = 1.1f;
         public float airResistance = 0.4f;
-        public float timing = 0.01f;
+        public float timing = 1.0f;
         private float deltaPos;
         private static readonly float rotationEpsilon = 0.999f;
         private bool freeFromJumpBlock = true;
@@ -102,6 +104,8 @@ namespace Assets.Scripts.Player
             InputBuffer = new List<PlayerInput>();
 
             StartCoroutine(SendServerMyInputBuffer());
+            if(isServer)
+                StartCoroutine(SendClientMyReceivedInputs());
         }
 
         void Update()
@@ -119,22 +123,6 @@ namespace Assets.Scripts.Player
             }
 
             ApplyRotation(false);
-
-            if (isServer)//Updates the client with input received
-            {
-                List<PlayerInput> History;
-
-                //if (isLocalPlayer)
-                //    History = LocalInputHistory;
-                //else
-                History = InputHistorySentToServer;
-                foreach(PlayerInput currInput in History)
-                {
-                    myTransform.position = ExecuteInput(myTransform.position, currInput);//Server updates position on its machine
-                }
-                History.Clear();
-                RpcSendPositionToClient(myTransform.position, Network.time);//Server updates position on all clients on a different machine than server
-            }
         }
 
         [ClientRpc]
@@ -564,5 +552,24 @@ namespace Assets.Scripts.Player
             }
         }
 
+        private IEnumerator SendClientMyReceivedInputs()
+        {
+            List<PlayerInput> History;
+
+            while (true)
+            {
+                yield return new WaitForSeconds(timing);
+                //if (isLocalPlayer)
+                //    History = LocalInputHistory;
+                //else
+                History = InputHistorySentToServer;
+                foreach (PlayerInput currInput in History)
+                {
+                    myTransform.position = ExecuteInput(myTransform.position, currInput);//Server updates position on its machine
+                }
+                History.Clear();
+                RpcSendPositionToClient(myTransform.position, Network.time);//Server updates position on all clients on a different machine than server
+            }
+        }
     }
 }
