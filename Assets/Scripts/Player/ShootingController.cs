@@ -14,9 +14,6 @@ namespace Assets.Scripts.Player
 
         void Start()
         {
-            if (!isLocalPlayer)//Shooting module is needed only for local player
-                enabled = false;
-
             myTargetMarker = (GameObject)Instantiate(Resources.Load("Prefabs/Player/Target Marker"));
             myRadar = GetComponentInChildren<Radar>();
             playerData = GetComponentInParent<PlayerDataHolder>();
@@ -25,7 +22,8 @@ namespace Assets.Scripts.Player
         void Update()
         {
             nearestTarget = myRadar.GetNearestTarget();
-            MarkTarget(nearestTarget);
+            if(isLocalPlayer)
+                MarkTarget(nearestTarget);
         }
 
         private void MarkTarget(GameObject target)
@@ -45,18 +43,18 @@ namespace Assets.Scripts.Player
         {
             if (CanShoot())
             {
-                GameObject rocket = (GameObject)Instantiate(Resources.Load("Prefabs/NPCs/Rocket"));
-                rocket.transform.position = transform.position;
-                rocket.GetComponent<Rocket>().target = nearestTarget;
-                rocket.GetComponent<Rocket>().SetPlayerWhoShot(playerData.playerId);
-                rocket.gameObject.SetActive(true);
-                NetworkServer.Spawn(rocket); 
+                GameObject missile = (GameObject)Instantiate(Resources.Load("Prefabs/NPCs/Missile"));
+                missile.transform.position = transform.position;
+                missile.GetComponent<Missile>().target = nearestTarget;
+                missile.GetComponent<Missile>().SetPlayerWhoShot(playerData.playerId);
+                missile.gameObject.SetActive(true);
+                NetworkServer.Spawn(missile); 
             }
         }
 
         public bool CanShoot()
         {
-            return nearestTarget!=null;//Placeholder before rocket count implementation
+            return nearestTarget!=null;//Placeholder before missile count implementation
         }
 
 }

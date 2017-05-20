@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using Assets.Scripts.Player;
 
-public class Rocket : NetworkBehaviour
+public class Missile : NetworkBehaviour
 {
     public GameObject target;
     [Range(0.0f, 1.0f)]
@@ -76,28 +76,28 @@ public class Rocket : NetworkBehaviour
             {
                 if(playerIDWhoShotMe != collider.GetComponent<PlayerDataHolder>().playerId)
                 {
-                    Debug.LogError("Not me!");
+                    //Debug.LogError("Not me!");
                     NetworkServer.UnSpawn(gameObject);
-                    gameObject.SetActive(false);
+                    Destroy(gameObject);
                 }
-                else
-                    Debug.LogError("It's me!");
+                //else
+                    //Debug.LogError("It's me!");
 
             }
-            else//Generic Target behaviour(just explodes without doing anything
+            else//Generic Target behaviour(just explodes without doing anything)
             {
-                Debug.LogError("Generic target Hit! " + target.gameObject.name);
+                //Debug.LogError("Generic target Hit! " + target.gameObject.name);
                 NetworkServer.UnSpawn(gameObject);
-                gameObject.SetActive(false);
+                Destroy(gameObject);
             }
         }
 
         //What to do if collider is a gravity field
         if (gravityField !=null)
         {
-            Debug.LogError("Platform Hit!");
+            //Debug.LogError("Platform Hit!");
             NetworkServer.UnSpawn(gameObject);
-            gameObject.SetActive(false);
+            Destroy(gameObject);
         }
     }
 
