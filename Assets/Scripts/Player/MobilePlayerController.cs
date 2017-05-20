@@ -27,15 +27,12 @@ namespace Assets.Scripts.Player
         private Rigidbody2D myRigidBody;
 
         private Vector2 groundCheck1, groundCheck2;
-
+        private GameObject missileStartPosition;
         private HashSet<GameObject> myGravityFields;//A collection of gravity fields currently in player's trigger
-        private HashSet<GameObject> myTargets;//A collection of hittable targets currently in player's trigger
 
         private GravityField safeGravityField;//In case no GravityField is present in player's collider, this is used for attraction
 
         public enum MOVEMENT_DIRECTIONS { COUNTERCLOCKWISE, CLOCKWISE, STOP }
-
-        private GameObject myTargetMarker;
 
         //Network prediction and interpolation variables
         private float lastSynchronizationTime = 0f;
@@ -53,7 +50,6 @@ namespace Assets.Scripts.Player
             public bool counterClockwise;
             public bool clockwise;
             public bool jump;
-            public bool shoot;
             public double timestamp;
             //public Vector2 position;
         }
@@ -87,11 +83,8 @@ namespace Assets.Scripts.Player
             //deltaPos = speed * 5 / Mathf.Pow(speed, 3);
 
 ;           myGravityFields = new HashSet<GameObject>();
-            myTargets = new HashSet<GameObject>();
-            myTargetMarker = (GameObject)Instantiate(Resources.Load("Prefabs/Player/Target Marker"));
 
             myGround = GetMyGround();
-            nearestTarget = GetNearestTargetAndMarkIt();
 
             groundCheck1 = myTransform.Find("Ground Check 1").position;
             groundCheck2 = myTransform.Find("Ground Check 2").position;
@@ -111,7 +104,6 @@ namespace Assets.Scripts.Player
             groundCheck2 = myTransform.Find("Ground Check 2").position;
             //Debug.Log(syncTime / syncDelay);
             myGround = GetMyGround();
-            nearestTarget = GetNearestTargetAndMarkIt();
 
             if(!isLocalPlayer && !isServer)
             {
@@ -346,12 +338,6 @@ namespace Assets.Scripts.Player
             return Physics2D.OverlapArea(groundCheck1, groundCheck2, LayerMask.GetMask("Walkable"));
         }
 
-        public bool CanShoot()
-        {
-            return true;//Placeholder before rocket count implementation
-        }
-
-
         //Movement routines called by the input manager
         public Vector3 Move(Vector2 startPosition, MOVEMENT_DIRECTIONS movementDirection)
         {
@@ -428,25 +414,6 @@ namespace Assets.Scripts.Player
             }
         }
 
-        [Command]
-        public void CmdShoot()
-        {
-            if (nearestTarget == null)
-            {
-                //Debug.Log("No targets in my area!");
-                return;
-            }
-
-            GameObject rocket = (GameObject)Instantiate(Resources.Load("Prefabs/NPCs/Rocket"));
-
-            rocket.transform.position = myTransform.position;
-            rocket.GetComponent<SpriteRenderer>().color = GetComponent<SpriteRenderer>().color;
-            rocket.GetComponent<Rocket>().target = nearestTarget;
-            rocket.GetComponent<Rocket>().SetPlayerWhoShot(gameObject);
-            rocket.gameObject.SetActive(true);
-            NetworkServer.Spawn(rocket);
-        }
-
         public void Jump()
         {
             if (IsGrounded())
@@ -470,12 +437,6 @@ namespace Assets.Scripts.Player
                 if (myGravityFields.Count == 1)
                     safeGravityField = newGravityField;
             }
-
-            //Target management
-            Target newTarget = collider.GetComponent<Target>();
-            if (newTarget != null)
-                myTargets.Add(newTarget.gameObject);
-
         }
 
         private void OnTriggerExit2D(Collider2D collider)
@@ -491,12 +452,6 @@ namespace Assets.Scripts.Player
                     safeGravityField = exitGravityField;
 
             }
-
-            //Target management
-            Target target = collider.GetComponent<Target>();
-            if (target != null)
-                myTargets.Remove(target.gameObject);
-
         }
 
         public CircleCollider2D GetCharacterCircleCollider2D()
@@ -509,34 +464,6 @@ namespace Assets.Scripts.Player
                     return currCollider;
             }
             return null;
-        }
-
-        private GameObject GetNearestTargetAndMarkIt()
-        {
-            float candidateMinDistance = float.MaxValue;
-            GameObject candidateNearestTarget = null;
-
-            foreach (GameObject currTarget in myTargets)
-            {
-                float currDistance = Vector2.Distance(myTransform.position, currTarget.transform.position);
-
-                if (currDistance < candidateMinDistance)
-                {
-                    candidateNearestTarget = currTarget.gameObject;
-                    candidateMinDistance = currDistance;
-                }
-            }
-
-            //Mark nearest target
-            if (candidateNearestTarget != null)
-            {
-                myTargetMarker.gameObject.SetActive(true);
-                myTargetMarker.transform.position = candidateNearestTarget.transform.position;
-            }
-            else
-                myTargetMarker.gameObject.SetActive(false);
-
-            return candidateNearestTarget;
         }
 
         private bool CanMove()

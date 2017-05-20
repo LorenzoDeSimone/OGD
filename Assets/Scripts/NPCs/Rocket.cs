@@ -15,16 +15,16 @@ public class Rocket : NetworkBehaviour
     private Rigidbody2D myRigidBody;
     private Transform myTransform;
 
-    private GameObject playerWhoShotMe;
+    private int playerIDWhoShotMe;
 
-    public GameObject GetPlayerWhoShot()
+    public int GetPlayerWhoShot()
     {
-        return playerWhoShotMe;
+        return playerIDWhoShotMe;
     }
 
-    public void SetPlayerWhoShot(GameObject player)
+    public void SetPlayerWhoShot(int playerID)
     {
-        playerWhoShotMe = player;
+        playerIDWhoShotMe = playerID;
     }
 
     // Use this for initialization
@@ -72,40 +72,39 @@ public class Rocket : NetworkBehaviour
         //What to do if collider is a target
         if (target != null)
         {
-            //Debug.Log("Target Hit!");
-            NetworkServer.UnSpawn(gameObject);
-            gameObject.SetActive(false);
+            if (newTargetPlayer != null)
+            {
+                if(playerIDWhoShotMe != collider.GetComponent<PlayerDataHolder>().playerId)
+                {
+                    Debug.LogError("Not me!");
+                    NetworkServer.UnSpawn(gameObject);
+                    gameObject.SetActive(false);
+                }
+                else
+                    Debug.LogError("It's me!");
+
+            }
+            else//Generic Target behaviour(just explodes without doing anything
+            {
+                Debug.LogError("Generic target Hit! " + target.gameObject.name);
+                NetworkServer.UnSpawn(gameObject);
+                gameObject.SetActive(false);
+            }
         }
 
         //What to do if collider is a gravity field
         if (gravityField !=null)
         {
-            //Debug.Log("Platform Hit!");
+            Debug.LogError("Platform Hit!");
             NetworkServer.UnSpawn(gameObject);
             gameObject.SetActive(false);
-        }
-
-        //What to do if collider is a player
-        if (newTargetPlayer != null)
-        { 
-            if (newTargetPlayer.gameObject.Equals(playerWhoShotMe))
-            {
-                //Debug.Log("My rocket can do me no harm!");
-            }
-            else
-            {
-                //Debug.Log("Other Player Hit!");
-                //NetworkServer.UnSpawn(gameObject);
-                //gameObject.SetActive(false);
-                //Insert methods for losing coins
-            }
         }
     }
 
     private void OnTriggerExit2D(Collider2D collider)
     {
-        MobilePlayerController newTargetPlayer = collider.GetComponent<MobilePlayerController>();
-        if (newTargetPlayer != null && newTargetPlayer.gameObject.Equals(playerWhoShotMe))
-            playerWhoShotMe = null;//The rocket forgets who shot it and it can hit him too after it exits first time from the shooter player trigger
+        //MobilePlayerController newTargetPlayer = collider.GetComponent<MobilePlayerController>();
+        //if (newTargetPlayer != null && newTargetPlayer.gameObject.Equals(playerIDWhoShotMe))
+        //    playerIDWhoShotMe = null;//The rocket forgets who shot it and it can hit him too after it exits first time from the shooter player trigger
     }
 }

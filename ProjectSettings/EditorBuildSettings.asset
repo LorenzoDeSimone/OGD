@@ -11,15 +11,18 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Game.unity
     guid: ab5da266505b0a0428fd06a05ead1548
-  - enabled: 1
-    path: Assets/Scenes/Sviluppo/Game-NewNetwork.unity
+  - enabled: 0
+    path: 
     guid: 52d76c53b5231e54d95cc121abeca94a
   - enabled: 1
     path: Assets/Scenes/Sviluppo/GameTest3.unity
     guid: d9662647301610343bc3684e798b06ed
-  - enabled: 1
-    path: Assets/Scenes/Sviluppo/NetworkTest-InGameMenus.unity
+  - enabled: 0
+    path: 
     guid: e30584796d69b794b86e231aa08c1067
-  - enabled: 1
-    path: Assets/Scenes/Sviluppo/TestLorenzo.unity
+  - enabled: 0
+    path: 
     guid: 783df28cd066ae841ae5ad5fd303b4ca
+  - enabled: 1
+    path: Assets/Scenes/Sviluppo/MissileTest.unity
+    guid: 45da2dda17a46c94cb4504427c17e00b

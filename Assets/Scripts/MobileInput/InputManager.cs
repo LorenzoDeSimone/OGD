@@ -6,7 +6,8 @@ using UnityEngine.Networking;
 public class InputManager : NetworkBehaviour {
 
     private static bool counterclockwisePressed=false, clockwisePressed=false;
-    private MobilePlayerController localPlayer; 
+    private MobilePlayerController localPlayerMovementController;
+    private ShootingController localPlayerShootingController;
 
     // Use this for initialization
     void Start ()
@@ -16,7 +17,8 @@ public class InputManager : NetworkBehaviour {
         {
             if(go.GetComponent<NetworkIdentity>().isLocalPlayer)
             {
-                localPlayer = go.GetComponent<MobilePlayerController>();
+                localPlayerMovementController = go.GetComponent<MobilePlayerController>();
+                localPlayerShootingController = go.GetComponentInChildren<ShootingController>();
                 break;
             }
         }
@@ -26,24 +28,29 @@ public class InputManager : NetworkBehaviour {
     void Update()
     {
         MobilePlayerController.PlayerInput input;
-        input.counterClockwise = input.clockwise = input.jump = input.shoot = false;
+        input.counterClockwise = input.clockwise = input.jump = false;
         input.timestamp = Network.time;
 
         if (counterclockwisePressed || Input.GetKey(KeyCode.LeftArrow))
         {
             input.counterClockwise = true;
-            localPlayer.LocalMoveandStoreInputInBuffer(input);
+            localPlayerMovementController.LocalMoveandStoreInputInBuffer(input);
         }
         else if (clockwisePressed   || Input.GetKey(KeyCode.RightArrow))
         {
             input.clockwise = true;
-            localPlayer.LocalMoveandStoreInputInBuffer(input);
+            localPlayerMovementController.LocalMoveandStoreInputInBuffer(input);
         }
 
         if(Input.GetKeyDown(KeyCode.Space))
         {
             input.jump = true;
-            localPlayer.LocalMoveandStoreInputInBuffer(input);
+            localPlayerMovementController.LocalMoveandStoreInputInBuffer(input);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            localPlayerShootingController.CmdShoot();
         }
     }
 
@@ -60,16 +67,15 @@ public class InputManager : NetworkBehaviour {
 
     public void SetRocketButton()
     {
-        Debug.Log("Shoot!");
-        //localPlayer.CmdShoot();
+        localPlayerShootingController.CmdShoot();
     }
 
     public void SetJumpButton()
     {
         MobilePlayerController.PlayerInput input;
-        input.counterClockwise = input.clockwise = input.shoot = false;
+        input.counterClockwise = input.clockwise = false;
         input.jump = true;
         input.timestamp = Network.time;
-        localPlayer.LocalMoveandStoreInputInBuffer(input);
+        localPlayerMovementController.LocalMoveandStoreInputInBuffer(input);
     }
 }
