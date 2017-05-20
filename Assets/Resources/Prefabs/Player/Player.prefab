@@ -20,10 +20,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4565784338930334}
   - component: {fileID: 58660628641219684}
-  - component: {fileID: 114194760546822792}
-  - component: {fileID: 114577710808341604}
+  - component: {fileID: 114504489635193244}
   m_Layer: 0
-  m_Name: Shooting Controller
+  m_Name: Radar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -58,9 +57,9 @@ GameObject:
   - component: {fileID: 212783235714675410}
   - component: {fileID: 114971350943336054}
   - component: {fileID: 114381223607131814}
-  - component: {fileID: 58756465289136972}
   - component: {fileID: 114507967478751558}
   - component: {fileID: 114591764407061358}
+  - component: {fileID: 114872215365196396}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -188,32 +187,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 6
---- !u!58 &58756465289136972
-CircleCollider2D:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1582415777413702}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 6
---- !u!114 &114194760546822792
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1251202333510656}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dae2399bb7fc93b4db4853b64767cbff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114381223607131814
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -227,6 +200,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   localCamera: {fileID: 1340606330616888, guid: 64ed662eb67abf946b9787f7da560fd4,
     type: 2}
+--- !u!114 &114504489635193244
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1251202333510656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85e40c9c24d36404f917f3d43e1e18f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114507967478751558
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -240,38 +224,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerId: 0
   paintsThePlayer: 0
---- !u!114 &114577710808341604
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1251202333510656}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 137
-    i1: 14
-    i2: 227
-    i3: 209
-    i4: 118
-    i5: 79
-    i6: 21
-    i7: 132
-    i8: 200
-    i9: 125
-    i10: 249
-    i11: 6
-    i12: 21
-    i13: 99
-    i14: 174
-    i15: 235
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 1
 --- !u!114 &114591764407061358
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -315,6 +267,17 @@ MonoBehaviour:
     i15: 235
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
+--- !u!114 &114872215365196396
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1582415777413702}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dae2399bb7fc93b4db4853b64767cbff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114971350943336054
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -335,7 +298,6 @@ MonoBehaviour:
   timing: 0.01
   jumpControlStopWindow: 0.1
   syncEndPosition: {x: 0, y: 0, z: 0}
-  predictionIterations: 2
 --- !u!212 &212783235714675410
 SpriteRenderer:
   m_ObjectHideFlags: 1
