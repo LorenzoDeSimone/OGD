@@ -43,11 +43,12 @@ namespace Assets.Scripts.Player
         {
             if (CanShoot())
             {
-                GameObject missile = (GameObject)Instantiate(Resources.Load("Prefabs/NPCs/Missile"));
-                missile.transform.position = transform.position;
-                missile.GetComponent<Missile>().target = nearestTarget;
-                missile.GetComponent<Missile>().SetPlayerWhoShot(playerData.playerId);
-                missile.gameObject.SetActive(true);
+                GameObject objMissile = (GameObject) Resources.Load("Prefabs/NPCs/Missile");
+                objMissile.transform.position = transform.position;
+                objMissile.GetComponent<Missile>().target = nearestTarget;
+                objMissile.GetComponent<Missile>().SetPlayerWhoShot(playerData.playerId);
+                objMissile.gameObject.SetActive(true);
+                GameObject missile = Instantiate(objMissile);
                 NetworkServer.Spawn(missile); 
             }
         }

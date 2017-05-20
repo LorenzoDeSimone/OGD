@@ -27,40 +27,49 @@ public class Missile : NetworkBehaviour
         playerIDWhoShotMe = playerID;
     }
 
-    // Use this for initialization
-    void Start ()
+    void OnEnable ()
     {
         myRigidBody = GetComponent<Rigidbody2D>();
         myTransform = GetComponent<Transform>();
 
-        Vector2 targetPosition = new Vector2(target.transform.position.x, target.transform.position.y);
-        targetDirection = (targetPosition - myRigidBody.position).normalized;
-        myTransform.right = targetDirection;
+        if (target != null)
+        {
+            Vector2 targetPosition = new Vector2(target.transform.position.x, target.transform.position.y);
+            targetDirection = (targetPosition - myRigidBody.position).normalized;
+            myTransform.right = targetDirection;
+        }
+        else
+            Debug.Log("OnEnable ->T null");
     }
 
     // Update is called once per frame
     void Update ()
     {
-        float actualSteeringMultiplier = speed * steeringMultiplier;
-   
-        //currentDirection = (target.transform.position - myTransform.position).normalized;
-        //myTransform.position = new Vector2(myTransform.position.x, myTransform.position.y) + currentDirection * speed;
-        Vector2 currentDirection = myTransform.right;
-        Vector2 targetPosition = new Vector2(target.transform.position.x, target.transform.position.y);
+        if (target != null)
+        {
+            float actualSteeringMultiplier = speed * steeringMultiplier;
 
-        targetDirection = (targetPosition - myRigidBody.position).normalized;
-        Debug.DrawRay(myRigidBody.position, currentDirection * speed, Color.green);//Pre Steering velocity
-        Debug.DrawRay(myRigidBody.position, targetDirection * speed, Color.gray);//Desired velocity
+            //currentDirection = (target.transform.position - myTransform.position).normalized;
+            //myTransform.position = new Vector2(myTransform.position.x, myTransform.position.y) + currentDirection * speed;
+            Vector2 currentDirection = myTransform.right;
+            Vector2 targetPosition = new Vector2(target.transform.position.x, target.transform.position.y);
 
-        Vector2 steeringVector = (targetDirection - currentDirection) * actualSteeringMultiplier;
-        Debug.DrawRay(new Vector2(myRigidBody.position.x, myRigidBody.position.y) + currentDirection * speed, steeringVector, Color.red);
+            targetDirection = (targetPosition - myRigidBody.position).normalized;
+            Debug.DrawRay(myRigidBody.position, currentDirection * speed, Color.green);//Pre Steering velocity
+            Debug.DrawRay(myRigidBody.position, targetDirection * speed, Color.gray);//Desired velocity
 
-        //currentDirection = currentDirection + steeringVector;
+            Vector2 steeringVector = (targetDirection - currentDirection) * actualSteeringMultiplier;
+            Debug.DrawRay(new Vector2(myRigidBody.position.x, myRigidBody.position.y) + currentDirection * speed, steeringVector, Color.red);
 
-        Debug.DrawRay(myRigidBody.position, (currentDirection * speed + steeringVector) * Time.deltaTime, Color.yellow);//Post Steering velocity
+            //currentDirection = currentDirection + steeringVector;
 
-        myRigidBody.position = (new Vector2(myRigidBody.position.x, myRigidBody.position.y) + (currentDirection * speed + steeringVector)*Time.deltaTime);
-        myTransform.right = (currentDirection * speed + steeringVector).normalized;
+            Debug.DrawRay(myRigidBody.position, (currentDirection * speed + steeringVector) * Time.deltaTime, Color.yellow);//Post Steering velocity
+
+            myRigidBody.position = (new Vector2(myRigidBody.position.x, myRigidBody.position.y) + (currentDirection * speed + steeringVector) * Time.deltaTime);
+            myTransform.right = (currentDirection * speed + steeringVector).normalized; 
+        }
+        else
+            Debug.Log("Update -> T null");
     }
 
     private void OnTriggerEnter2D(Collider2D collider)
@@ -81,7 +90,7 @@ public class Missile : NetworkBehaviour
                     Destroy(gameObject);
                 }
                 //else
-                    //Debug.LogError("It's me!");
+                    Debug.LogError("It's me!");
 
             }
             else//Generic Target behaviour(just explodes without doing anything)

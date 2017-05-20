@@ -29,23 +29,22 @@ public class InputManager : NetworkBehaviour {
     {
         MobilePlayerController.PlayerInput input;
         input.counterClockwise = input.clockwise = input.jump = false;
-        input.timestamp = Network.time;
 
         if (counterclockwisePressed || Input.GetKey(KeyCode.LeftArrow))
         {
             input.counterClockwise = true;
-            localPlayerMovementController.LocalMoveandStoreInputInBuffer(input);
+            localPlayerMovementController.RequestMovement(input);
         }
         else if (clockwisePressed   || Input.GetKey(KeyCode.RightArrow))
         {
             input.clockwise = true;
-            localPlayerMovementController.LocalMoveandStoreInputInBuffer(input);
+            localPlayerMovementController.RequestMovement(input);
         }
 
         if(Input.GetKeyDown(KeyCode.Space))
         {
             input.jump = true;
-            localPlayerMovementController.LocalMoveandStoreInputInBuffer(input);
+            localPlayerMovementController.RequestMovement(input);
         }
 
         if (Input.GetKeyDown(KeyCode.Return))
@@ -75,7 +74,6 @@ public class InputManager : NetworkBehaviour {
         MobilePlayerController.PlayerInput input;
         input.counterClockwise = input.clockwise = false;
         input.jump = true;
-        input.timestamp = Network.time;
-        localPlayerMovementController.LocalMoveandStoreInputInBuffer(input);
+        localPlayerMovementController.RequestMovement(input);
     }
 }
