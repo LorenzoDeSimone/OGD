@@ -25,7 +25,7 @@ namespace Assets.Scripts.Player
 
         void Update()
         {
-            nearestTarget = myRadar.GetNearestTarget();
+            nearestTarget = myRadar.GetNearestTarget(currShootPosition.transform.position);
             if(isLocalPlayer)
                 MarkTarget(nearestTarget);
         }

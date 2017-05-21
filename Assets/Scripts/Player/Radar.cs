@@ -55,19 +55,34 @@ public class Radar : MonoBehaviour
     }
 
     //Target methods
-    public GameObject GetNearestTarget()
+    public GameObject GetNearestTarget(Vector3 shootStartPosition)
     {
         float candidateMinDistance = float.MaxValue;
         GameObject candidateNearestTarget = null;
 
         foreach (GameObject currTarget in nearTargets)
         {
-            float currDistance = Vector2.Distance(transform.position, currTarget.transform.position);
+            float distanceFromShootingPoint = Vector2.Distance(shootStartPosition, currTarget.transform.position);
 
-            if (currDistance < candidateMinDistance)
+            if (distanceFromShootingPoint < candidateMinDistance)
             {
-                candidateNearestTarget = currTarget.gameObject;
-                candidateMinDistance = currDistance;
+                //Check if shooting I would hit myself
+                float distanceFromPlayer = Vector2.Distance(transform.position, currTarget.transform.position);
+                if (distanceFromPlayer > distanceFromShootingPoint)
+                {
+                    //Checks if there is no walkable between the shooting position and the target
+                    //Debug.DrawRay(shootStartPosition, currTarget.transform.position - shootStartPosition, Color.red);
+                    RaycastHit2D currRaycastHit2D = Physics2D.Raycast(shootStartPosition,
+                                                           currTarget.transform.position - shootStartPosition,
+                                                           distanceFromShootingPoint,
+                                                           LayerMask.GetMask("Walkable"));
+
+                    if (currRaycastHit2D.collider == null)
+                    {
+                        candidateNearestTarget = currTarget.gameObject;
+                        candidateMinDistance = distanceFromShootingPoint;
+                    } 
+                }
             }
         }
         return candidateNearestTarget;
