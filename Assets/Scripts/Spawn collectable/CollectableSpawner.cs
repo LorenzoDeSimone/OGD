@@ -15,13 +15,24 @@ namespace Assets.Scripts.Spawn_collectable
         public int maxCountdown = 20;
 
         private HashSet<GameObject> collectables;
+        private List<Vector3> positions;
         private CountDown countdownCounter;
 
         private void Start()
         {
+            GameObject go;
             collectables = new HashSet<GameObject>();
-            GameObject go = Instantiate(countdown, transform.position, Quaternion.identity, transform);
-            NetworkServer.Spawn(go);
+            positions = new List<Vector3>();
+            try
+            {
+                go = Instantiate(countdown, transform.position, Quaternion.identity, transform);
+                NetworkServer.Spawn(go);
+            }
+            catch (System.Exception)
+            {
+                go = Instantiate((GameObject)Resources.Load("Prefabs/Platforms/Counter"), transform.position, Quaternion.identity, transform);
+                NetworkServer.Spawn(go);
+            }
             countdownCounter = go.GetComponent<CountDown>();
             StartCoroutine(firstCountdown());
         }
@@ -36,48 +47,49 @@ namespace Assets.Scripts.Spawn_collectable
                     go = Instantiate(collectablePrefab, t.position, Quaternion.identity, transform);
                     collectables.Add(go);
                     NetworkServer.Spawn(go);
+                    positions.Add(t.position);
                 }
             }
+            SpawnCoins();
         }
 
         private void SpawnCoins()
         {
             Collectable c;
+            Vector3 temp;
+            int i,j;
+            for (i = 0; i < positions.Count - 1; i++)
+            {
+                j = Random.Range(0, positions.Count);
+                temp = positions[i];
+                positions[i] = positions[j];
+                positions[j] = temp;
+            }
+            i = 0;
             foreach (GameObject g in collectables)
             {
                 c = g.GetComponent<Collectable>();
                 if (!c.GetNetworkActiveState())
-                    c.RpcChangeNetworkState(true);
+                    c.RpcChangeNetworkState(true, positions[i]);
+                i++;
             }
         }
 
         private IEnumerator firstCountdown()
         {
-            countdownCounter.RpcChangeNetworkState("3");
-            yield return new WaitForSeconds(1);
-            countdownCounter.RpcChangeNetworkState("2");
-            yield return new WaitForSeconds(1);
-            countdownCounter.RpcChangeNetworkState("1");
-            yield return new WaitForSeconds(1);
-            countdownCounter.RpcChangeNetworkState("");
-            InitCollectables();  // Isn't on start! is it a problem?
-            yield return new WaitForSeconds(3);
+            InitCollectables();
+            yield return new WaitForSecondsRealtime(3);
+            countdownCounter.RpcChangeNetworkState(0);
             StartCoroutine(startCountdown());
         }
 
         private IEnumerator startCountdown()
         {
-            int i = Random.Range(minCountdown, maxCountdown + 1);
-            //wait countdown
-            while (i > 0)
-            {
-                countdownCounter.RpcChangeNetworkState("" + i);
-                i--;
-                yield return new WaitForSeconds(1);
-            }
-            countdownCounter.RpcChangeNetworkState("");
+            int countdown = Random.Range(minCountdown, maxCountdown + 1);
+            countdownCounter.RpcChangeNetworkState(countdown);
+            yield return new WaitForSecondsRealtime(countdown);
             SpawnCoins();
-            yield return new WaitForSeconds(3);
+            yield return new WaitForSecondsRealtime(3);
             StartCoroutine(startCountdown());
         }
     }

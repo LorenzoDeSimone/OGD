@@ -42,7 +42,7 @@ namespace Assets.Scripts.Spawn_collectable
         {
             networkActiveState = b;
             if (isServer)
-                RpcChangeNetworkState(b); 
+                RpcChangeNetworkState(b, transform.position); 
         }
 
         [Command]
@@ -68,10 +68,11 @@ namespace Assets.Scripts.Spawn_collectable
         }
 
         [ClientRpc]
-        public void RpcChangeNetworkState(bool b)
+        public void RpcChangeNetworkState(bool b, Vector3 v)
         {
             mySprite.enabled = b;
             myCollider.enabled = b;
+            transform.position = v;
         }
 
         private void AddPointsToPlayer(PlayerDataHolder playerDataHolder)

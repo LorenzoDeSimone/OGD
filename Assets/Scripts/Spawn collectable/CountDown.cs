@@ -7,15 +7,32 @@ using UnityEngine.UI;
 public class CountDown : NetworkBehaviour
 {
     Text myText;
+    SpriteRenderer mySprite;
 
     private void Start()
     {
         myText = GetComponentInChildren<Text>();
+        mySprite = GetComponentInChildren<SpriteRenderer>();
+        mySprite.enabled = false;
     }
     
     [ClientRpc]
-    public void RpcChangeNetworkState(string str)
+    public void RpcChangeNetworkState(int count)
     {
-        myText.text = str;
+        mySprite.enabled = true;
+        StopCoroutine("countdown");
+        StartCoroutine(countdown(count));
+    }
+
+    private IEnumerator countdown(int count)
+    {
+        while (count > 0)
+        {
+            myText.text = count + "";
+            yield return new WaitForSecondsRealtime(1);
+            count--;
+        }
+        myText.text = "";
+        mySprite.enabled = false;
     }
 }
