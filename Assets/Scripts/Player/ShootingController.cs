@@ -26,8 +26,10 @@ namespace Assets.Scripts.Player
         void Update()
         {
             nearestTarget = myRadar.GetNearestTarget(currShootPosition.transform.position);
-            if(isLocalPlayer)
+            if (isLocalPlayer)
+            {
                 MarkTarget(nearestTarget);
+            }
         }
 
         public void UpdateShootStartPosition(MobilePlayerController.PlayerInput input)
@@ -50,18 +52,21 @@ namespace Assets.Scripts.Player
                 myTargetMarker.gameObject.SetActive(false);
         }
 
-        [Command]
-        public void CmdShoot()
+        public void Shoot()
         {
-            if (CanShoot())
-            {
-                GameObject objMissile = (GameObject) Resources.Load("Prefabs/NPCs/Missile");
-                objMissile.transform.position = currShootPosition.transform.position;
-                objMissile.GetComponent<Missile>().target = nearestTarget;
-                objMissile.gameObject.SetActive(true);
-                GameObject missile = Instantiate(objMissile);
-                NetworkServer.Spawn(missile); 
-            }
+            if(isLocalPlayer && CanShoot())
+                CmdShoot(currShootPosition.transform.position, nearestTarget);
+        }
+
+        [Command]
+        public void CmdShoot(Vector3 clientCurrShootPosition, GameObject clientNearestTarget)
+        {
+                GameObject missile = (GameObject) Instantiate(Resources.Load("Prefabs/NPCs/Missile"));
+                missile.transform.position = clientCurrShootPosition;
+                missile.GetComponent<Missile>().target = clientNearestTarget;
+                missile.transform.right = (clientNearestTarget.transform.position - clientCurrShootPosition).normalized;
+                missile.gameObject.SetActive(true);
+                NetworkServer.Spawn(missile);
         }
 
         public bool CanShoot()
