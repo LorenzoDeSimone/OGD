@@ -15,18 +15,6 @@ public class Missile : NetworkBehaviour
     private Rigidbody2D myRigidBody;
     private Transform myTransform;
 
-    private int playerIDWhoShotMe;
-
-    public int GetPlayerWhoShot()
-    {
-        return playerIDWhoShotMe;
-    }
-
-    public void SetPlayerWhoShot(int playerID)
-    {
-        playerIDWhoShotMe = playerID;
-    }
-
     void OnEnable ()
     {
         myRigidBody = GetComponent<Rigidbody2D>();
@@ -39,7 +27,10 @@ public class Missile : NetworkBehaviour
             myTransform.right = targetDirection;
         }
         else
+        {
             Debug.Log("OnEnable ->T null");
+            Destroy(gameObject);
+        }
     }
 
     // Update is called once per frame
@@ -83,15 +74,9 @@ public class Missile : NetworkBehaviour
         {
             if (newTargetPlayer != null)
             {
-                if(playerIDWhoShotMe != collider.GetComponent<PlayerDataHolder>().playerId)
-                {
-                    //Debug.LogError("Not me!");
+                
                     NetworkServer.UnSpawn(gameObject);
                     Destroy(gameObject);
-                }
-                //else
-                    Debug.LogError("It's me!");
-
             }
             else//Generic Target behaviour(just explodes without doing anything)
             {

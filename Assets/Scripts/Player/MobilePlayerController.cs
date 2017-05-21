@@ -24,6 +24,10 @@ namespace Assets.Scripts.Player
 
         private GameObject groundCheck1, groundCheck2;
 
+        private SpriteRenderer spriteRenderer;
+
+        private ShootingController myShootingController;
+
         public struct PlayerInput
         {
             public bool counterClockwise;
@@ -42,6 +46,9 @@ namespace Assets.Scripts.Player
 
             groundCheck1 = myTransform.Find("Ground Check 1").gameObject;
             groundCheck2 = myTransform.Find("Ground Check 2").gameObject;
+
+            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+            myShootingController = GetComponent<ShootingController>();
         }
 
         [ClientCallback]
@@ -120,14 +127,20 @@ namespace Assets.Scripts.Player
             {
                 movementVersor = new Vector3(-myGround.normal.y, myGround.normal.x);
                 movementPerpendicularDown = -myGround.normal;//new Vector2(-movementVersor.y, movementVersor.x).normalized;
+                spriteRenderer.flipX = true;
+                //spriteRenderer.transform.position = myTransform.position - spriteRenderer.transform.localPosition;
             }
             else if (input.clockwise)
             {
                 movementVersor = new Vector3(myGround.normal.y, -myGround.normal.x);
                 movementPerpendicularDown = -myGround.normal;// new Vector2(movementVersor.y, -movementVersor.x).normalized;
+                spriteRenderer.flipX = false;
+                //spriteRenderer.transform.position = myTransform.position + spriteRenderer.transform.localPosition;
             }
             else
                 return myTransform.position;
+
+            myShootingController.UpdateShootStartPosition(input);
 
             Vector2 nextPlayerPoint = new Vector2(startPosition.x, startPosition.y) + movementVersor * speed * 0.2f;
             Vector2 myPosition = new Vector2(startPosition.x, startPosition.y);
