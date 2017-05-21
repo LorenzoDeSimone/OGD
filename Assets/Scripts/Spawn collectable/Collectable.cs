@@ -32,7 +32,7 @@ namespace Assets.Scripts.Spawn_collectable
         {
             MobilePlayerController player = coll.gameObject.GetComponent<MobilePlayerController>();
 
-            if (player && coll.Equals(player.GetCharacterCircleCollider2D()))
+            if (player && coll.Equals(player.GetCharacterCapsuleCollider2D()))
             {
                 CmdUpdateServerState(false, coll.gameObject.GetComponent<PlayerDataHolder>().playerId);
             }

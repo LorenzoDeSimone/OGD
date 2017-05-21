@@ -929,8 +929,7 @@ Prefab:
       propertyPath: m_TagString
       value: Platform
       objectReference: {fileID: 0}
-    - target: {fileID: 58331571886791916, guid: aa73be220fba6a140afdbe45ac93384c,
-        type: 2}
+    - target: {fileID: 0}
       propertyPath: m_Material
       value: 
       objectReference: {fileID: 0}
@@ -1337,11 +1336,6 @@ Prefab:
     - target: {fileID: 1787905787674056, guid: aa73be220fba6a140afdbe45ac93384c, type: 2}
       propertyPath: m_Name
       value: Planet (2)
-      objectReference: {fileID: 0}
-    - target: {fileID: 58331571886791916, guid: aa73be220fba6a140afdbe45ac93384c,
-        type: 2}
-      propertyPath: m_Material
-      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: aa73be220fba6a140afdbe45ac93384c, type: 2}
