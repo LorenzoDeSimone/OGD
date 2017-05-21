@@ -93,7 +93,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   steeringMultiplier: 0.1
-  speed: 10
+  speed: 20
 --- !u!114 &114536548182572266
 MonoBehaviour:
   m_ObjectHideFlags: 1
