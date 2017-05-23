@@ -63,7 +63,7 @@ namespace Assets.Scripts.Player
         {
                 GameObject missile = (GameObject) Instantiate(Resources.Load("Prefabs/NPCs/Missile"));
                 missile.transform.position = clientCurrShootPosition;
-                missile.GetComponent<Missile>().target = clientNearestTarget;
+                missile.GetComponent<Missile>().SetTargetId(clientNearestTarget.GetComponent<PlayerDataHolder>().GetPlayerNetworkId());
                 missile.transform.right = (clientNearestTarget.transform.position - clientCurrShootPosition).normalized;
                 missile.gameObject.SetActive(true);
                 NetworkServer.Spawn(missile);

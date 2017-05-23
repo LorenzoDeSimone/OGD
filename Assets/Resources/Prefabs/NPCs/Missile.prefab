@@ -24,14 +24,13 @@ GameObject:
   - component: {fileID: 50122437641793268}
   - component: {fileID: 70803512253449226}
   - component: {fileID: 114945957004123604}
-  - component: {fileID: 114536548182572266}
   m_Layer: 0
   m_Name: Missile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4223467207675448
 Transform:
   m_ObjectHideFlags: 1
@@ -91,30 +90,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1732983367ed6744894045ed6d29554f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
   steeringMultiplier: 0.1
   speed: 20
---- !u!114 &114536548182572266
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1825933286919356}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_TransformSyncMode: 2
-  m_SendInterval: 0.033333335
-  m_SyncRotationAxis: 3
-  m_RotationSyncCompression: 0
-  m_SyncSpin: 0
-  m_MovementTheshold: 0.01
-  m_VelocityThreshold: 0.01
-  m_SnapThreshold: 10
-  m_InterpolateRotation: 1
-  m_InterpolateMovement: 0.8
 --- !u!114 &114945957004123604
 MonoBehaviour:
   m_ObjectHideFlags: 1
