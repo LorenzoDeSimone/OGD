@@ -26,6 +26,10 @@ namespace Assets.Scripts.Player
 
         private GameObject groundCheck1, groundCheck2;
 
+        private SpriteRenderer spriteRenderer;
+
+        private ShootingController myShootingController;
+
         public struct PlayerInput
         {
             public bool counterClockwise;
@@ -44,6 +48,9 @@ namespace Assets.Scripts.Player
 
             groundCheck1 = myTransform.Find("Ground Check 1").gameObject;
             groundCheck2 = myTransform.Find("Ground Check 2").gameObject;
+
+            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+            myShootingController = GetComponent<ShootingController>();
         }
 
         [ClientCallback]
@@ -77,7 +84,7 @@ namespace Assets.Scripts.Player
             Vector2 gravityVersor;
             GravityField myGravityField = myGround.collider.GetComponent<GravityField>();
 
-            if (Vector2.Distance(myTransform.position, myGround.point) > GetCharacterCircleCollider2D().radius * 10f)
+            if (Vector2.Distance(myTransform.position, myGround.point) > 1 * 10f)
                 gravityVersor = (myGravityField.gameObject.transform.position - myTransform.position).normalized;
             else
                 gravityVersor = -myGround.normal;
@@ -120,18 +127,22 @@ namespace Assets.Scripts.Player
 
             if (input.counterClockwise)
             {
-                GetComponent<SpriteRenderer>().flipX = true;//TEMP WORKAROUND, Animations will be implemented
                 movementVersor = new Vector3(-myGround.normal.y, myGround.normal.x);
                 movementPerpendicularDown = -myGround.normal;//new Vector2(-movementVersor.y, movementVersor.x).normalized;
+                spriteRenderer.flipX = true;
+                //spriteRenderer.transform.position = myTransform.position - spriteRenderer.transform.localPosition;
             }
             else if (input.clockwise)
             {
-                GetComponent<SpriteRenderer>().flipX = false;//TEMP WORKAROUND, Animations will be implemented
                 movementVersor = new Vector3(myGround.normal.y, -myGround.normal.x);
                 movementPerpendicularDown = -myGround.normal;// new Vector2(movementVersor.y, -movementVersor.x).normalized;
+                spriteRenderer.flipX = false;
+                //spriteRenderer.transform.position = myTransform.position + spriteRenderer.transform.localPosition;
             }
             else
                 return myTransform.position;
+
+            myShootingController.UpdateShootStartPosition(input);
 
             Vector2 nextPlayerPoint = new Vector2(startPosition.x, startPosition.y) + movementVersor * speed * 0.2f;
             Vector2 myPosition = new Vector2(startPosition.x, startPosition.y);
@@ -141,7 +152,7 @@ namespace Assets.Scripts.Player
 
             //Casts a ray with the direction of the antinormal of the playne starting from the next predicted player position to see if there will be ground
             RaycastHit2D nextGroundCheck = Physics2D.Raycast(nextPlayerPoint, movementPerpendicularDown,
-                                                               GetCharacterCircleCollider2D().radius * EdgeCheckMultiplier,
+                                                               1 * EdgeCheckMultiplier,
                                                                LayerMask.GetMask("Walkable"));
 
             if (nextGroundCheck.collider == null && IsGrounded())//Edge detected: we obtain the next position on the platform that is grounded
@@ -151,12 +162,12 @@ namespace Assets.Scripts.Player
                 ####<->N--|
                 ####
                 */
-                whereGroundShouldBe = nextPlayerPoint + movementPerpendicularDown * GetCharacterCircleCollider2D().radius * EdgeCheckMultiplier;
+                whereGroundShouldBe = nextPlayerPoint + movementPerpendicularDown * 1 * EdgeCheckMultiplier;
                 platformEdge = Physics2D.Raycast(whereGroundShouldBe, BackRaycastDirection, Mathf.Infinity, LayerMask.GetMask("Walkable"));
                 if (platformEdge.collider != null && platformEdge.collider.gameObject.Equals(myGravityField.gameObject))
                 {
                     //Debug.Log("Myland!");
-                    recalculatedNextPlayerPoint = platformEdge.point + platformEdge.normal * GetCharacterCircleCollider2D().radius;
+                    recalculatedNextPlayerPoint = platformEdge.point + platformEdge.normal * 1;
                     movementVersor = (recalculatedNextPlayerPoint - myPosition).normalized;
 
                     Debug.DrawLine(myTransform.position, nextPlayerPoint, Color.blue);
@@ -189,16 +200,9 @@ namespace Assets.Scripts.Player
                 GetComponent<Rigidbody2D>().AddForce(myGround.normal * jumpPower * Time.fixedDeltaTime);
         }
 
-        public CircleCollider2D GetCharacterCircleCollider2D()
+        public CapsuleCollider2D GetCharacterCapsuleCollider2D()
         {
-            CircleCollider2D[] colliders = GetComponents<CircleCollider2D>();
-
-            foreach (CircleCollider2D currCollider in colliders)
-            {
-                if (!currCollider.isTrigger)
-                    return currCollider;
-            }
-            return null;
+            return GetComponent<CapsuleCollider2D>();
         }
 
         private bool CanMove()

@@ -49,7 +49,8 @@ public class InputManager : NetworkBehaviour {
 
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            localPlayerShootingController.CmdShoot();
+            Debug.LogError("Shoot");
+            localPlayerShootingController.Shoot();
         }
     }
 
@@ -66,7 +67,7 @@ public class InputManager : NetworkBehaviour {
 
     public void SetRocketButton()
     {
-        localPlayerShootingController.CmdShoot();
+        localPlayerShootingController.Shoot();
     }
 
     public void SetJumpButton()
