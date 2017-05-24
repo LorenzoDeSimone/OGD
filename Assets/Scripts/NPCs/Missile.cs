@@ -56,15 +56,15 @@ public class Missile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        MobilePlayerController newTargetPlayer = collider.GetComponent<MobilePlayerController>();
+        //Movable newTargetPlayer = collider.GetComponent<Assets.Scripts.Player.>();
         GravityField gravityField = collider.GetComponent<GravityField>();
 
-        if (newTargetPlayer != null)
+        /*if (newTargetPlayer != null)
         {
             //Debug.LogError("Player Hit! " + target.gameObject.name);
             NetworkServer.UnSpawn(gameObject);
             Destroy(gameObject);
-        }
+        }*/
 
         //What to do if collider is a gravity field
         if (gravityField != null)

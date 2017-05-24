@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 public class InputManager : NetworkBehaviour {
 
     private static bool counterclockwisePressed=false, clockwisePressed=false;
-    private MobilePlayerController localPlayerMovementController;
+    private InputController localPlayerInputController;
     private ShootingController localPlayerShootingController;
 
     // Use this for initialization
@@ -17,7 +17,7 @@ public class InputManager : NetworkBehaviour {
         {
             if(go.GetComponent<NetworkIdentity>().isLocalPlayer)
             {
-                localPlayerMovementController = go.GetComponent<MobilePlayerController>();
+                localPlayerInputController = go.GetComponent<InputController>();
                 localPlayerShootingController = go.GetComponentInChildren<ShootingController>();
                 break;
             }
@@ -27,24 +27,24 @@ public class InputManager : NetworkBehaviour {
     //Handles continous movement
     void Update()
     {
-        MobilePlayerController.PlayerInput input;
+        Movable.CharacterInput input;
         input.counterClockwise = input.clockwise = input.jump = false;
 
         if (counterclockwisePressed || Input.GetKey(KeyCode.LeftArrow))
         {
             input.counterClockwise = true;
-            localPlayerMovementController.RequestMovement(input);
+            localPlayerInputController.RequestMovement(input);
         }
         else if (clockwisePressed   || Input.GetKey(KeyCode.RightArrow))
         {
             input.clockwise = true;
-            localPlayerMovementController.RequestMovement(input);
+            localPlayerInputController.RequestMovement(input);
         }
 
         if(Input.GetKeyDown(KeyCode.Space))
         {
             input.jump = true;
-            localPlayerMovementController.RequestMovement(input);
+            localPlayerInputController.RequestMovement(input);
         }
 
         if (Input.GetKeyDown(KeyCode.Return))
@@ -72,9 +72,9 @@ public class InputManager : NetworkBehaviour {
 
     public void SetJumpButton()
     {
-        MobilePlayerController.PlayerInput input;
+        Movable.CharacterInput input;
         input.counterClockwise = input.clockwise = false;
         input.jump = true;
-        localPlayerMovementController.RequestMovement(input);
+        localPlayerInputController.RequestMovement(input);
     }
 }

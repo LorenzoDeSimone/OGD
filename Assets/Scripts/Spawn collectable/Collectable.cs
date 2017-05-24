@@ -30,12 +30,10 @@ namespace Assets.Scripts.Spawn_collectable
 
         private void OnTriggerEnter2D(Collider2D coll)
         {
-            MobilePlayerController player = coll.gameObject.GetComponent<MobilePlayerController>();
+            PlayerDataHolder player = coll.gameObject.GetComponent<PlayerDataHolder>();
 
-            if (player && coll.Equals(player.GetCharacterCapsuleCollider2D()))
-            {
+            if (player)// && coll.Equals(player.GetCharacterCapsuleCollider2D()))
                 CmdUpdateServerState(false, coll.gameObject.GetComponent<PlayerDataHolder>().playerId);
-            }
         }
 
         private void UpdateNetworkState(bool b)

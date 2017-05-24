@@ -7,14 +7,14 @@ using System.Collections;
 namespace Assets.Scripts.Player
 {
     [RequireComponent(typeof(Rigidbody2D))]
-    public class MobilePlayerController : NetworkBehaviour
+    public class Movable : NetworkBehaviour
     {
         public float speed = 1.0f;
         public float jumpPower = 100.0f;
         public float rotationSpeed = 5.0f;
-        public float movementReduction = 10;
         public float EdgeCheckMultiplier = 1.1f;
-        public float airResistance = 0.4f;
+        public float jumpControlStopWindow = 0.2f;
+
         private static readonly float rotationEpsilon = 0.999f;
 
         private RaycastHit2D myGround;
@@ -27,10 +27,9 @@ namespace Assets.Scripts.Player
         private GameObject groundCheck1, groundCheck2;
 
         private SpriteRenderer spriteRenderer;
+        private bool jumpEnabled;
 
-        private ShootingController myShootingController;
-
-        public struct PlayerInput
+        public struct CharacterInput
         {
             public bool counterClockwise;
             public bool clockwise;
@@ -50,7 +49,7 @@ namespace Assets.Scripts.Player
             groundCheck2 = myTransform.Find("Ground Check 2").gameObject;
 
             spriteRenderer = GetComponent<SpriteRenderer>();
-            myShootingController = GetComponent<ShootingController>();
+            jumpEnabled = true;
         }
 
         [ClientCallback]
@@ -66,16 +65,6 @@ namespace Assets.Scripts.Player
         void FixedUpdate()
         {
             ApplyGravity();
-        }
-
-        public void RequestMovement(PlayerInput input)
-        {
-            if (isLocalPlayer)
-            {
-                myTransform.position = Move(myTransform.position, input);
-                if (input.jump)
-                    Jump();
-            }
         }
 
         private void ApplyGravity()
@@ -115,15 +104,24 @@ namespace Assets.Scripts.Player
         }
 
         //Movement routines called by the input manager
-        private Vector3 Move(Vector2 startPosition, PlayerInput input)
+        public void Move(CharacterInput input)
         {
             //if (!CanMove())
             //return myTransform.position;
+
+            Vector2 startPosition = myTransform.position;
 
             GravityField myGravityField = myGround.collider.GetComponent<GravityField>();
             RaycastHit2D platformEdge;
 
             Vector2 movementVersor, movementPerpendicularDown, whereGroundShouldBe, recalculatedNextPlayerPoint;
+
+            if (input.jump && IsGrounded())
+            {
+                Jump();
+                jumpEnabled = false;
+                StartCoroutine(JumpControlStop());
+            }
 
             if (input.counterClockwise)
             {
@@ -140,9 +138,7 @@ namespace Assets.Scripts.Player
                 //spriteRenderer.transform.position = myTransform.position + spriteRenderer.transform.localPosition;
             }
             else
-                return myTransform.position;
-
-            myShootingController.UpdateShootStartPosition(input);
+                return;
 
             Vector2 nextPlayerPoint = new Vector2(startPosition.x, startPosition.y) + movementVersor * speed * 0.2f;
             Vector2 myPosition = new Vector2(startPosition.x, startPosition.y);
@@ -176,22 +172,9 @@ namespace Assets.Scripts.Player
                     Debug.DrawLine(platformEdge.point, recalculatedNextPlayerPoint, Color.red);
                 }
             }
+            Debug.DrawRay(myTransform.position, movementVersor, Color.red);
 
-            float distance = Vector2.Distance(myGround.point, myTransform.position);
-
-            if (IsGrounded())//We apply movement vector directly is player is grounded
-            {
-                return startPosition + movementVersor * speed * Time.deltaTime;
-                //myRigidBody.AddForce(movementVersor * speed * Time.fixedDeltaTime);
-                //myRigidBody.velocity = movementVersor * speed * Time.fixedDeltaTime;
-                //myTransform.position = new Vector2(myTransform.position.x, myTransform.position.y) + movementVersor * speed * Time.fixedDeltaTime;
-            }
-            else//Otherwise, we decrease air control proportionally to his distance to the ground
-            {
-                return startPosition + movementVersor * speed * Time.deltaTime;
-                //myRigidBody.AddForce(movementVersor * speed * Time.fixedDeltaTime);
-                //myRigidBody.position = new Vector2(myRigidBody.position.x, myRigidBody.position.y) + movementVersor * speed * 1 / Mathf.Pow(distance, airResistance) * Time.fixedDeltaTime;
-            }
+            myTransform.position = startPosition + movementVersor * speed * Time.deltaTime;
         }
 
         public void Jump()
@@ -205,9 +188,16 @@ namespace Assets.Scripts.Player
             return GetComponent<CapsuleCollider2D>();
         }
 
-        private bool CanMove()
+        public bool CanMove()
         {
             return true;//Insert other booleans in && for other situations in which the player cannot move
+        }
+
+        IEnumerator<WaitForSeconds> JumpControlStop()
+        {
+            yield return new WaitForSeconds(jumpControlStopWindow);
+            //Debug.Log("enabling");
+            jumpEnabled = true;
         }
     }
 }

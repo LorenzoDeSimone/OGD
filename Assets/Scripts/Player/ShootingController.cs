@@ -12,11 +12,15 @@ namespace Assets.Scripts.Player
         private PlayerDataHolder playerData;
         private Radar myRadar;
         private GameObject currShootPosition, leftShootPosition, rightShootPosition;
+        private Movable myMovable;
+
 
         void Start()
         {
             myTargetMarker = (GameObject)Instantiate(Resources.Load("Prefabs/Player/Target Marker"));
             myRadar = GetComponentInChildren<Radar>();
+            myMovable = GetComponent<Movable>();
+
             playerData = GetComponentInParent<PlayerDataHolder>();
 
             leftShootPosition = transform.Find("Left Shoot Position").gameObject;
@@ -32,12 +36,15 @@ namespace Assets.Scripts.Player
             }
         }
 
-        public void UpdateShootStartPosition(MobilePlayerController.PlayerInput input)
+        public void UpdateShootStartPosition(Movable.CharacterInput input)
         {
-            if (input.counterClockwise)
-                currShootPosition = leftShootPosition;
-            else if (input.clockwise)
-                currShootPosition = rightShootPosition;
+            if (myMovable.CanMove())
+            {
+                if (input.counterClockwise)
+                    currShootPosition = leftShootPosition;
+                else if (input.clockwise)
+                    currShootPosition = rightShootPosition;
+            }
         }
 
         private void MarkTarget(GameObject target)
