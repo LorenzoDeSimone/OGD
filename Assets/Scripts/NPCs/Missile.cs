@@ -61,7 +61,7 @@ public class Missile : MonoBehaviour
 
         if (newTargetPlayer != null)
         {
-            Debug.LogError("Player Hit! " + target.gameObject.name);
+            //Debug.LogError("Player Hit! " + target.gameObject.name);
             NetworkServer.UnSpawn(gameObject);
             Destroy(gameObject);
         }
@@ -69,7 +69,7 @@ public class Missile : MonoBehaviour
         //What to do if collider is a gravity field
         if (gravityField != null)
         {
-            Debug.LogError("Platform Hit!");
+            //Debug.LogError("Platform Hit!");
             NetworkServer.UnSpawn(gameObject);
             Destroy(gameObject);
         }

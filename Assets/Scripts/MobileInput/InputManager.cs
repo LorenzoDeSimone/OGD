@@ -49,7 +49,7 @@ public class InputManager : NetworkBehaviour {
 
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            Debug.LogError("Shoot");
+            //Debug.LogError("Shoot");
             localPlayerShootingController.Shoot();
         }
     }

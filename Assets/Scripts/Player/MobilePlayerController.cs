@@ -49,7 +49,7 @@ namespace Assets.Scripts.Player
             groundCheck1 = myTransform.Find("Ground Check 1").gameObject;
             groundCheck2 = myTransform.Find("Ground Check 2").gameObject;
 
-            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+            spriteRenderer = GetComponent<SpriteRenderer>();
             myShootingController = GetComponent<ShootingController>();
         }
 
@@ -197,7 +197,7 @@ namespace Assets.Scripts.Player
         public void Jump()
         {
             if (IsGrounded())
-                GetComponent<Rigidbody2D>().AddForce(myGround.normal * jumpPower * Time.fixedDeltaTime);
+                GetComponent<Rigidbody2D>().AddForce(myGround.normal * jumpPower);
         }
 
         public CapsuleCollider2D GetCharacterCapsuleCollider2D()
