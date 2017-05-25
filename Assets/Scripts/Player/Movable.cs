@@ -28,6 +28,7 @@ namespace Assets.Scripts.Player
 
         private SpriteRenderer spriteRenderer;
         private bool controlsEnabled;
+        public bool thisAgentCanJump = false;
 
         public struct CharacterInput
         {
@@ -44,8 +45,11 @@ namespace Assets.Scripts.Player
 
             myGround = myRadar.GetMyGround();
 
-            groundCheck1 = myTransform.Find("Ground Check 1").gameObject;
-            groundCheck2 = myTransform.Find("Ground Check 2").gameObject;
+            if (thisAgentCanJump)
+            {
+                groundCheck1 = myTransform.Find("Ground Check 1").gameObject;
+                groundCheck2 = myTransform.Find("Ground Check 2").gameObject;
+            }
 
             spriteRenderer = GetComponent<SpriteRenderer>();
             controlsEnabled = true;
@@ -70,7 +74,7 @@ namespace Assets.Scripts.Player
             Vector2 gravityVersor;
             GravityField myGravityField = myGround.collider.GetComponent<GravityField>();
 
-            if (Vector2.Distance(myTransform.position, myGround.point) > GetCollider().radius * 10f)
+            if (Vector2.Distance(myTransform.position, myGround.point) > GetCollider().bounds.extents.y * 10f)
                 gravityVersor = (myGravityField.gameObject.transform.position - myTransform.position).normalized;
             else
                 gravityVersor = -myGround.normal;
@@ -97,7 +101,10 @@ namespace Assets.Scripts.Player
 
         public bool IsGrounded()
         {
-            return Physics2D.OverlapArea(groundCheck1.transform.position, groundCheck2.transform.position, LayerMask.GetMask("Walkable"));
+            if(thisAgentCanJump)
+                return Physics2D.OverlapArea(groundCheck1.transform.position, groundCheck2.transform.position, LayerMask.GetMask("Walkable"));
+            else
+                return true;
         }
 
         //Movement routines called by the input manager
@@ -133,7 +140,7 @@ namespace Assets.Scripts.Player
             else
                 return;
 
-            Vector2 nextPlayerPoint = new Vector2(startPosition.x, startPosition.y) + movementVersor * speed * 0.2f;
+            Vector2 nextPlayerPoint = new Vector2(startPosition.x, startPosition.y) + movementVersor * speed * speed/60f;
             Vector2 myPosition = new Vector2(startPosition.x, startPosition.y);
             Vector2 BackRaycastDirection = -movementVersor;//(myGravityField.transform.position - myTransform.position).normalized;
 
@@ -141,28 +148,30 @@ namespace Assets.Scripts.Player
 
             //Casts a ray with the direction of the antinormal of the playne starting from the next predicted player position to see if there will be ground
             RaycastHit2D nextGroundCheck = Physics2D.Raycast(nextPlayerPoint, movementPerpendicularDown,
-                                                               GetCollider().radius * EdgeCheckMultiplier,
+                                                               GetCollider().bounds.extents.x * EdgeCheckMultiplier,
                                                                LayerMask.GetMask("Walkable"));
 
-            if (nextGroundCheck.collider == null && IsGrounded())//Edge detected: we obtain the next position on the platform that is grounded
+            if (nextGroundCheck.collider == null)//Edge detected: we obtain the next position on the platform that is grounded
             {
                 /*Little Raycast scheme! P is player, arrows are raycasts, # is platform, N next player position corrected by the edge detection algorithm
                 P--------->              N-P  the new corrected direction. Debug.DrawLine should help to understand what is going on =)
                 ####<->N--|
                 ####
                 */
-                whereGroundShouldBe = nextPlayerPoint + movementPerpendicularDown * GetCollider().radius * EdgeCheckMultiplier;
+                whereGroundShouldBe = nextPlayerPoint + movementPerpendicularDown * GetCollider().bounds.extents.x * EdgeCheckMultiplier;
                 platformEdge = Physics2D.Raycast(whereGroundShouldBe, BackRaycastDirection, Mathf.Infinity, LayerMask.GetMask("Walkable"));
                 if (platformEdge.collider != null && platformEdge.collider.gameObject.Equals(myGravityField.gameObject))
                 {
                     //Debug.Log("Myland!");
-                    recalculatedNextPlayerPoint = platformEdge.point + platformEdge.normal * GetCollider().radius;
+                    recalculatedNextPlayerPoint = platformEdge.point + platformEdge.normal * GetCollider().bounds.extents.x;
                     movementVersor = (recalculatedNextPlayerPoint - myPosition).normalized;
 
                     Debug.DrawLine(myTransform.position, nextPlayerPoint, Color.blue);
                     Debug.DrawLine(nextPlayerPoint, whereGroundShouldBe, Color.green);
                     Debug.DrawLine(whereGroundShouldBe, platformEdge.point, Color.yellow);
                     Debug.DrawLine(platformEdge.point, recalculatedNextPlayerPoint, Color.red);
+                    //Debug.LogError("W");
+
                 }
             }
             Debug.DrawRay(myTransform.position, movementVersor, Color.red);
@@ -186,9 +195,9 @@ namespace Assets.Scripts.Player
                    controlsEnabled;//Insert other booleans in && for other situations in which the player cannot move
         }
 
-        public CircleCollider2D GetCollider()
+        public Collider2D GetCollider()
         {
-            return GetComponent<CircleCollider2D>();
+            return GetComponent<Collider2D>();
         }
 
         IEnumerator<WaitForSeconds> JumpControlEnable()

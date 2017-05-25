@@ -303,11 +303,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0316f5a83a841549aac1653b52743fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
+  speed: 8
   jumpPower: 600
   rotationSpeed: 10
   EdgeCheckMultiplier: 1.1
   jumpControlStopWindow: 0.2
+  thisAgentCanJump: 1
 --- !u!114 &114504489635193244
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -7,17 +7,13 @@ namespace Assets.Scripts.Player
 {
     public class ShootingController : NetworkBehaviour
     {
-        private GameObject myTargetMarker;
-        private GameObject nearestTarget;
         private PlayerDataHolder playerData;
         private Radar myRadar;
         private GameObject currShootPosition, leftShootPosition, rightShootPosition;
         private Movable myMovable;
 
-
         void Start()
         {
-            myTargetMarker = (GameObject)Instantiate(Resources.Load("Prefabs/Player/Target Marker"));
             myRadar = GetComponentInChildren<Radar>();
             myMovable = GetComponent<Movable>();
 
@@ -29,11 +25,7 @@ namespace Assets.Scripts.Player
 
         void Update()
         {
-            nearestTarget = myRadar.GetNearestTarget(currShootPosition.transform.position);
-            if (isLocalPlayer)
-            {
-                MarkTarget(nearestTarget);
-            }
+
         }
 
         public void UpdateShootStartPosition(Movable.CharacterInput input)
@@ -47,38 +39,36 @@ namespace Assets.Scripts.Player
             }
         }
 
-        private void MarkTarget(GameObject target)
-        {
-            //Moves target marker over target
-            if (target != null)
-            {
-                myTargetMarker.gameObject.SetActive(true);
-                myTargetMarker.transform.position = target.transform.position;
-            }
-            else
-                myTargetMarker.gameObject.SetActive(false);
-        }
-
         public void Shoot()
         {
-            if(isLocalPlayer && CanShoot())
-                CmdShoot(currShootPosition.transform.position, nearestTarget);
+            if (isLocalPlayer && CanShoot())
+            {
+                Movable.CharacterInput missileDirection;
+                missileDirection.clockwise = missileDirection.counterClockwise = missileDirection.jump = false;
+
+                if (currShootPosition.Equals(leftShootPosition))
+                    missileDirection.counterClockwise = true;
+                else
+                    missileDirection.clockwise = true;
+
+                CmdShoot(currShootPosition.transform.position, missileDirection);
+            }
         }
 
         [Command]
-        public void CmdShoot(Vector3 clientCurrShootPosition, GameObject clientNearestTarget)
+        public void CmdShoot(Vector3 clientCurrShootPosition, Movable.CharacterInput missileDirection)
         {
-                GameObject missile = (GameObject) Instantiate(Resources.Load("Prefabs/NPCs/Missile"));
-                missile.transform.position = clientCurrShootPosition;
-                missile.GetComponent<Missile>().SetTargetId(clientNearestTarget.GetComponent<PlayerDataHolder>().GetPlayerNetworkId());
-                missile.transform.right = (clientNearestTarget.transform.position - clientCurrShootPosition).normalized;
-                missile.gameObject.SetActive(true);
-                NetworkServer.Spawn(missile);
+                GameObject playerMissile = (GameObject) Instantiate(Resources.Load("Prefabs/NPCs/PlayerMissile"));
+                playerMissile.transform.position = clientCurrShootPosition;
+                playerMissile.transform.right = transform.right;
+                playerMissile.GetComponent<PlayerMissile>().SetDirection(missileDirection);
+                playerMissile.gameObject.SetActive(true);
+                NetworkServer.Spawn(playerMissile);
         }
 
         public bool CanShoot()
         {
-            return nearestTarget!=null;//Placeholder before missile count implementation
+            return true;//Placeholder before missile count implementation
         }
 
 }
