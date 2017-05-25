@@ -835,6 +835,12 @@ Prefab:
       propertyPath: m_TagString
       value: SpawnPoint
       objectReference: {fileID: 0}
+    - target: {fileID: 114290409384451322, guid: 5081209272d2aac4d9da6f9d1cbe3c94,
+        type: 2}
+      propertyPath: collectablePrefab
+      value: 
+      objectReference: {fileID: 1392533751142890, guid: 21536bbcfca5c2c4a9ea58c33494e4f4,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5081209272d2aac4d9da6f9d1cbe3c94, type: 2}
   m_IsPrefabParent: 0
@@ -990,6 +996,12 @@ Prefab:
       propertyPath: m_Name
       value: Platform 6x2 (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 114290409384451322, guid: 5081209272d2aac4d9da6f9d1cbe3c94,
+        type: 2}
+      propertyPath: collectablePrefab
+      value: 
+      objectReference: {fileID: 1392533751142890, guid: 21536bbcfca5c2c4a9ea58c33494e4f4,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5081209272d2aac4d9da6f9d1cbe3c94, type: 2}
   m_IsPrefabParent: 0
@@ -1060,6 +1072,12 @@ Prefab:
       propertyPath: m_TagString
       value: Platform
       objectReference: {fileID: 0}
+    - target: {fileID: 114661331437017846, guid: aa73be220fba6a140afdbe45ac93384c,
+        type: 2}
+      propertyPath: collectablePrefab
+      value: 
+      objectReference: {fileID: 1392533751142890, guid: 21536bbcfca5c2c4a9ea58c33494e4f4,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: aa73be220fba6a140afdbe45ac93384c, type: 2}
   m_IsPrefabParent: 0
@@ -1313,6 +1331,12 @@ Prefab:
       propertyPath: m_TagString
       value: Platform
       objectReference: {fileID: 0}
+    - target: {fileID: 114290409384451322, guid: 5081209272d2aac4d9da6f9d1cbe3c94,
+        type: 2}
+      propertyPath: collectablePrefab
+      value: 
+      objectReference: {fileID: 1392533751142890, guid: 21536bbcfca5c2c4a9ea58c33494e4f4,
+        type: 2}
     m_RemovedComponents:
     - {fileID: 61790981161215496, guid: 5081209272d2aac4d9da6f9d1cbe3c94, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 5081209272d2aac4d9da6f9d1cbe3c94, type: 2}
@@ -1402,6 +1426,12 @@ Prefab:
       propertyPath: m_Name
       value: Planet (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 114661331437017846, guid: aa73be220fba6a140afdbe45ac93384c,
+        type: 2}
+      propertyPath: collectablePrefab
+      value: 
+      objectReference: {fileID: 1392533751142890, guid: 21536bbcfca5c2c4a9ea58c33494e4f4,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: aa73be220fba6a140afdbe45ac93384c, type: 2}
   m_IsPrefabParent: 0
@@ -1619,6 +1649,12 @@ Prefab:
       propertyPath: m_TagString
       value: Platform
       objectReference: {fileID: 0}
+    - target: {fileID: 114290409384451322, guid: 5081209272d2aac4d9da6f9d1cbe3c94,
+        type: 2}
+      propertyPath: collectablePrefab
+      value: 
+      objectReference: {fileID: 1392533751142890, guid: 21536bbcfca5c2c4a9ea58c33494e4f4,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5081209272d2aac4d9da6f9d1cbe3c94, type: 2}
   m_IsPrefabParent: 0

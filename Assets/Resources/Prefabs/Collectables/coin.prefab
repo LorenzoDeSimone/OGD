@@ -25,7 +25,7 @@ GameObject:
   - component: {fileID: 114251353440774882}
   - component: {fileID: 114613709625799192}
   m_Layer: 0
-  m_Name: Coin
+  m_Name: coin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -73,22 +73,22 @@ MonoBehaviour:
   m_SceneId:
     m_Value: 0
   m_AssetId:
-    i0: 136
-    i1: 136
-    i2: 158
-    i3: 13
-    i4: 153
-    i5: 178
-    i6: 5
-    i7: 212
-    i8: 154
-    i9: 154
-    i10: 126
-    i11: 27
-    i12: 68
-    i13: 164
-    i14: 194
-    i15: 221
+    i0: 33
+    i1: 83
+    i2: 107
+    i3: 188
+    i4: 252
+    i5: 165
+    i6: 194
+    i7: 196
+    i8: 169
+    i9: 234
+    i10: 88
+    i11: 195
+    i12: 52
+    i13: 148
+    i14: 228
+    i15: 244
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
 --- !u!114 &114613709625799192

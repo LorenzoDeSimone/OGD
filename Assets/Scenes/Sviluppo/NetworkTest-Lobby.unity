@@ -2666,7 +2666,7 @@ MonoBehaviour:
   m_OfflineScene: NetworkTest-Lobby
   m_OnlineScene: 
   m_SpawnPrefabs:
-  - {fileID: 1392533751142890, guid: 88889e0d99b205d49a9a7e1b44a4c2dd, type: 2}
+  - {fileID: 1392533751142890, guid: 21536bbcfca5c2c4a9ea58c33494e4f4, type: 2}
   - {fileID: 1825933286919356, guid: 25cb73523442f584aa52cc61ecddb0e1, type: 2}
   - {fileID: 1648704762638588, guid: cd1a61dd02ee4004bb1e2140860baf1a, type: 2}
   - {fileID: 1233439009769682, guid: b9b6d1c20d2f20942a717f507f110682, type: 2}
