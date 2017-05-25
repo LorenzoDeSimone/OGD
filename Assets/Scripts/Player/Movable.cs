@@ -27,7 +27,7 @@ namespace Assets.Scripts.Player
         private GameObject groundCheck1, groundCheck2;
 
         private SpriteRenderer spriteRenderer;
-        private bool jumpEnabled;
+        private bool controlsEnabled;
 
         public struct CharacterInput
         {
@@ -36,7 +36,6 @@ namespace Assets.Scripts.Player
             public bool jump;
         }
 
-        [ClientCallback]
         void Start()
         {
             myRigidBody = GetComponent<Rigidbody2D>();
@@ -49,10 +48,9 @@ namespace Assets.Scripts.Player
             groundCheck2 = myTransform.Find("Ground Check 2").gameObject;
 
             spriteRenderer = GetComponent<SpriteRenderer>();
-            jumpEnabled = true;
+            controlsEnabled = true;
         }
 
-        [ClientCallback]
         void Update()
         {
             //Debug.LogError("Velocity:" + myRigidBody.velocity);
@@ -61,7 +59,6 @@ namespace Assets.Scripts.Player
             ApplyRotation(false);
         }
 
-        [ClientCallback]
         void FixedUpdate()
         {
             ApplyGravity();
@@ -73,7 +70,7 @@ namespace Assets.Scripts.Player
             Vector2 gravityVersor;
             GravityField myGravityField = myGround.collider.GetComponent<GravityField>();
 
-            if (Vector2.Distance(myTransform.position, myGround.point) > 1 * 10f)
+            if (Vector2.Distance(myTransform.position, myGround.point) > GetCollider().radius * 10f)
                 gravityVersor = (myGravityField.gameObject.transform.position - myTransform.position).normalized;
             else
                 gravityVersor = -myGround.normal;
@@ -106,8 +103,8 @@ namespace Assets.Scripts.Player
         //Movement routines called by the input manager
         public void Move(CharacterInput input)
         {
-            //if (!CanMove())
-            //return myTransform.position;
+            if (!CanMove())
+                return;
 
             Vector2 startPosition = myTransform.position;
 
@@ -116,12 +113,8 @@ namespace Assets.Scripts.Player
 
             Vector2 movementVersor, movementPerpendicularDown, whereGroundShouldBe, recalculatedNextPlayerPoint;
 
-            if (input.jump && IsGrounded())
-            {
+            if (input.jump)
                 Jump();
-                jumpEnabled = false;
-                StartCoroutine(JumpControlStop());
-            }
 
             if (input.counterClockwise)
             {
@@ -148,7 +141,7 @@ namespace Assets.Scripts.Player
 
             //Casts a ray with the direction of the antinormal of the playne starting from the next predicted player position to see if there will be ground
             RaycastHit2D nextGroundCheck = Physics2D.Raycast(nextPlayerPoint, movementPerpendicularDown,
-                                                               1 * EdgeCheckMultiplier,
+                                                               GetCollider().radius * EdgeCheckMultiplier,
                                                                LayerMask.GetMask("Walkable"));
 
             if (nextGroundCheck.collider == null && IsGrounded())//Edge detected: we obtain the next position on the platform that is grounded
@@ -158,12 +151,12 @@ namespace Assets.Scripts.Player
                 ####<->N--|
                 ####
                 */
-                whereGroundShouldBe = nextPlayerPoint + movementPerpendicularDown * 1 * EdgeCheckMultiplier;
+                whereGroundShouldBe = nextPlayerPoint + movementPerpendicularDown * GetCollider().radius * EdgeCheckMultiplier;
                 platformEdge = Physics2D.Raycast(whereGroundShouldBe, BackRaycastDirection, Mathf.Infinity, LayerMask.GetMask("Walkable"));
                 if (platformEdge.collider != null && platformEdge.collider.gameObject.Equals(myGravityField.gameObject))
                 {
                     //Debug.Log("Myland!");
-                    recalculatedNextPlayerPoint = platformEdge.point + platformEdge.normal * 1;
+                    recalculatedNextPlayerPoint = platformEdge.point + platformEdge.normal * GetCollider().radius;
                     movementVersor = (recalculatedNextPlayerPoint - myPosition).normalized;
 
                     Debug.DrawLine(myTransform.position, nextPlayerPoint, Color.blue);
@@ -180,24 +173,29 @@ namespace Assets.Scripts.Player
         public void Jump()
         {
             if (IsGrounded())
+            {            
                 GetComponent<Rigidbody2D>().AddForce(myGround.normal * jumpPower);
-        }
-
-        public CapsuleCollider2D GetCharacterCapsuleCollider2D()
-        {
-            return GetComponent<CapsuleCollider2D>();
+                controlsEnabled = false;
+                StartCoroutine(JumpControlEnable());
+            }
         }
 
         public bool CanMove()
         {
-            return true;//Insert other booleans in && for other situations in which the player cannot move
+            return IsGrounded() &&
+                   controlsEnabled;//Insert other booleans in && for other situations in which the player cannot move
         }
 
-        IEnumerator<WaitForSeconds> JumpControlStop()
+        public CircleCollider2D GetCollider()
+        {
+            return GetComponent<CircleCollider2D>();
+        }
+
+        IEnumerator<WaitForSeconds> JumpControlEnable()
         {
             yield return new WaitForSeconds(jumpControlStopWindow);
-            //Debug.Log("enabling");
-            jumpEnabled = true;
+            Debug.Log("enabling");
+            controlsEnabled = true;
         }
     }
 }
