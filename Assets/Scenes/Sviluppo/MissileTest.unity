@@ -873,16 +873,6 @@ Prefab:
       propertyPath: m_Name
       value: MetallicPlatform 6x2 (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 1142757745800392, guid: 5081209272d2aac4d9da6f9d1cbe3c94, type: 2}
-      propertyPath: m_TagString
-      value: SpawnPoint
-      objectReference: {fileID: 0}
-    - target: {fileID: 114290409384451322, guid: 5081209272d2aac4d9da6f9d1cbe3c94,
-        type: 2}
-      propertyPath: collectablePrefab
-      value: 
-      objectReference: {fileID: 1392533751142890, guid: 21536bbcfca5c2c4a9ea58c33494e4f4,
-        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5081209272d2aac4d9da6f9d1cbe3c94, type: 2}
   m_IsPrefabParent: 0

@@ -30,10 +30,16 @@ public class PlayerMissile : MonoBehaviour
     void Update()
     {
         RaycastHit2D myGround = myRadar.GetMyGround();
+           /*
         if (myGround && Vector2.Distance(transform.position,myGround.point) <= minimumAttractionDistance)
-            myMovable.Move(myDirection);
+            {
+                myMovable.Move(myDirection);
+            }
         else//If the missile doesn't have a ground during its starts, it follows a straight line until the radar finds something(or the players shoots in air targeting another planet)
-            transform.position = transform.position + transform.right * myMovable.speed * Time.deltaTime;
+            {
+            */
+                transform.position = transform.position + transform.right * myMovable.speed * Time.deltaTime;
+            //}
     }
 
     IEnumerator<WaitForSeconds> DespawnCountdown(float despawnTime)
