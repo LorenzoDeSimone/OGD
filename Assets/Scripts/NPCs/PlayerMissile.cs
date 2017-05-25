@@ -8,7 +8,7 @@ public class PlayerMissile : MonoBehaviour
 {
 
     public float despawnTime = 5f;
-    public float minimumAttractionDistance = 5f;
+    public float minimumAttractionDistance = 5.5f;
 
     private Movable myMovable;
     private Movable.CharacterInput myDirection;
