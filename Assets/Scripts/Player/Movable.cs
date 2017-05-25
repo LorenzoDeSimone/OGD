@@ -70,6 +70,8 @@ namespace Assets.Scripts.Player
 
         private void ApplyGravity()
         {
+            if (!myGround)
+                return;
             //float distance = Vector2.Distance(myGround.point, myTransform.position);
             Vector2 gravityVersor;
             GravityField myGravityField = myGround.collider.GetComponent<GravityField>();
@@ -85,6 +87,9 @@ namespace Assets.Scripts.Player
 
         private void ApplyRotation(bool forceTargetRotation)
         {
+            if (!myGround)
+                return;
+
             //Forward -> blue arrow in the editor
             //Normal -> Normal of current gravity field
             //We calculate the quaternion rotation that has the same forward vector of the current ground

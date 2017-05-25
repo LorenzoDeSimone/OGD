@@ -60,7 +60,7 @@ namespace Assets.Scripts.Player
         {
                 GameObject playerMissile = (GameObject) Instantiate(Resources.Load("Prefabs/NPCs/PlayerMissile"));
                 playerMissile.transform.position = clientCurrShootPosition;
-                playerMissile.transform.right = transform.right;
+                playerMissile.transform.right = (clientCurrShootPosition - transform.position).normalized;
                 playerMissile.GetComponent<PlayerMissile>().SetDirection(missileDirection);
                 playerMissile.gameObject.SetActive(true);
                 NetworkServer.Spawn(playerMissile);

@@ -6,12 +6,19 @@ using Assets.Scripts.Player;
 
 public class PlayerMissile : MonoBehaviour
 {
+
+    public float despawnTime = 5f;
+    public float minimumAttractionDistance = 5f;
+
     private Movable myMovable;
     private Movable.CharacterInput myDirection;
+    private Radar myRadar;
 
     private void Start()
     {
         myMovable = GetComponent<Movable>();
+        myRadar = GetComponentInChildren<Radar>();
+        StartCoroutine(DespawnCountdown(despawnTime));
     }
 
     public void SetDirection(Movable.CharacterInput input)
@@ -22,14 +29,18 @@ public class PlayerMissile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        myMovable.Move(myDirection);
+        RaycastHit2D myGround = myRadar.GetMyGround();
+        if (myGround && Vector2.Distance(transform.position,myGround.point) <= minimumAttractionDistance)
+            myMovable.Move(myDirection);
+        else//If the missile doesn't have a ground during its starts, it follows a straight line until the radar finds something(or the players shoots in air targeting another planet)
+            transform.position = transform.position + transform.right * myMovable.speed * Time.deltaTime;
     }
 
-    IEnumerator<WaitForSeconds> VanishCountDown(float vanishTime)
+    IEnumerator<WaitForSeconds> DespawnCountdown(float despawnTime)
     {
-        yield return new WaitForSeconds(vanishTime);
-        //NetworkServer.UnSpawn(gameObject);
-        //Destroy(gameObject);
+        yield return new WaitForSeconds(despawnTime);
+        NetworkServer.UnSpawn(gameObject);
+        Destroy(gameObject);
     }
 
     private void OnTriggerEnter2D(Collider2D collider)
