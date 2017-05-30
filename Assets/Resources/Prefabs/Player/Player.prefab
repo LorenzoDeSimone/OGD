@@ -336,8 +336,8 @@ MonoBehaviour:
   playerSprites:
   - {fileID: 21300000, guid: 60374612388eed344bc4f1a2454333ff, type: 3}
   - {fileID: 21300000, guid: 5912c656b118f83409df424e7f629318, type: 3}
-  - {fileID: 21300000, guid: 16adedc6bc8e0ad41a1817b2e0e6ab16, type: 3}
   - {fileID: 21300000, guid: ea5c1bc9ee2f58041b76bd821c833d98, type: 3}
+  - {fileID: 21300000, guid: 16adedc6bc8e0ad41a1817b2e0e6ab16, type: 3}
 --- !u!114 &114591764407061358
 MonoBehaviour:
   m_ObjectHideFlags: 1
