@@ -13,15 +13,8 @@ public class InputManager : NetworkBehaviour {
     void Start ()
     {
         //Searches for local player Game Object and stores it
-        foreach(GameObject go in GameObject.FindGameObjectsWithTag("Player"))
-        {
-            if(go.GetComponent<NetworkIdentity>().isLocalPlayer)
-            {
-                localPlayerInputController = go.GetComponent<InputController>();
-                localPlayerShootingController = go.GetComponentInChildren<ShootingController>();
-                break;
-            }
-        }
+        List < UnityEngine.Networking.PlayerController > players = NetworkManager.singleton.client.connection.playerControllers;
+        localPlayerInputController = players[0].gameObject.GetComponent<InputController>();
     }
 
     //Handles continous movement
