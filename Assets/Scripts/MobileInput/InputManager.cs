@@ -15,6 +15,7 @@ public class InputManager : NetworkBehaviour {
         //Searches for local player Game Object and stores it
         List < UnityEngine.Networking.PlayerController > players = NetworkManager.singleton.client.connection.playerControllers;
         localPlayerInputController = players[0].gameObject.GetComponent<InputController>();
+        localPlayerShootingController = players[0].gameObject.GetComponent<ShootingController>();
     }
 
     //Handles continous movement
