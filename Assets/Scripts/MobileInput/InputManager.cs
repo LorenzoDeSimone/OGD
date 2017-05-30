@@ -6,21 +6,27 @@ using UnityEngine.Networking;
 public class InputManager : NetworkBehaviour {
 
     private static bool counterclockwisePressed=false, clockwisePressed=false;
-    private InputController localPlayerInputController;
-    private ShootingController localPlayerShootingController;
+    private InputController localPlayerInputController = null;
+    private ShootingController localPlayerShootingController = null;
 
     // Use this for initialization
     void Start ()
     {
         //Searches for local player Game Object and stores it
-        List < UnityEngine.Networking.PlayerController > players = NetworkManager.singleton.client.connection.playerControllers;
-        localPlayerInputController = players[0].gameObject.GetComponent<InputController>();
-        localPlayerShootingController = players[0].gameObject.GetComponent<ShootingController>();
+        //List < UnityEngine.Networking.PlayerController > players = NetworkManager.singleton.client.connection.playerControllers;
+        //localPlayerInputController = players[0].gameObject.GetComponent<InputController>();
+        //localPlayerShootingController = players[0].gameObject.GetComponent<ShootingController>();
     }
 
     //Handles continous movement
     void Update()
     {
+        if(localPlayerInputController == null)
+        {
+            localPlayerInputController = PlayerDataHolder.GetLocalPlayer().GetComponent<InputController>();
+            localPlayerShootingController = PlayerDataHolder.GetLocalPlayer().gameObject.GetComponent<ShootingController>();
+        }
+
         Movable.CharacterInput input;
         input.counterClockwise = input.clockwise = input.jump = false;
 

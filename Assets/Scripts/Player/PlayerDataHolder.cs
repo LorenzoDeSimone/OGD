@@ -94,7 +94,7 @@ namespace Assets.Scripts.Player
             localPlayer = go;
         }
 
-        public static GameObject GetLocalPLayer()
+        public static GameObject GetLocalPlayer()
         {
             return localPlayer;
         }
