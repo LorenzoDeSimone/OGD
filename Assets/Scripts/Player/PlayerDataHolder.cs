@@ -9,6 +9,8 @@ namespace Assets.Scripts.Player
         public delegate void OnPointSyncEvent(int playerNetID, int playerPoints);
         public static event OnPointSyncEvent PointSyncEvent;
 
+        private static GameObject localPlayer;
+
         [SyncVar (hook = "SendPointSyncEvent")]
         int playerPoints = 0;
         
@@ -19,9 +21,12 @@ namespace Assets.Scripts.Player
         [Header("Sprites and Animator")]
         public Sprite[] playerSprites;
         //public RuntimeAnimatorController[] animatorControllers;
-
+        
         private void Start()
         {
+            if (isLocalPlayer)
+                SetLocalPlayer(gameObject);
+
             InitPlayer();
         }
 
@@ -82,6 +87,16 @@ namespace Assets.Scripts.Player
         public int GetPlayerNetworkId()
         {
             return playerId;
+        }
+
+        private static void SetLocalPlayer(GameObject go)
+        {
+            localPlayer = go;
+        }
+
+        public static GameObject GetLocalPLayer()
+        {
+            return localPlayer;
         }
     }
 }
