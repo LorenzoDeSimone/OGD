@@ -16,6 +16,10 @@ namespace Assets.Scripts.Player
         public int playerId = 0;
         public bool paintsThePlayer = true;
 
+        [Header("Sprites and Animator")]
+        public Sprite[] playerSprites;
+        //public RuntimeAnimatorController[] animatorControllers;
+
         private void Start()
         {
             InitPlayer();
@@ -42,8 +46,19 @@ namespace Assets.Scripts.Player
         private void InitPlayer()
         {
             TryToPaintPlayer();
+            AddSprite();
             //Send event with -1 for bar init
             SendPointSyncEvent(-1);
+        }
+
+        private void AddSprite()
+        {
+            Sprite newSprite = playerSprites[playerId % playerSprites.Length];
+            gameObject.GetComponent<SpriteRenderer>().sprite = newSprite;
+            /*
+            RuntimeAnimatorController newController = animatorControllers[playerId % animatorControllers.Length];
+            gameObject.GetComponent<Animator>().runtimeAnimatorController = newController;
+            */
         }
 
         private void TryToPaintPlayer()
