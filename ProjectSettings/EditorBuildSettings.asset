@@ -7,10 +7,10 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/Scenes/Sviluppo/Lobby.unity
-    guid: 00000000000000000000000000000000
+    guid: cff004e9efbf49147aa5564e181700ce
   - enabled: 1
     path: Assets/Scenes/Sviluppo/MissileTest2.unity
-    guid: 00000000000000000000000000000000
+    guid: 4022aab0cfddc12488c210f68005429e
   - enabled: 1
-    path: Assets/Scenes/Sviluppo/NewGameTest.unity
+    path: Assets/Scenes/Sviluppo/GameTest.unity
     guid: 00000000000000000000000000000000
