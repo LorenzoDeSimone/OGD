@@ -47,7 +47,7 @@ namespace Assets.Scripts.UI
             {
                 newPlayerScore = Instantiate(playerScorePrefab, scoresHolder);
 
-                newPlayerScore.GetComponent<Image>().color = PlayerColor.GetColor(ofPlayersAndPoints[i]);
+                newPlayerScore.GetComponent<Image>().color = PlayerColor.GetColor(i);
 
                 newAnchorMax = ((RectTransform)newPlayerScore.transform).anchorMax;
                 newAnchorMin = ((RectTransform)newPlayerScore.transform).anchorMin;
