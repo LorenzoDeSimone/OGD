@@ -57,7 +57,7 @@ public class Missile : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collider)
     {
         //Movable newTargetPlayer = collider.GetComponent<Assets.Scripts.Player.>();
-        GravityField gravityField = collider.GetComponent<GravityField>();
+        Platform gravityField = collider.GetComponent<Platform>();
 
         /*if (newTargetPlayer != null)
         {

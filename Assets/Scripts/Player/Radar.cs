@@ -7,7 +7,7 @@ public class Radar : MonoBehaviour
     private HashSet<GameObject> nearTargets;//A collection of hittable targets currently in player's radar
 
     private HashSet<GameObject> nearGravityFields;//A collection of gravity fields currently in player's radar
-    private GravityField safeGravityField;//In case no gravity field is present in player's radar, this is used for attraction
+    private Platform safeGravityField;//In case no gravity field is present in player's radar, this is used for attraction
 
     // Use this for initialization
     void Start ()
@@ -19,7 +19,7 @@ public class Radar : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collider)
     {
         //Gravity Fields management
-        GravityField gravityField = collider.GetComponent<GravityField>();
+        Platform gravityField = collider.GetComponent<Platform>();
         Target target = collider.GetComponent<Target>();
 
         if (gravityField != null)
@@ -37,7 +37,7 @@ public class Radar : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collider)
     {
-        GravityField gravityField = collider.GetComponent<GravityField>();
+        Platform gravityField = collider.GetComponent<Platform>();
         Target target = collider.GetComponent<Target>();
 
         //Gravity Fields management

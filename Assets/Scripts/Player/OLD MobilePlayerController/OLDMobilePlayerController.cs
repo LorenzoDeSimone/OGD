@@ -223,7 +223,7 @@ namespace Assets.Scripts.Player
         {
             //float distance = Vector2.Distance(myGround.point, myTransform.position);
             Vector2 gravityVersor;
-            GravityField myGravityField = myGround.collider.GetComponent<GravityField>();
+            Platform myGravityField = myGround.collider.GetComponent<Platform>();
 
             if (Vector2.Distance(myTransform.position, myGround.point) > GetCharacterCircleCollider2D().radius * 10f)
                 gravityVersor = (myGravityField.gameObject.transform.position - myTransform.position).normalized;
@@ -277,7 +277,7 @@ namespace Assets.Scripts.Player
             //if (!CanMove())
             //return myTransform.position;
 
-            GravityField myGravityField = myGround.collider.GetComponent<GravityField>();
+            Platform myGravityField = myGround.collider.GetComponent<Platform>();
             RaycastHit2D platformEdge;
 
             Vector2 movementVersor, movementPerpendicularDown, whereGroundShouldBe, recalculatedNextPlayerPoint;
