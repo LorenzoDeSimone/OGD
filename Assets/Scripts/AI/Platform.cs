@@ -5,5 +5,6 @@ using Assets.Scripts.Player;
 
 public class Platform : MonoBehaviour
 {
+    public List<GameObject> adjacencies;
     public float mass = 50;
 }
