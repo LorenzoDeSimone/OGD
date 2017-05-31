@@ -9,6 +9,8 @@ public class Radar : MonoBehaviour
     private HashSet<GameObject> nearGravityFields;//A collection of gravity fields currently in player's radar
     private Platform safeGravityField;//In case no gravity field is present in player's radar, this is used for attraction
 
+    public bool variableGravityField = true;
+
     // Use this for initialization
     void Start ()
     {
@@ -18,16 +20,19 @@ public class Radar : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        //Gravity Fields management
         Platform gravityField = collider.GetComponent<Platform>();
         Target target = collider.GetComponent<Target>();
 
-        if (gravityField != null)
+        if (variableGravityField || (!variableGravityField && nearGravityFields.Count == 0))
         {
-            nearGravityFields.Add(gravityField.gameObject);
+            //Gravity Fields management
 
-            if (nearGravityFields.Count == 1)
-                safeGravityField = gravityField;
+            if (gravityField != null)
+            {
+                nearGravityFields.Add(gravityField.gameObject);
+                if (nearGravityFields.Count == 1)
+                    safeGravityField = gravityField;
+            } 
         }
 
         //Target management
@@ -40,13 +45,16 @@ public class Radar : MonoBehaviour
         Platform gravityField = collider.GetComponent<Platform>();
         Target target = collider.GetComponent<Target>();
 
-        //Gravity Fields management
-        if (gravityField != null)
+        if (variableGravityField)
         {
-            nearGravityFields.Remove(gravityField.gameObject);
+            //Gravity Fields management
+            if (gravityField != null)
+            {
+                nearGravityFields.Remove(gravityField.gameObject);
 
-            if (nearGravityFields.Count == 0)
-                safeGravityField = gravityField;
+                if (nearGravityFields.Count == 0)
+                    safeGravityField = gravityField;
+            }
         }
 
         //Target management

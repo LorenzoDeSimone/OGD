@@ -145,6 +145,7 @@ namespace Assets.Scripts.Player
             else
                 return;
 
+
             Vector2 nextPlayerPoint = new Vector2(startPosition.x, startPosition.y) + movementVersor * speed * speed/60f;
             Vector2 myPosition = new Vector2(startPosition.x, startPosition.y);
             Vector2 BackRaycastDirection = -movementVersor;//(myGravityField.transform.position - myTransform.position).normalized;
@@ -196,7 +197,8 @@ namespace Assets.Scripts.Player
 
         public bool CanMove()
         {
-            return IsGrounded() &&
+            return IsGrounded()            &&
+                   myGround.collider!=null &&
                    controlsEnabled;//Insert other booleans in && for other situations in which the player cannot move
         }
 
