@@ -1,16 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
-public class MapManager : MonoBehaviour {
+[CustomEditor(typeof(Platform))]
+public class MapManager : Editor
+{
+    private int num;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public override void OnInspectorGUI()
+    {
+        DrawDefaultInspector();
+
+        Platform myScript = (Platform)target;
+        if (GUILayout.Button("Connect Platforms"))
+        {
+            myScript.connectPlatform();
+        }
+    }
 }
