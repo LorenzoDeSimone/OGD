@@ -132,7 +132,7 @@ namespace Assets.Scripts.Player
 
             Vector2 movementVersor, movementPerpendicularDown, whereGroundShouldBe, recalculatedNextMovablePoint;
 
-            if (input.jump)
+            if (input.jump && thisAgentCanJump)
                 Jump();
 
             if (input.counterClockwise)
@@ -150,7 +150,12 @@ namespace Assets.Scripts.Player
                 //spriteRenderer.transform.position = myTransform.position + spriteRenderer.transform.localPosition;
             }
             else
+            {
+                Debug.LogWarning("clockwise: " + input.clockwise + "|| counterclockwise: " + input.counterClockwise);
+//                Debug.LogError("W");
                 return;
+            }
+
 
 
             Vector2 nextMovablePoint = myPosition + movementVersor * speed * speed/60f;
@@ -162,6 +167,8 @@ namespace Assets.Scripts.Player
             RaycastHit2D nextGroundCheck = Physics2D.Raycast(nextMovablePoint, movementPerpendicularDown,
                                                                distanceToGround * EdgeCheckMultiplier,
                                                                LayerMask.GetMask("Walkable"));
+
+            Debug.DrawRay(myTransform.position, movementVersor, Color.magenta);
 
             if (nextGroundCheck.collider == null)//Edge detected: we obtain the next position on the platform that is grounded
             {
@@ -183,10 +190,8 @@ namespace Assets.Scripts.Player
                     Debug.DrawLine(whereGroundShouldBe, platformEdge.point, Color.yellow);
                     Debug.DrawLine(platformEdge.point, recalculatedNextMovablePoint, Color.magenta);
                    // Debug.LogError("W");
-
                 }
             }
-            Debug.DrawRay(myTransform.position, movementVersor, Color.red);
 
             myTransform.position = myPosition + movementVersor * speed * Time.deltaTime;
         }

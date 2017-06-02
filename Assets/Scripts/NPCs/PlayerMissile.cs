@@ -21,20 +21,15 @@ public class PlayerMissile : MonoBehaviour
         StartCoroutine(DespawnCountdown(despawnTime));
     }
 
-    public void SetDirection(Movable.CharacterInput input)
-    {
-        myDirection = input;
-    }
-
     // Update is called once per frame
     void Update()
     {
         RaycastHit2D myGround = myRadar.GetMyGround();
-           
-        if (myGround && Vector2.Distance(transform.position,myGround.point) <= minimumAttractionDistance)
-            myMovable.Move(myDirection);
-        else//If the missile doesn't have a ground during its starts, it follows a straight line until the radar finds something(or the players shoots in air targeting another planet)
-            transform.position = transform.position + transform.right * myMovable.speed * Time.deltaTime;
+        //Debug.LogError("www");   
+        //if (myGround && Vector2.Distance(transform.position,myGround.point) <= minimumAttractionDistance)
+        //    myMovable.Move(myDirection);
+        //else//If the missile doesn't have a ground during its starts, it follows a straight line until the radar finds something(or the players shoots in air targeting another planet)
+        transform.position = transform.position + transform.right * myMovable.speed * Time.deltaTime;
     }
 
     IEnumerator<WaitForSeconds> DespawnCountdown(float despawnTime)
