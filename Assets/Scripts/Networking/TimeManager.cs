@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.Networking;
 
-public class TimeManager : MonoBehaviour
+public class TimeManager : NetworkBehaviour
 {
     private float endTime;
     private Text myText;
@@ -27,8 +28,10 @@ public class TimeManager : MonoBehaviour
                 seconds = "0" + numSeconds;
             else
                 seconds = "" + numSeconds;
-
-            minutes = "" + numMinutes;
+            if (numMinutes < 10)
+                minutes = "0" + numMinutes;
+            else
+                minutes = "" + numMinutes;
 
             myText.text = minutes + ":" + seconds;
             yield return new WaitForSecondsRealtime(1);
@@ -37,7 +40,8 @@ public class TimeManager : MonoBehaviour
         }
     }
 
-    public void setEndTime(float num)
+    [ClientRpc]
+    public void RpcSetEndTime(float num)
     {
         endTime = num;
         StartCoroutine(CountDown());

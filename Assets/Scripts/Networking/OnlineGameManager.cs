@@ -10,13 +10,15 @@ namespace Assets.Scripts.Networking
     {
         [Header("Time of a match in seconds")]
         public float matchTime = 180;
-        public TimeManager timer;
+        public GameObject timer;
 
         public GameObject victoryScreenHolder;
-        
+
         void Start()
         {
-            timer.setEndTime(Time.time + matchTime);
+            GameObject go = Instantiate(timer);
+            NetworkServer.Spawn(go);
+            go.GetComponent<TimeManager>().RpcSetEndTime(Time.time + matchTime);
             StartCoroutine(StartMatchCountDown());
         }
 
