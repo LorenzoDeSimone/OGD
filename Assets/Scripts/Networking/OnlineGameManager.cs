@@ -10,17 +10,19 @@ namespace Assets.Scripts.Networking
     {
         [Header("Time of a match in seconds")]
         public float matchTime = 180;
+        public TimeManager timer;
 
         public GameObject victoryScreenHolder;
         
         void Start()
         {
+            timer.setEndTime(Time.time + matchTime);
             StartCoroutine(StartMatchCountDown());
         }
 
         private IEnumerator StartMatchCountDown()
         {
-            yield return new WaitForSeconds(matchTime);
+            yield return new WaitForSecondsRealtime(matchTime);
             EndMatch();
         }
 

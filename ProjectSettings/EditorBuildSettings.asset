@@ -13,4 +13,10 @@ EditorBuildSettings:
     guid: 4022aab0cfddc12488c210f68005429e
   - enabled: 1
     path: Assets/Scenes/Sviluppo/GameTest.unity
+    guid: ea2a1c28b714ce046a87cd45b8532628
+  - enabled: 1
+    path: Assets/Scenes/Sviluppo/Patroller Bot.unity
+    guid: 4d921ee221800af4f8a0966289acb399
+  - enabled: 1
+    path: Assets/Scenes/Sviluppo/AnimationTest.unity
     guid: 00000000000000000000000000000000
