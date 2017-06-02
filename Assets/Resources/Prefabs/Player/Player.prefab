@@ -306,9 +306,10 @@ MonoBehaviour:
   speed: 8
   jumpPower: 600
   rotationSpeed: 10
-  EdgeCheckMultiplier: 1.1
+  EdgeCheckMultiplier: 1.01
   jumpControlStopWindow: 0.2
   thisAgentCanJump: 1
+  thisAgentHasGravity: 1
 --- !u!114 &114504489635193244
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -29,6 +29,7 @@ namespace Assets.Scripts.Player
         private SpriteRenderer spriteRenderer;
         private bool controlsEnabled;
         public bool thisAgentCanJump = false;
+        public bool thisAgentHasGravity = false;
 
         public struct CharacterInput
         {
@@ -65,13 +66,17 @@ namespace Assets.Scripts.Player
 
         void FixedUpdate()
         {
-            ApplyGravity();
+            if(thisAgentHasGravity)
+                ApplyGravity();
         }
 
         private void ApplyGravity()
         {
             if (!myGround)
+            {
+                Debug.Log("No Ground");
                 return;
+            }
             //float distance = Vector2.Distance(myGround.point, myTransform.position);
             Vector2 gravityVersor;
             Platform myGravityField = myGround.collider.GetComponent<Platform>();
@@ -88,8 +93,10 @@ namespace Assets.Scripts.Player
         private void ApplyRotation(bool forceTargetRotation)
         {
             if (!myGround)
+            {
+                Debug.Log("No Ground");
                 return;
-
+            }
             //Forward -> blue arrow in the editor
             //Normal -> Normal of current gravity field
             //We calculate the quaternion rotation that has the same forward vector of the current ground
@@ -118,12 +125,12 @@ namespace Assets.Scripts.Player
             if (!CanMove())
                 return;
 
-            Vector2 startPosition = myTransform.position;
+            Vector2 myPosition = myTransform.position;
 
             Platform myGravityField = myGround.collider.GetComponent<Platform>();
             RaycastHit2D platformEdge;
 
-            Vector2 movementVersor, movementPerpendicularDown, whereGroundShouldBe, recalculatedNextPlayerPoint;
+            Vector2 movementVersor, movementPerpendicularDown, whereGroundShouldBe, recalculatedNextMovablePoint;
 
             if (input.jump)
                 Jump();
@@ -146,15 +153,14 @@ namespace Assets.Scripts.Player
                 return;
 
 
-            Vector2 nextPlayerPoint = new Vector2(startPosition.x, startPosition.y) + movementVersor * speed * speed/60f;
-            Vector2 myPosition = new Vector2(startPosition.x, startPosition.y);
+            Vector2 nextMovablePoint = myPosition + movementVersor * speed * speed/60f;
             Vector2 BackRaycastDirection = -movementVersor;//(myGravityField.transform.position - myTransform.position).normalized;
-
+            float distanceToGround = Vector2.Distance(myPosition, myGround.point);
             //Edge detection code
 
             //Casts a ray with the direction of the antinormal of the playne starting from the next predicted player position to see if there will be ground
-            RaycastHit2D nextGroundCheck = Physics2D.Raycast(nextPlayerPoint, movementPerpendicularDown,
-                                                               GetCollider().bounds.extents.x * EdgeCheckMultiplier,
+            RaycastHit2D nextGroundCheck = Physics2D.Raycast(nextMovablePoint, movementPerpendicularDown,
+                                                               distanceToGround * EdgeCheckMultiplier,
                                                                LayerMask.GetMask("Walkable"));
 
             if (nextGroundCheck.collider == null)//Edge detected: we obtain the next position on the platform that is grounded
@@ -164,25 +170,25 @@ namespace Assets.Scripts.Player
                 ####<->N--|
                 ####
                 */
-                whereGroundShouldBe = nextPlayerPoint + movementPerpendicularDown * GetCollider().bounds.extents.x * EdgeCheckMultiplier;
+                whereGroundShouldBe = nextMovablePoint + movementPerpendicularDown * distanceToGround * EdgeCheckMultiplier;
                 platformEdge = Physics2D.Raycast(whereGroundShouldBe, BackRaycastDirection, Mathf.Infinity, LayerMask.GetMask("Walkable"));
                 if (platformEdge.collider != null && platformEdge.collider.gameObject.Equals(myGravityField.gameObject))
                 {
                     //Debug.Log("Myland!");
-                    recalculatedNextPlayerPoint = platformEdge.point + platformEdge.normal * GetCollider().bounds.extents.x;
-                    movementVersor = (recalculatedNextPlayerPoint - myPosition).normalized;
+                    recalculatedNextMovablePoint = platformEdge.point + platformEdge.normal * distanceToGround;
+                    movementVersor = (recalculatedNextMovablePoint - myPosition).normalized;
 
-                    Debug.DrawLine(myTransform.position, nextPlayerPoint, Color.blue);
-                    Debug.DrawLine(nextPlayerPoint, whereGroundShouldBe, Color.green);
+                    Debug.DrawLine(myTransform.position, nextMovablePoint, Color.blue);
+                    Debug.DrawLine(nextMovablePoint, whereGroundShouldBe, Color.green);
                     Debug.DrawLine(whereGroundShouldBe, platformEdge.point, Color.yellow);
-                    Debug.DrawLine(platformEdge.point, recalculatedNextPlayerPoint, Color.red);
-                    //Debug.LogError("W");
+                    Debug.DrawLine(platformEdge.point, recalculatedNextMovablePoint, Color.magenta);
+                   // Debug.LogError("W");
 
                 }
             }
             Debug.DrawRay(myTransform.position, movementVersor, Color.red);
 
-            myTransform.position = startPosition + movementVersor * speed * Time.deltaTime;
+            myTransform.position = myPosition + movementVersor * speed * Time.deltaTime;
         }
 
         public void Jump()

@@ -183,10 +183,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 12
   jumpPower: 0
-  rotationSpeed: 10
-  EdgeCheckMultiplier: 3
+  rotationSpeed: 12
+  EdgeCheckMultiplier: 1.01
   jumpControlStopWindow: 0
   thisAgentCanJump: 0
+  thisAgentHasGravity: 0
 --- !u!114 &114912440225334284
 MonoBehaviour:
   m_ObjectHideFlags: 1

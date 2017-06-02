@@ -8,15 +8,18 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Sviluppo/Lobby.unity
     guid: cff004e9efbf49147aa5564e181700ce
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Sviluppo/MissileTest2.unity
     guid: 4022aab0cfddc12488c210f68005429e
   - enabled: 1
     path: Assets/Scenes/Sviluppo/GameTest.unity
     guid: ea2a1c28b714ce046a87cd45b8532628
   - enabled: 1
+    path: Assets/Scenes/Sviluppo/MissileTest.unity
+    guid: 00000000000000000000000000000000
+  - enabled: 1
     path: Assets/Scenes/Sviluppo/Patroller Bot.unity
     guid: 4d921ee221800af4f8a0966289acb399
   - enabled: 1
     path: Assets/Scenes/Sviluppo/AnimationTest.unity
-    guid: 00000000000000000000000000000000
+    guid: 53bad4e336678b948a54f4cf21dd901a

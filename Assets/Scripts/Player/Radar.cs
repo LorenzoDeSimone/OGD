@@ -104,7 +104,7 @@ public class Radar : MonoBehaviour
     {
         float candidateMinDistance = float.MaxValue;
         Vector2 myPosition = new Vector2(transform.position.x, transform.position.y);
-        Collider2D movableCollider = GetComponentInParent<Movable>().GetComponent<CircleCollider2D>();
+        Collider2D movableCollider = GetComponentInParent<Movable>().GetComponent<Collider2D>();
 
         //Finds first ground with a raycast under himself (Guaranteed to be found FIRST TIME ONLY by level design!)
         RaycastHit2D candidateNearestGround = Physics2D.Raycast(transform.position,
@@ -136,7 +136,7 @@ public class Radar : MonoBehaviour
 
                 float currDistance = Vector2.Distance(transform.position, currRaycastHit2D.point);
 
-                Debug.DrawRay(myPosition, distanceFromGravityField.pointA - myPosition, Color.cyan);
+                //Debug.DrawRay(myPosition, distanceFromGravityField.pointA - myPosition, Color.cyan);
 
                 if (currDistance < candidateMinDistance)
                 {
@@ -144,8 +144,9 @@ public class Radar : MonoBehaviour
                     candidateMinDistance = currDistance;
                 }
             }
-            if (candidateNearestGround.collider == null)
-                Debug.LogError("Oh my!");
+            //if (candidateNearestGround.collider == null)
+            //   Debug.LogError("Oh my!");
+
             return candidateNearestGround;
         }
     }
