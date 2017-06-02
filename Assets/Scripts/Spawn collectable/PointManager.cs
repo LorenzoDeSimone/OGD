@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class PointManager : MonoBehaviour
 {
     public GameObject pointBarSegmentPrefab;
+    public Sprite[] barSprites;
 
     Dictionary<int, RectTransform> ofPlayersAndBars;
     Dictionary<int, int> ofPlayersAndPoints;
@@ -35,7 +36,7 @@ public class PointManager : MonoBehaviour
 
         if (playerPoints > 0)
         {
-            Debug.Log("Updating points " + playerNetID + " " + playerPoints);
+            //Debug.Log("Updating points " + playerNetID + " " + playerPoints);
             ofPlayersAndPoints[playerNetID] = playerPoints; 
             pointsTotal = CalculateTotalPoints();
         }
@@ -46,14 +47,18 @@ public class PointManager : MonoBehaviour
     private void AddNewBar(int playerNetID)
     {
         GameObject go;
+        Sprite newSprite = barSprites[playerNetID % barSprites.Length];
+        
         try
         {
             go = Instantiate(pointBarSegmentPrefab, transform, false);
+            go.GetComponent<Image>().sprite = newSprite;
         }
         catch (System.Exception)
         {
             //Something unity won't the find prefab i put i the editor WTF?!!
             go = Instantiate((GameObject)Resources.Load("Prefabs/UI/PointBarSegment"), transform, false);
+            go.GetComponent<Image>().sprite = newSprite;
         }
 
         go.GetComponent<Image>().color = PlayerColor.GetColor(playerNetID);
@@ -87,13 +92,13 @@ public class PointManager : MonoBehaviour
 
             if (pointsTotal <= 0)
             {
-                offSet += 1 / (float)ofPlayersAndBars.Count;
+                offSet += 1f / (float)ofPlayersAndBars.Count;
             }
             else
             {
                 if (ofPlayersAndPoints[k] > 0)
                 {
-                    offSet += (ofPlayersAndPoints[k] / (float)pointsTotal) * (1f - (0.05f * numZeroPointPlayer));
+                    offSet += ((float)ofPlayersAndPoints[k] / (float)pointsTotal) * (1f - (0.05f * (float)numZeroPointPlayer));
                 }
                 else
                 {

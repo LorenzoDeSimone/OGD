@@ -4054,7 +4054,7 @@ MonoBehaviour:
   m_NetworkPort: 10000
   m_ServerBindToIP: 0
   m_ServerBindAddress: 
-  m_NetworkAddress: 192.168.43.139
+  m_NetworkAddress: localhost
   m_DontDestroyOnLoad: 1
   m_RunInBackground: 1
   m_ScriptCRCCheck: 1
@@ -4134,7 +4134,7 @@ MonoBehaviour:
   m_GamePlayerPrefab: {fileID: 1582415777413702, guid: 890ee3d1764f1584c87df9061563aeeb,
     type: 2}
   m_LobbyScene: Lobby
-  m_PlayScene: GameTest
+  m_PlayScene: Patroller Bot
   lobbySlots: []
   publicMatchWaitTime: 10
 --- !u!114 &2108872119
