@@ -27,10 +27,8 @@ public class TimeManager : MonoBehaviour
                 seconds = "0" + numSeconds;
             else
                 seconds = "" + numSeconds;
-            if (numMinutes < 10)
-                minutes = "0" + numMinutes;
-            else
-                minutes = "" + numMinutes;
+
+            minutes = "" + numMinutes;
 
             myText.text = minutes + ":" + seconds;
             yield return new WaitForSecondsRealtime(1);
