@@ -2,9 +2,12 @@
 using Assets.Scripts.Player;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System.Linq;
 
 public class PointManager : MonoBehaviour
 {
+    public static PointManager instance;
+
     public GameObject pointBarSegmentPrefab;
     public Sprite[] barSprites;
 
@@ -15,19 +18,15 @@ public class PointManager : MonoBehaviour
 
     private void Start()
     {
+        if(instance == null)
+            instance = this;
+
         ofPlayersAndBars = new Dictionary<int, RectTransform>();
         ofPlayersAndPoints = new Dictionary<int, int>();
-
-        PlayerDataHolder.PointSyncEvent += UpdateBar;
-    }
-
-    private void OnDestroy()
-    {
-        PlayerDataHolder.PointSyncEvent -= UpdateBar;
     }
 
     //player uses -1 as points for bar init
-    private void UpdateBar(int playerNetID, int playerPoints)
+    public void UpdateBar(int playerNetID, int playerPoints)
     {
         if (!ofPlayersAndBars.ContainsKey(playerNetID))
         {
@@ -123,6 +122,19 @@ public class PointManager : MonoBehaviour
         }
 
         return sum;
+    }
+
+    public int GetPlayerRankPosition(int playerId,int playerNum)
+    {
+        int count = 4;
+        foreach(int id in ofPlayersAndPoints.Keys)
+        {
+            if(id != playerId && ofPlayersAndPoints[playerId] > ofPlayersAndPoints[id])
+            {
+                count--;
+            }
+        }
+        return count;
     }
 
     public int GetTotalPoints()

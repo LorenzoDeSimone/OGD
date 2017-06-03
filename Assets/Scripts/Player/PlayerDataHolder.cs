@@ -6,19 +6,16 @@ namespace Assets.Scripts.Player
 {
     class PlayerDataHolder : NetworkBehaviour
     {
-        public delegate void OnPointSyncEvent(int playerNetID, int playerPoints);
-        public static event OnPointSyncEvent PointSyncEvent;
-
         private static GameObject localPlayer;
 
-        [SyncVar (hook = "SendPointSyncEvent")]
+        [SyncVar (hook = "SyncNewPoints")]
         int playerPoints = 0;
         
         [SyncVar]
         public int playerId = 0;
         public bool paintsThePlayer = true;
 
-        [Header("Sprites and Animator")]
+        [Header("Sprites and Animators")]
         public Sprite[] playerSprites;
         public RuntimeAnimatorController[] animatorControllers;
         
@@ -42,12 +39,26 @@ namespace Assets.Scripts.Player
             playerPoints += pointsToAdd;
         }
 
+        public void OnHit(int value)
+        {
+            CmdDecresePoints(value);
+            SyncNewPoints(playerPoints);
+        }
+
+        [Command]
+        private void CmdDecresePoints(int value)
+        {
+            System.Random rand = new System.Random();
+            int matchSize = (int)NetworkManager.singleton.matchSize;
+            playerPoints -= rand.Next(2,5) + matchSize - PointManager.instance.GetPlayerRankPosition(GetPlayerNetworkId(),matchSize);
+        }
+
         //argument needed from sync var PRE-hook... -1 for bar init
-        private void SendPointSyncEvent(int newValue)
+        private void SyncNewPoints(int newValue)
         {
             if(newValue > 0)
                 playerPoints = newValue;
-            PointSyncEvent.Invoke(GetPlayerNetworkId(), newValue);
+            PointManager.instance.UpdateBar(GetPlayerNetworkId(), newValue);
         }
 
         private void InitPlayer()
@@ -55,7 +66,7 @@ namespace Assets.Scripts.Player
             TryToPaintPlayer();
             AddSprite();
             //Send event with -1 for bar init
-            SendPointSyncEvent(-1);
+            SyncNewPoints(-1);
         }
 
         private void AddSprite()
