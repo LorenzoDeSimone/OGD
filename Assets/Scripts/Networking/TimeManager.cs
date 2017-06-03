@@ -43,7 +43,7 @@ public class TimeManager : NetworkBehaviour
     [ClientRpc]
     public void RpcSetEndTime(float num)
     {
-        endTime = num;
+        endTime = Time.time + num;
         StartCoroutine(CountDown());
     }
 }

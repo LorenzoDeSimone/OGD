@@ -1,24 +1,18 @@
 ﻿using Assets.Scripts.Networking;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-public class PlayerNumberSelector : MonoBehaviour {
+public class PlayerNumberSelector : SliderHelper {
 
     public Text textField;
-    protected NetworkLobbyController lobbyController;
-    private Slider slider;
-    
-	void Start () {
-        lobbyController = (NetworkLobbyController)NetworkManager.singleton;
-        slider = GetComponent<Slider>();
-    }
-	
-	public void ChangeValue()
+
+    protected override void Init()
     {
-        textField.text = ""+(int)slider.value;
-        lobbyController.minPlayers = (int)slider.value;
+    }
+
+    protected override void OnValueChanged(float newValue)
+    {
+        textField.text = "" + (int)newValue;
+        lobbyController.minPlayers = (int)newValue;
     }
 }
