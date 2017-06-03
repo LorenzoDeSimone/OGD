@@ -10,18 +10,21 @@ namespace Assets.Scripts.Networking
     {
         [Header("Time of a match in seconds")]
         public float matchTime = 180;
-        public TimeManager timer;
+        public GameObject timer;
 
         public GameObject victoryScreenHolder;
-        
+
         void Start()
         {
-            timer.setEndTime(Time.time + matchTime);
+            timer = Instantiate(timer);
+            NetworkServer.Spawn(timer);
             StartCoroutine(StartMatchCountDown());
         }
 
         private IEnumerator StartMatchCountDown()
         {
+            yield return new WaitForSecondsRealtime(1);
+            timer.GetComponent<TimeManager>().RpcSetEndTime(matchTime);
             yield return new WaitForSecondsRealtime(matchTime);
             EndMatch();
         }

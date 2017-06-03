@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Scripts.Player;
 
 public class Radar : MonoBehaviour
 {
@@ -8,6 +9,8 @@ public class Radar : MonoBehaviour
 
     private HashSet<GameObject> nearGravityFields;//A collection of gravity fields currently in player's radar
     private Platform safeGravityField;//In case no gravity field is present in player's radar, this is used for attraction
+
+    public bool variableGravityField = true;
 
     // Use this for initialization
     void Start ()
@@ -18,16 +21,19 @@ public class Radar : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        //Gravity Fields management
         Platform gravityField = collider.GetComponent<Platform>();
         Target target = collider.GetComponent<Target>();
 
-        if (gravityField != null)
+        if (variableGravityField || (!variableGravityField && nearGravityFields.Count == 0))
         {
-            nearGravityFields.Add(gravityField.gameObject);
+            //Gravity Fields management
 
-            if (nearGravityFields.Count == 1)
-                safeGravityField = gravityField;
+            if (gravityField != null)
+            {
+                nearGravityFields.Add(gravityField.gameObject);
+                if (nearGravityFields.Count == 1)
+                    safeGravityField = gravityField;
+            } 
         }
 
         //Target management
@@ -40,13 +46,16 @@ public class Radar : MonoBehaviour
         Platform gravityField = collider.GetComponent<Platform>();
         Target target = collider.GetComponent<Target>();
 
-        //Gravity Fields management
-        if (gravityField != null)
+        if (variableGravityField)
         {
-            nearGravityFields.Remove(gravityField.gameObject);
+            //Gravity Fields management
+            if (gravityField != null)
+            {
+                nearGravityFields.Remove(gravityField.gameObject);
 
-            if (nearGravityFields.Count == 0)
-                safeGravityField = gravityField;
+                if (nearGravityFields.Count == 0)
+                    safeGravityField = gravityField;
+            }
         }
 
         //Target management
@@ -94,6 +103,9 @@ public class Radar : MonoBehaviour
     public RaycastHit2D GetMyGround()
     {
         float candidateMinDistance = float.MaxValue;
+        Vector2 myPosition = new Vector2(transform.position.x, transform.position.y);
+        Collider2D movableCollider = GetComponentInParent<Movable>().GetComponent<CircleCollider2D>();
+
         //Finds first ground with a raycast under himself (Guaranteed to be found FIRST TIME ONLY by level design!)
         RaycastHit2D candidateNearestGround = Physics2D.Raycast(transform.position,
                                              -transform.up,
@@ -103,9 +115,11 @@ public class Radar : MonoBehaviour
             return candidateNearestGround;
         else if (nearGravityFields.Count == 0)
         {
+            ColliderDistance2D distanceFromGravityField = safeGravityField.GetComponent<Collider2D>().Distance(movableCollider);
+
             //Debug.Log("0 gravityFields");
             return Physics2D.Raycast(transform.position,
-                                     safeGravityField.transform.position - transform.position,
+                                     distanceFromGravityField.pointA - myPosition,
                                      Mathf.Infinity,
                                      LayerMask.GetMask("Walkable"));
         }
@@ -113,12 +127,16 @@ public class Radar : MonoBehaviour
         {
             foreach (GameObject currField in nearGravityFields)
             {
+                ColliderDistance2D distanceFromGravityField = currField.GetComponent<Collider2D>().Distance(movableCollider);
+
                 RaycastHit2D currRaycastHit2D = Physics2D.Raycast(transform.position,
-                                                                  currField.transform.position - transform.position,
+                                                                  distanceFromGravityField.pointA - myPosition,
                                                                   Mathf.Infinity,
                                                                   LayerMask.GetMask("Walkable"));
 
                 float currDistance = Vector2.Distance(transform.position, currRaycastHit2D.point);
+
+                Debug.DrawRay(myPosition, distanceFromGravityField.pointA - myPosition, Color.cyan);
 
                 if (currDistance < candidateMinDistance)
                 {
@@ -126,7 +144,44 @@ public class Radar : MonoBehaviour
                     candidateMinDistance = currDistance;
                 }
             }
+            if (candidateNearestGround.collider == null)
+                Debug.LogError("Oh my!");
             return candidateNearestGround;
         }
     }
 }
+
+/*
+//Gravity Fields methods
+//Finds nearest ground to the player
+public GravityFieldInfo GetMyGround()
+{
+   float candidateMinDistance;
+   Collider2D movableCollider = GetComponentInParent<Movable>().GetComponent<Collider2D>();
+   //Finds first ground with a raycast under himself (Guaranteed to be found FIRST TIME ONLY by level design!)
+   GravityFieldInfo candidateGravityFieldInfo;
+
+   ColliderDistance2D distanceFromGravityField = safeGravityField.GetComponent<Collider2D>().Distance(movableCollider);
+
+   candidateGravityFieldInfo.normal = distanceFromGravityField.normal;
+   candidateGravityFieldInfo.nearestPoint = distanceFromGravityField.pointA;
+   candidateGravityFieldInfo.mass = safeGravityField.GetComponent<Platform>().mass;
+   candidateMinDistance = Vector2.Distance(transform.position, safeGravityField.transform.position);
+
+   foreach (GameObject currField in nearGravityFields)
+   {
+       Debug.DrawLine(transform.position, currField.transform.position, Color.green);
+       float distanceBetweenCenters = Vector2.Distance(transform.position, currField.transform.position);
+       if (distanceBetweenCenters < candidateMinDistance)
+       {
+           candidateMinDistance = distanceBetweenCenters;
+           ColliderDistance2D currGravityFieldDistanceInfo = currField.GetComponent<Collider2D>().Distance(movableCollider);
+           candidateGravityFieldInfo.normal = currGravityFieldDistanceInfo.normal;
+           candidateGravityFieldInfo.nearestPoint = currGravityFieldDistanceInfo.pointA;
+           candidateGravityFieldInfo.mass = currField.GetComponent<Platform>().mass;
+       }
+   }
+
+   return candidateGravityFieldInfo;
+}
+}*/
