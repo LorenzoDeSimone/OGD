@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Networking.Match;
@@ -8,31 +9,26 @@ namespace Assets.Scripts.Networking
 {
     class PublicPlayMenu : PlayMenu
     {
-        const string CHARS_POOL = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789-";
-        const int NAME_LENGHT = 16;
-
-        public MaskableGraphic loadingSpinner;
-        public MaskableGraphic loadingMessage;
-
         protected override void InitMenu()
         {
-            JoinPublicMatch();
+            TryJoinMatch();
             StartCoroutine(SpinLoadingSpinner());
         }
 
-        private void JoinPublicMatch()
+        protected override void TryJoinMatch()
         {
             lobbyController.StartMatchMaker();
-            lobbyController.readyToReset = false;
 
+            lobbyController.readyToReset = false;
             StartCoroutine(SearchMatch());
         }
 
-        private IEnumerator SearchMatch()
+        protected override IEnumerator SearchMatch()
         {
             while (lobbyController.IsSearchingPublicMatch())
             {
-                lobbyController.loadingPublicMatches = true;
+                lobbyController.loadingMatches = true;
+                
                 lobbyController.matchMaker.ListMatches(0, 10, "", false, 0, 0, 
                     lobbyController.InitMatchList);
                 yield return new WaitWhile(lobbyController.IsLoadingPublicMatches);
@@ -72,27 +68,13 @@ namespace Assets.Scripts.Networking
                 }
             }
         }
-
-        private IEnumerator SpinLoadingSpinner()
+        protected override void TryInitMenu()
         {
-            while(true)
+            if (lobbyController.Online)
             {
-                loadingSpinner.transform.Rotate(loadingSpinner.transform.forward,-2.0f);
-                yield return new WaitForEndOfFrame();
+                lobbyController.currentPlayMenu = this;
+                InitMenu();
             }
-        }
-
-        private string RandomPublicName()
-        {
-            string randName = "";
-            System.Random rInt = new System.Random();
-
-            for (int i = 0; i < NAME_LENGHT; i++)
-            {
-                randName += CHARS_POOL[rInt.Next() % CHARS_POOL.Length];
-            }
-
-            return randName;
         }
     }
 }

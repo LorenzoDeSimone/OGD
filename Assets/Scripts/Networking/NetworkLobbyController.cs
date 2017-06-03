@@ -12,7 +12,7 @@ namespace Assets.Scripts.Networking
 
         public float publicMatchWaitTime = 10.0f;
 
-        internal bool loadingPublicMatches = true;
+        internal bool loadingMatches = true;
         internal bool readyToReset = true;
         internal bool creatingMatch = true;
         internal bool joiningMatch = false;
@@ -27,6 +27,13 @@ namespace Assets.Scripts.Networking
         ulong netId;
         ulong nodeId;
         ulong createdMatchID = (ulong)NetworkID.Invalid;
+        bool online = true;
+        NetworkDiscovery networkExplorer;
+
+        private void Start()
+        {
+            networkExplorer = GetComponent<NetworkDiscovery>();
+        }
 
         public override void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo)
         {
@@ -131,7 +138,7 @@ namespace Assets.Scripts.Networking
                 publicMatches = new List<MatchInfoSnapshot>();
             }
 
-            loadingPublicMatches = false;
+            loadingMatches = false;
         }
 
         public void PrepareToReset()
@@ -151,7 +158,10 @@ namespace Assets.Scripts.Networking
         {
             StopAllCoroutines();
 
-            if(currentPlayMenu)
+            if (networkExplorer.running)
+                networkExplorer.StopBroadcast();
+
+            if (currentPlayMenu)
                 currentPlayMenu.StopMatchSearch();
 
             if (matchMaker)
@@ -161,10 +171,28 @@ namespace Assets.Scripts.Networking
             StopClient();
             StopHost();
 
-            loadingPublicMatches = true;
+            loadingMatches = true;
             searchingPublicMatch = true;
             joiningMatch = false;
             creatingMatch = true;
+        }
+
+        public bool Online
+        {
+            get
+            {
+                return online;
+            }
+
+            set
+            {
+                online = value;
+            }
+        }
+
+        public NetworkDiscovery GetNetExplorer()
+        {
+            return networkExplorer;
         }
 
         public bool IsSearchingPublicMatch()
@@ -174,7 +202,7 @@ namespace Assets.Scripts.Networking
 
         public bool IsLoadingPublicMatches()
         {
-            return loadingPublicMatches;
+            return loadingMatches;
         }
 
         public bool IsJoiningMatch()

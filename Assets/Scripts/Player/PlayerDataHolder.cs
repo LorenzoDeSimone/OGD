@@ -20,7 +20,7 @@ namespace Assets.Scripts.Player
 
         [Header("Sprites and Animator")]
         public Sprite[] playerSprites;
-        //public RuntimeAnimatorController[] animatorControllers;
+        public RuntimeAnimatorController[] animatorControllers;
         
         private void Start()
         {
@@ -30,10 +30,12 @@ namespace Assets.Scripts.Player
             InitPlayer();
         }
 
+        /*
         private void OnGUI()
         {
             GUI.Box(new Rect(10, 10*playerId, 100, 90), string.Format("{0} {1}", playerPoints, playerId));
         }
+        */
 
         public void AddPoints(int pointsToAdd)
         {

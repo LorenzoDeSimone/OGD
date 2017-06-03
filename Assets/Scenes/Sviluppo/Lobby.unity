@@ -175,7 +175,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 1
+  m_Text: 2
 --- !u!222 &81894151
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -767,21 +767,10 @@ MonoBehaviour:
   m_MinValue: 1
   m_MaxValue: 4
   m_WholeNumbers: 1
-  m_Value: 1
+  m_Value: 2
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 352246889}
-        m_MethodName: ChangeValue
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: UnityEngine.UI.Slider+SliderEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &352246889
@@ -3116,6 +3105,7 @@ GameObject:
   - component: {fileID: 1662957872}
   - component: {fileID: 1662957874}
   - component: {fileID: 1662957873}
+  - component: {fileID: 1662957875}
   m_Layer: 5
   m_Name: JoinPublicPlayMenu
   m_TagString: Untagged
@@ -3188,6 +3178,21 @@ MonoBehaviour:
     i15: 0
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
+--- !u!114 &1662957875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1662957871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61449396ebad261498e194dde4836793, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loadingSpinner: {fileID: 230085974}
+  loadingMessage: {fileID: 1382901246}
+  waitTime: 0.3
+  attempts: 2
 --- !u!1 &1761448994
 GameObject:
   m_ObjectHideFlags: 0
@@ -3197,8 +3202,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1761448995}
   - component: {fileID: 1761448996}
+  - component: {fileID: 1761448997}
   m_Layer: 5
-  m_Name: Toggle
+  m_Name: ToggleOnline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3275,6 +3281,17 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Slider+SliderEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &1761448997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1761448994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e298881af215a441821afda320b0c86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1767017960
 GameObject:
   m_ObjectHideFlags: 0
@@ -4033,6 +4050,7 @@ GameObject:
   - component: {fileID: 2108872120}
   - component: {fileID: 2108872118}
   - component: {fileID: 2108872119}
+  - component: {fileID: 2108872121}
   m_Layer: 0
   m_Name: LobbyController
   m_TagString: NetworkLobbyController
@@ -4125,10 +4143,10 @@ MonoBehaviour:
   matchSize: 4
   isNetworkActive: 0
   matchMaker: {fileID: 0}
-  m_ShowLobbyGUI: 1
+  m_ShowLobbyGUI: 0
   m_MaxPlayers: 4
   m_MaxPlayersPerConnection: 1
-  m_MinPlayers: 1
+  m_MinPlayers: 2
   m_LobbyPlayerPrefab: {fileID: 114380445389110200, guid: f2a55bb9c6c84e64988637225db0de6f,
     type: 2}
   m_GamePlayerPrefab: {fileID: 1582415777413702, guid: 890ee3d1764f1584c87df9061563aeeb,
@@ -4149,7 +4167,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   manager: {fileID: 0}
-  showGUI: 1
+  showGUI: 0
   offsetX: 0
   offsetY: 0
 --- !u!4 &2108872120
@@ -4165,6 +4183,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2108872121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2108872117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1553936188, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_BroadcastPort: 4000
+  m_BroadcastKey: 9741
+  m_BroadcastVersion: 1
+  m_BroadcastSubVersion: 1
+  m_BroadcastInterval: 1000
+  m_UseNetworkManager: 1
+  m_BroadcastData: is there anybody out there?
+  m_ShowGUI: 0
+  m_OffsetX: 0
+  m_OffsetY: 100
 --- !u!1 &2135801295
 GameObject:
   m_ObjectHideFlags: 0
