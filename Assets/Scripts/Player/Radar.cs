@@ -11,6 +11,7 @@ public class Radar : MonoBehaviour
     private Platform safeGravityField;//In case no gravity field is present in player's radar, this is used for attraction
 
     public bool variableGravityField = true;
+    public bool checkForGroundDown = true;
 
     // Use this for initialization
     void Start ()
@@ -105,12 +106,25 @@ public class Radar : MonoBehaviour
         float candidateMinDistance = float.MaxValue;
         Vector2 myPosition = new Vector2(transform.position.x, transform.position.y);
         Collider2D movableCollider = GetComponentInParent<Movable>().GetComponent<Collider2D>();
+        RaycastHit2D candidateNearestGround;
 
-        //Finds first ground with a raycast under himself (Guaranteed to be found FIRST TIME ONLY by level design!)
-        RaycastHit2D candidateNearestGround = Physics2D.Raycast(transform.position,
-                                             -transform.up,
-                                              Mathf.Infinity,
-                                              LayerMask.GetMask("Walkable"));
+        if (checkForGroundDown)
+        {
+            //Finds first ground with a raycast under himself (Guaranteed to be found FIRST TIME ONLY by level design!)
+            candidateNearestGround = Physics2D.Raycast(transform.position,
+                                     -transform.up,
+                                     Mathf.Infinity,
+                                     LayerMask.GetMask("Walkable"));
+        }
+        else
+        {
+            //NONSENSE: just neeed for a RaycastHit2D that has no collider... I know... It's horrible =(
+            candidateNearestGround = Physics2D.Raycast(transform.position,
+                         transform.up,
+                         0f,
+                         LayerMask.GetMask("Water"));
+        }
+
         if (safeGravityField == null)
             return candidateNearestGround;
         else if (nearGravityFields.Count == 0)

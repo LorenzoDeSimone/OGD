@@ -81,10 +81,7 @@ namespace Assets.Scripts.Player
             Vector2 gravityVersor;
             Platform myGravityField = myGround.collider.GetComponent<Platform>();
 
-            if (Vector2.Distance(myTransform.position, myGround.point) > GetCollider().bounds.extents.y * 10f)
-                gravityVersor = (myGravityField.gameObject.transform.position - myTransform.position).normalized;
-            else
-                gravityVersor = -myGround.normal;
+            gravityVersor = -myGround.normal;
 
             Debug.DrawRay(myTransform.position, gravityVersor, Color.red);
             GetComponent<Rigidbody2D>().AddForce(gravityVersor * myGravityField.mass);///distance);

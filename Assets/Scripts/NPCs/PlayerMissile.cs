@@ -5,10 +5,8 @@ using UnityEngine.Networking;
 using Assets.Scripts.Player;
 
 public class PlayerMissile : MonoBehaviour
-{
-
-    public float despawnTime = 5f;
-    public float minimumAttractionDistance = 5.5f;
+{ 
+    public float despawnTime = 10f;
 
     private Movable myMovable;
     private Movable.CharacterInput myDirection;
@@ -26,10 +24,13 @@ public class PlayerMissile : MonoBehaviour
     {
         RaycastHit2D myGround = myRadar.GetMyGround();
         //Debug.LogError("www");   
-        //if (myGround && Vector2.Distance(transform.position,myGround.point) <= minimumAttractionDistance)
-        //    myMovable.Move(myDirection);
+        myDirection.counterClockwise = true;
+        if(myGround.collider==null)// if the missile doesn't have a ground during its starts, it follows a straight line until the radar finds something(or the players shoots in air targeting another planet)
+            transform.position = transform.position + transform.right * myMovable.speed * Time.deltaTime;
+        else
+            myMovable.Move(myDirection);
         //else//If the missile doesn't have a ground during its starts, it follows a straight line until the radar finds something(or the players shoots in air targeting another planet)
-        transform.position = transform.position + transform.right * myMovable.speed * Time.deltaTime;
+        //transform.position = transform.position + transform.right * myMovable.speed * Time.deltaTime;
     }
 
     IEnumerator<WaitForSeconds> DespawnCountdown(float despawnTime)
