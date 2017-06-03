@@ -290,6 +290,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   matchTime: 180
+  timer: {fileID: 0}
   victoryScreenHolder: {fileID: 1648704762638588, guid: cd1a61dd02ee4004bb1e2140860baf1a,
     type: 2}
 --- !u!114 &38238905
@@ -542,6 +543,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pointBarSegmentPrefab: {fileID: 1147678074177196, guid: ec1d0aa644db5404e8ab00727121433c,
     type: 2}
+  barSprites: []
 --- !u!1 &221655971
 GameObject:
   m_ObjectHideFlags: 0

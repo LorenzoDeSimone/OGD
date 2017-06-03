@@ -39,14 +39,14 @@ namespace Assets.Scripts.Player
             playerPoints += pointsToAdd;
         }
 
-        public void OnHit(int value)
+        public void OnHit()
         {
-            CmdDecresePoints(value);
+            CmdDecresePoints();
             SyncNewPoints(playerPoints);
         }
 
         [Command]
-        private void CmdDecresePoints(int value)
+        private void CmdDecresePoints()
         {
             System.Random rand = new System.Random();
             int matchSize = (int)NetworkManager.singleton.matchSize;
