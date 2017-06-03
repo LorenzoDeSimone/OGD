@@ -49,7 +49,6 @@ namespace Assets.Scripts.Networking
                     bss.MoveNext();
                     lobbyController.networkAddress = ((NetworkBroadcastResult)bss.Current).serverAddress;
                     lobbyController.StartClient();
-                    Debug.LogWarning("Connected to match...");
                     startdAsClient = true;
                 }
                 yield return new WaitForSeconds(waitTime);
@@ -70,7 +69,6 @@ namespace Assets.Scripts.Networking
                 {
                     networkExplorer.Initialize();
                     networkExplorer.StartAsServer();
-                    Debug.LogWarning("Started as server...");
                 }
             }
         }
