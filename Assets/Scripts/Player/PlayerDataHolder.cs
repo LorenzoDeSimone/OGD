@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using System;
+using UnityEditor.Animations;
 
 namespace Assets.Scripts.Player
 {
@@ -14,10 +15,6 @@ namespace Assets.Scripts.Player
         [SyncVar]
         public int playerId = 0;
         public bool paintsThePlayer = true;
-
-        [Header("Sprites and Animators")]
-        public Sprite[] playerSprites;
-        public RuntimeAnimatorController[] animatorControllers;
         
         private void Start()
         {
@@ -64,19 +61,10 @@ namespace Assets.Scripts.Player
         private void InitPlayer()
         {
             TryToPaintPlayer();
-            AddSprite();
+            PlayerDresser.instance.DressPlayer(GetComponent<SpriteRenderer>(), GetPlayerNetworkId());
+            PlayerDresser.instance.AnimatePlayer(GetComponent<AnimatorController>(), GetPlayerNetworkId());
             //Send event with -1 for bar init
             SyncNewPoints(-1);
-        }
-
-        private void AddSprite()
-        {
-            Sprite newSprite = playerSprites[playerId % playerSprites.Length];
-            gameObject.GetComponent<SpriteRenderer>().sprite = newSprite;
-            /*
-            RuntimeAnimatorController newController = animatorControllers[playerId % animatorControllers.Length];
-            gameObject.GetComponent<Animator>().runtimeAnimatorController = newController;
-            */
         }
 
         private void TryToPaintPlayer()
