@@ -11,6 +11,7 @@ public class PlayerMissile : MonoBehaviour
     private Movable myMovable;
     private Movable.CharacterInput myDirection;
     private Radar myRadar;
+    private bool firstHitWithAGravityField = true;
 
     private void Start()
     {
@@ -24,10 +25,24 @@ public class PlayerMissile : MonoBehaviour
     {
         RaycastHit2D myGround = myRadar.GetMyGround();
         //Debug.LogError("www");   
-        myDirection.counterClockwise = true;
-        if(myGround.collider==null)// if the missile doesn't have a ground during its starts, it follows a straight line until the radar finds something(or the players shoots in air targeting another planet)
+
+        if (myGround.collider == null)// if the missile doesn't have a ground during its starts, it follows a straight line until the radar finds something(or the players shoots in air targeting another planet)
             transform.position = transform.position + transform.right * myMovable.speed * Time.deltaTime;
-        else
+        else if (myGround.collider != null && firstHitWithAGravityField)
+        {
+            myDirection.counterClockwise = myDirection.clockwise = myDirection.jump = false;
+            Vector2 counterClockWiseDirection = new Vector3(-myGround.normal.y, myGround.normal.x);
+            Vector2 clockwiseDirection = new Vector3(myGround.normal.y, -myGround.normal.x);
+
+            if (Vector2.Dot(transform.right, counterClockWiseDirection) > Vector2.Dot(transform.right, clockwiseDirection))
+                myDirection.counterClockwise = true;
+            else
+                myDirection.clockwise = true;
+
+            firstHitWithAGravityField = false;
+        }
+
+        if(myGround.collider!=null)
             myMovable.Move(myDirection);
         //else//If the missile doesn't have a ground during its starts, it follows a straight line until the radar finds something(or the players shoots in air targeting another planet)
         //transform.position = transform.position + transform.right * myMovable.speed * Time.deltaTime;

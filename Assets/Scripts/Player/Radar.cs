@@ -119,6 +119,7 @@ public class Radar : MonoBehaviour
         else
         {
             //NONSENSE: just neeed for a RaycastHit2D that has no collider... I know... It's horrible =(
+            //Why can't I just create a RaycastHit2D with a null collider? Ask Unity -.-"
             candidateNearestGround = Physics2D.Raycast(transform.position,
                          transform.up,
                          0f,
