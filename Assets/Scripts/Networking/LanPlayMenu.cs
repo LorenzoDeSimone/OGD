@@ -12,7 +12,6 @@ namespace Assets.Scripts.Networking
         public float waitTime = 0.3f;
         public int attempts = 5;
 
-
         protected override void InitMenu()
         {
             networkExplorer = lobbyController.GetNetExplorer();
@@ -27,50 +26,66 @@ namespace Assets.Scripts.Networking
             StartCoroutine(SearchMatch());
         }
 
+
         protected override IEnumerator SearchMatch()
         {
             bool startdAsClient = false;
+            bool startedAsServer = false;
 
-            networkExplorer.Initialize();
-            yield return new WaitForSeconds(waitTime);
-            networkExplorer.StartAsClient();
-
-            for (int i = 0; i < attempts; i++)
+            do
             {
-                if (networkExplorer == null || networkExplorer.broadcastsReceived == null)
+                if (networkExplorer.running)
+                    networkExplorer.StopBroadcast();
+                yield return new WaitForSeconds(0.1f);
+                networkExplorer.Initialize();
+                yield return new WaitForSeconds(0.1f);
+                networkExplorer.StartAsClient();
+
+                for (int i = 0; i < attempts; i++)
                 {
-                    i--;
-                    continue;
+                    if (networkExplorer == null || networkExplorer.broadcastsReceived == null)
+                    {
+                        i--;
+                        continue;
+                    }
+
+                    if (networkExplorer.broadcastsReceived.Count > 0)
+                    {
+                        IEnumerator bss = networkExplorer.broadcastsReceived.Values.GetEnumerator();
+                        bss.MoveNext();
+                        lobbyController.networkAddress = ((NetworkBroadcastResult)bss.Current).serverAddress;
+                        lobbyController.StartClient();
+                        startdAsClient = true;
+                    }
+                    yield return new WaitForSeconds(waitTime);
                 }
 
-                if (networkExplorer.broadcastsReceived.Count > 0)
+                if (!startdAsClient)
                 {
-                    IEnumerator bss = networkExplorer.broadcastsReceived.Values.GetEnumerator();
-                    bss.MoveNext();
-                    lobbyController.networkAddress = ((NetworkBroadcastResult)bss.Current).serverAddress;
-                    lobbyController.StartClient();
-                    startdAsClient = true;
-                }
-                yield return new WaitForSeconds(waitTime);
-            }
+                    if (networkExplorer.running)
+                        networkExplorer.StopBroadcast();
+                    yield return new WaitForSeconds(0.1f);
+                    try
+                    {
+                        lobbyController.StartHost();
+                    }
+                    catch (Exception)
+                    {
+                    }
+                    finally
+                    {
+                        startedAsServer = true;
+                    }
 
-            if (!startdAsClient)
-            {
-                networkExplorer.StopBroadcast();
-                yield return new WaitForSeconds(waitTime); try
-                {
-                    lobbyController.StartHost();
-                }
-                catch (Exception)
-                {
-                    StartCoroutine(SearchMatch());
-                }
-                finally
-                {
-                    networkExplorer.Initialize();
-                    networkExplorer.StartAsServer();
+                    if (startedAsServer)
+                    {
+                        networkExplorer.Initialize();
+                        yield return new WaitForSeconds(0.1f);
+                        networkExplorer.StartAsServer();
+                    }
                 }
             }
+            while (!startdAsClient && !startedAsServer);
         }
 
         protected override void TryInitMenu()
