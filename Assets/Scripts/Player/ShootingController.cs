@@ -44,32 +44,32 @@ namespace Assets.Scripts.Player
             if (isLocalPlayer && CanShoot())
             {
                 Vector2 missileDirection;
-                int missileStatus = PlayerMissile.inAir;
+                bool isStartDirectionCounterClockwise;
 
                 if (leftShootPosition.Equals(currShootPosition))
                 {
-                    missileStatus = PlayerMissile.counterclockwise;
+                    isStartDirectionCounterClockwise = true;
                     missileDirection = (leftShootPosition.transform.position - rightShootPosition.transform.position).normalized;
                 }
                 else
                 {
-                    missileStatus = PlayerMissile.clockwise;
+                    isStartDirectionCounterClockwise = false;
                     missileDirection = (rightShootPosition.transform.position - leftShootPosition.transform.position).normalized;
                 }
 
 
-                CmdShoot(currShootPosition.transform.position, missileDirection, missileStatus);
+                CmdShoot(currShootPosition.transform.position, missileDirection, isStartDirectionCounterClockwise);
 
             }
         }
 
         [Command]
-        public void CmdShoot(Vector2 shootPosition, Vector2 missileDirection, int missileStatus)
+        public void CmdShoot(Vector2 shootPosition, Vector2 missileDirection, bool isStartDirectionCounterClockwise)
         {
             GameObject playerMissile = (GameObject) Instantiate(Resources.Load("Prefabs/NPCs/PlayerMissile"));
             playerMissile.transform.position = shootPosition;
             playerMissile.transform.right = missileDirection;
-            playerMissile.GetComponent<PlayerMissile>().SetStatus(missileStatus);
+            playerMissile.GetComponent<PlayerMissile>().SetStartDirection(isStartDirectionCounterClockwise);
             playerMissile.gameObject.SetActive(true);
             NetworkServer.Spawn(playerMissile);
         }

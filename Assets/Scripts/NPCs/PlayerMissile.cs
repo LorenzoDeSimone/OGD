@@ -13,8 +13,7 @@ public class PlayerMissile : NetworkBehaviour
     private Radar myRadar;
     private bool firstHitWithAGravityField = true;
     private bool isDirectionOnGroundClockwise;
-    private int status;
-    public static int clockwise = 0, counterclockwise = 1, inAir = 2;
+    public static int clockwise = 0, counterclockwise = 1;
 
     private void Start()
     {
@@ -31,39 +30,30 @@ public class PlayerMissile : NetworkBehaviour
 
         if (myGround.collider == null)// if the missile doesn't have a ground during its starts, it follows a straight line until the radar finds something(or the players shoots in air targeting another planet)
             transform.position = transform.position + transform.right * myMovable.speed * Time.deltaTime;
-        else if (myGround.collider != null && status == inAir)
+        else if (myGround.collider != null && firstHitWithAGravityField)
         {
             myDirection.counterClockwise = myDirection.clockwise = myDirection.jump = false;
             Vector2 counterClockWiseDirection = new Vector3(-myGround.normal.y, myGround.normal.x);
             Vector2 clockwiseDirection = new Vector3(myGround.normal.y, -myGround.normal.x);
 
             if (Vector2.Dot(transform.right, counterClockWiseDirection) > Vector2.Dot(transform.right, clockwiseDirection))
-            {
-                status = counterclockwise;
                 myDirection.counterClockwise = true;
-            }
             else
-            {
-                status = clockwise;
                 myDirection.clockwise = true;
-            }
+            firstHitWithAGravityField = false;
         }
 
-        if (myGround.collider != null)
-        {
-            myDirection.clockwise = myDirection.counterClockwise = myDirection.jump = false;
-            if (status == clockwise)
-                myDirection.clockwise=true;
-            else if(status == counterclockwise)
-                myDirection.counterClockwise = true;
-
+        if(myGround.collider != null && !firstHitWithAGravityField)
             transform.right = myMovable.Move(myDirection);
-        }
     }
 
-    public void SetStatus(int status)
+    public void SetStartDirection(bool isDirectionCounterClockwise)
     {
-        this.status = status;
+        myDirection.clockwise = myDirection.counterClockwise = myDirection.jump = false;
+        if (isDirectionCounterClockwise)
+            myDirection.counterClockwise = true;
+        else
+            myDirection.clockwise = true;
     }
 
 
