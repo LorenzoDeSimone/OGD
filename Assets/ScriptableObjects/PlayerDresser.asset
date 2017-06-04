@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55c50a9b0fbb5a241bf55217b437a607, type: 3}
+  m_Name: PlayerDresser
+  m_EditorClassIdentifier: 
+  playerSprites:
+  - {fileID: 21300000, guid: 60374612388eed344bc4f1a2454333ff, type: 3}
+  - {fileID: 21300000, guid: 5912c656b118f83409df424e7f629318, type: 3}
+  - {fileID: 21300000, guid: 16adedc6bc8e0ad41a1817b2e0e6ab16, type: 3}
+  - {fileID: 21300000, guid: ea5c1bc9ee2f58041b76bd821c833d98, type: 3}
+  animators:
+  - {fileID: 22100000, guid: 5cc68bc985dee104b8af7763e7fb791b, type: 2}
+  - {fileID: 22100000, guid: 1dac97d2860933e4a86bdb4eeb558cfd, type: 2}
+  - {fileID: 22100000, guid: 200a4f863d3059f48ba8b79053cbcb50, type: 2}
+  - {fileID: 22100000, guid: 64b672327d2289042ba14707856ca03f, type: 2}

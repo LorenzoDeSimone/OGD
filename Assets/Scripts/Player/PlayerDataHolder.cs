@@ -1,13 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
-using System;
-using UnityEditor.Animations;
 
 namespace Assets.Scripts.Player
 {
     class PlayerDataHolder : NetworkBehaviour
     {
         private static GameObject localPlayer;
+        public PlayerDresser dresser;
 
         [SyncVar (hook = "SyncNewPoints")]
         int playerPoints = 0;
@@ -23,13 +22,6 @@ namespace Assets.Scripts.Player
 
             InitPlayer();
         }
-
-        /*
-        private void OnGUI()
-        {
-            GUI.Box(new Rect(10, 10*playerId, 100, 90), string.Format("{0} {1}", playerPoints, playerId));
-        }
-        */
 
         public void AddPoints(int pointsToAdd)
         {
@@ -55,14 +47,15 @@ namespace Assets.Scripts.Player
         {
             if(newValue > 0)
                 playerPoints = newValue;
-            PointManager.instance.UpdateBar(GetPlayerNetworkId(), newValue);
+            if(PointManager.instance != null)
+                PointManager.instance.UpdateBar(GetPlayerNetworkId(), newValue);
         }
 
         private void InitPlayer()
         {
             TryToPaintPlayer();
-            PlayerDresser.instance.DressPlayer(GetComponent<SpriteRenderer>(), GetPlayerNetworkId());
-            PlayerDresser.instance.AnimatePlayer(GetComponent<AnimatorController>(), GetPlayerNetworkId());
+            dresser.DressPlayer(GetComponent<SpriteRenderer>(), GetPlayerNetworkId());
+            GetComponent<Animator>().runtimeAnimatorController = dresser.GetAnimator(GetPlayerNetworkId());
             //Send event with -1 for bar init
             SyncNewPoints(-1);
         }

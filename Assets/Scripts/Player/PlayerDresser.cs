@@ -1,30 +1,22 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Animations;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Scripts.Player
 {
-    public class PlayerDresser : MonoBehaviour
-    {
-        public static PlayerDresser instance;
-       
-        public Sprite[] playerSprites;
-        public List<Animation[]> animations;
 
-        void Start()
-        {
-            if (instance == null)
-                instance = this;
-        }
+    [CreateAssetMenu(fileName = "PlayerDresser", menuName = "Dresser", order = 1)]
+    public class PlayerDresser : ScriptableObject
+    {     
+        public Sprite[] playerSprites;
+        public AnimatorOverrideController[] animators;
 
         public void DressPlayer(SpriteRenderer rend, int playerId)
         {
             rend.sprite = playerSprites[playerId % playerSprites.Length];
         }
 
-        public void AnimatePlayer(AnimatorController contr, int playerId)
+        public AnimatorOverrideController GetAnimator(int playerId)
         {
+            return animators[playerId % playerSprites.Length];
         }
     }
 
