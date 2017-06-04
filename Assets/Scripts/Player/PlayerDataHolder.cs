@@ -41,9 +41,9 @@ namespace Assets.Scripts.Player
             int matchSize = (int)NetworkManager.singleton.matchSize;
             int tempPoints = playerPoints;
             tempPoints -= rand.Next(2,5) + matchSize - PointManager.instance.GetPlayerRankPosition(GetPlayerNetworkId(),matchSize);
-            if(tempPoints <= 0)
+            if(tempPoints < 0)
             {
-                playerPoints = 1;
+                playerPoints = 0;
             }
             else
             {
