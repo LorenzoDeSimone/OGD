@@ -8,9 +8,7 @@ AnimatorOverrideController:
   m_Name: GreenAnimator
   m_Controller: {fileID: 9100000, guid: ac124543b56a0ca41a4298453631c0ba, type: 2}
   m_Clips:
-  - m_OriginalClip: {fileID: 7400000, guid: 43fb8d15fe930d84e941bac9d2278c5b, type: 2}
-    m_OverrideClip: {fileID: 7400000, guid: d497ebea1eec82c4da674baced2504da, type: 2}
   - m_OriginalClip: {fileID: 7400000, guid: 704cfe8dabb1fab43987431d7ca36365, type: 2}
-    m_OverrideClip: {fileID: 7400000, guid: ffe158fe00ce69a4db2dffac296495ec, type: 2}
-  - m_OriginalClip: {fileID: 7400000, guid: b3c4369e0d1419d458d3521967833e94, type: 2}
     m_OverrideClip: {fileID: 7400000, guid: d94b899dc532dc743bad07d5bd7fa65b, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: b3c4369e0d1419d458d3521967833e94, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: ffe158fe00ce69a4db2dffac296495ec, type: 2}

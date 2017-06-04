@@ -8,8 +8,6 @@ AnimatorOverrideController:
   m_Name: BlueAnimator
   m_Controller: {fileID: 9100000, guid: ac124543b56a0ca41a4298453631c0ba, type: 2}
   m_Clips:
-  - m_OriginalClip: {fileID: 7400000, guid: 43fb8d15fe930d84e941bac9d2278c5b, type: 2}
-    m_OverrideClip: {fileID: 7400000, guid: 914d6b4c770206f439fa0ded4aeda024, type: 2}
   - m_OriginalClip: {fileID: 7400000, guid: 704cfe8dabb1fab43987431d7ca36365, type: 2}
     m_OverrideClip: {fileID: 7400000, guid: 236d368c8addeed49b851b4c791e9f68, type: 2}
   - m_OriginalClip: {fileID: 7400000, guid: b3c4369e0d1419d458d3521967833e94, type: 2}
