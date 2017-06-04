@@ -39,7 +39,16 @@ namespace Assets.Scripts.Player
         {
             System.Random rand = new System.Random();
             int matchSize = (int)NetworkManager.singleton.matchSize;
-            playerPoints -= rand.Next(2,5) + matchSize - PointManager.instance.GetPlayerRankPosition(GetPlayerNetworkId(),matchSize);
+            int tempPoints = playerPoints;
+            tempPoints -= rand.Next(2,5) + matchSize - PointManager.instance.GetPlayerRankPosition(GetPlayerNetworkId(),matchSize);
+            if(tempPoints <= 0)
+            {
+                playerPoints = 1;
+            }
+            else
+            {
+                playerPoints = tempPoints;
+            }
         }
 
         //argument needed from sync var PRE-hook... -1 for bar init
