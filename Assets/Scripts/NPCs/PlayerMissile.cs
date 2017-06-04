@@ -12,6 +12,9 @@ public class PlayerMissile : NetworkBehaviour
     private Movable.CharacterInput myDirection;
     private Radar myRadar;
     private bool firstHitWithAGravityField = true;
+    private bool isDirectionOnGroundClockwise;
+    private int status;
+    public static int clockwise = 0, counterclockwise = 1, inAir = 2;
 
     private void Start()
     {
@@ -28,25 +31,41 @@ public class PlayerMissile : NetworkBehaviour
 
         if (myGround.collider == null)// if the missile doesn't have a ground during its starts, it follows a straight line until the radar finds something(or the players shoots in air targeting another planet)
             transform.position = transform.position + transform.right * myMovable.speed * Time.deltaTime;
-        else if (myGround.collider != null && firstHitWithAGravityField)
+        else if (myGround.collider != null && status == inAir)
         {
             myDirection.counterClockwise = myDirection.clockwise = myDirection.jump = false;
             Vector2 counterClockWiseDirection = new Vector3(-myGround.normal.y, myGround.normal.x);
             Vector2 clockwiseDirection = new Vector3(myGround.normal.y, -myGround.normal.x);
 
             if (Vector2.Dot(transform.right, counterClockWiseDirection) > Vector2.Dot(transform.right, clockwiseDirection))
+            {
+                status = counterclockwise;
                 myDirection.counterClockwise = true;
+            }
             else
+            {
+                status = clockwise;
                 myDirection.clockwise = true;
-
-            firstHitWithAGravityField = false;
+            }
         }
 
-        if(myGround.collider!=null)
-            transform.right=myMovable.Move(myDirection);
-        //else//If the missile doesn't have a ground during its starts, it follows a straight line until the radar finds something(or the players shoots in air targeting another planet)
-        //transform.position = transform.position + transform.right * myMovable.speed * Time.deltaTime;
+        if (myGround.collider != null)
+        {
+            myDirection.clockwise = myDirection.counterClockwise = myDirection.jump = false;
+            if (status == clockwise)
+                myDirection.clockwise=true;
+            else if(status == counterclockwise)
+                myDirection.counterClockwise = true;
+
+            transform.right = myMovable.Move(myDirection);
+        }
     }
+
+    public void SetStatus(int status)
+    {
+        this.status = status;
+    }
+
 
     public void DestroyMissile()
     {

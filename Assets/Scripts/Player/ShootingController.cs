@@ -44,21 +44,32 @@ namespace Assets.Scripts.Player
             if (isLocalPlayer && CanShoot())
             {
                 Vector2 missileDirection;
-                if (leftShootPosition.Equals(currShootPosition))
-                    missileDirection = (leftShootPosition.transform.position - rightShootPosition.transform.position).normalized;
-                else
-                    missileDirection = (rightShootPosition.transform.position - leftShootPosition.transform.position).normalized;
+                int missileStatus = PlayerMissile.inAir;
 
-                CmdShoot(currShootPosition.transform.position, missileDirection);
+                if (leftShootPosition.Equals(currShootPosition))
+                {
+                    missileStatus = PlayerMissile.counterclockwise;
+                    missileDirection = (leftShootPosition.transform.position - rightShootPosition.transform.position).normalized;
+                }
+                else
+                {
+                    missileStatus = PlayerMissile.clockwise;
+                    missileDirection = (rightShootPosition.transform.position - leftShootPosition.transform.position).normalized;
+                }
+
+
+                CmdShoot(currShootPosition.transform.position, missileDirection, missileStatus);
+
             }
         }
 
         [Command]
-        public void CmdShoot(Vector2 shootPosition, Vector2 missileDirection)
+        public void CmdShoot(Vector2 shootPosition, Vector2 missileDirection, int missileStatus)
         {
             GameObject playerMissile = (GameObject) Instantiate(Resources.Load("Prefabs/NPCs/PlayerMissile"));
             playerMissile.transform.position = shootPosition;
             playerMissile.transform.right = missileDirection;
+            playerMissile.GetComponent<PlayerMissile>().SetStatus(missileStatus);
             playerMissile.gameObject.SetActive(true);
             NetworkServer.Spawn(playerMissile);
         }
@@ -67,6 +78,7 @@ namespace Assets.Scripts.Player
         {
             return true;//Placeholder before missile count implementation
         }
+
 
 }
 

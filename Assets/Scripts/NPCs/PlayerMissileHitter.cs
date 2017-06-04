@@ -17,12 +17,18 @@ public class PlayerMissileHitter : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collider)
     {
         PlayerDataHolder player = collider.gameObject.GetComponent<PlayerDataHolder>();
+        PlayerMissile otherPlayerMissile = collider.gameObject.GetComponent<PlayerMissile>();
+
         if (myMissile.isServer)//Only server can check missiles collisions
         {
             if (player)
             {
                 player.OnHit();
                 //Debug.LogError("Player Hit! " + target.gameObject.name);
+                myMissile.DestroyMissile();
+            }
+            else if (otherPlayerMissile)
+            {
                 myMissile.DestroyMissile();
             }
         }
