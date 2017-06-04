@@ -117,10 +117,10 @@ namespace Assets.Scripts.Player
         }
 
         //Movement routines called by the input manager
-        public void Move(CharacterInput input)
+        public Vector2 Move(CharacterInput input)//returns new movement versor just for checking
         {
             if (!CanMove())
-                return;
+                return Vector2.zero;
 
             Vector2 myPosition = myTransform.position;
 
@@ -136,21 +136,23 @@ namespace Assets.Scripts.Player
             {
                 movementVersor = new Vector3(-myGround.normal.y, myGround.normal.x);
                 movementPerpendicularDown = -myGround.normal;//new Vector2(-movementVersor.y, movementVersor.x).normalized;
-                spriteRenderer.flipX = true;
+                if (GetComponent<PlayerDataHolder>())//TEMPORARY animator needed
+                    spriteRenderer.flipX = true;
                 //spriteRenderer.transform.position = myTransform.position - spriteRenderer.transform.localPosition;
             }
             else if (input.clockwise)
             {
                 movementVersor = new Vector3(myGround.normal.y, -myGround.normal.x);
                 movementPerpendicularDown = -myGround.normal;// new Vector2(movementVersor.y, -movementVersor.x).normalized;
-                spriteRenderer.flipX = false;
+                if(GetComponent<PlayerDataHolder>())//TEMPORARY animator needed
+                    spriteRenderer.flipX = false;
                 //spriteRenderer.transform.position = myTransform.position + spriteRenderer.transform.localPosition;
             }
             else
             {
                 Debug.LogWarning("clockwise: " + input.clockwise + "|| counterclockwise: " + input.counterClockwise);
-//                Debug.LogError("W");
-                return;
+                //                Debug.LogError("W");
+                return Vector2.zero;
             }
 
 
@@ -191,6 +193,7 @@ namespace Assets.Scripts.Player
             }
 
             myTransform.position = myPosition + movementVersor * speed * Time.deltaTime;
+            return movementVersor;
         }
 
         public void Jump()
