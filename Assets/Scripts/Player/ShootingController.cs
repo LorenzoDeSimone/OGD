@@ -7,10 +7,13 @@ namespace Assets.Scripts.Player
 {
     public class ShootingController : NetworkBehaviour
     {
+        public float shootingCooldown= 0.15f;
+
         private PlayerDataHolder playerData;
         private Radar myRadar;
         private GameObject currShootPosition, leftShootPosition, rightShootPosition;
         private Movable myMovable;
+        private bool shootCoolDownOK = true;
 
         void Start()
         {
@@ -59,7 +62,8 @@ namespace Assets.Scripts.Player
 
 
                 CmdShoot(currShootPosition.transform.position, missileDirection, isStartDirectionCounterClockwise);
-
+                shootCoolDownOK = false;
+                StartCoroutine(ShootingCooldown(shootingCooldown));
             }
         }
 
@@ -76,10 +80,16 @@ namespace Assets.Scripts.Player
 
         public bool CanShoot()
         {
-            return true;//Placeholder before missile count implementation
+            return shootCoolDownOK;//Placeholder before missile count implementation
         }
 
 
-}
+        IEnumerator<WaitForSeconds> ShootingCooldown(float shootingCooldown)
+        {
+            yield return new WaitForSeconds(shootingCooldown);
+            shootCoolDownOK = true;
+        }
+
+    }
 
 }

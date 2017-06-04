@@ -69,5 +69,4 @@ public class PlayerMissile : NetworkBehaviour
         NetworkServer.UnSpawn(gameObject);
         Destroy(gameObject);
     }
-
 }
