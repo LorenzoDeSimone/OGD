@@ -46,20 +46,12 @@ namespace Assets.Scripts.Player
 
             myGround = myRadar.GetMyGround();
 
-            if (thisAgentCanJump)
-            {
-                groundCheck1 = myTransform.Find("Ground Check 1").gameObject;
-                groundCheck2 = myTransform.Find("Ground Check 2").gameObject;
-            }
-
             spriteRenderer = GetComponent<SpriteRenderer>();
             controlsEnabled = true;
         }
 
         void Update()
         {
-            //Debug.LogError("Velocity:" + myRigidBody.velocity);
-            //Debug.Log(syncTime / syncDelay);
             myGround = myRadar.GetMyGround();
             ApplyRotation(false);
         }
@@ -110,8 +102,9 @@ namespace Assets.Scripts.Player
 
         public bool IsGrounded()
         {
-            if(thisAgentCanJump)
-                return Physics2D.OverlapArea(groundCheck1.transform.position, groundCheck2.transform.position, LayerMask.GetMask("Walkable"));
+            if (thisAgentCanJump)
+                return Physics2D.OverlapCircle(myTransform.position, GetCollider().bounds.extents.y, LayerMask.GetMask("Walkable"));
+            //return Physics2D.OverlapArea(groundCheck1.transform.position, groundCheck2.transform.position, LayerMask.GetMask("Walkable"));
             else
                 return true;
         }
@@ -138,7 +131,6 @@ namespace Assets.Scripts.Player
                 movementPerpendicularDown = -myGround.normal;//new Vector2(-movementVersor.y, movementVersor.x).normalized;
                 if (GetComponent<PlayerDataHolder>())//TEMPORARY animator needed
                     spriteRenderer.flipX = true;
-                //spriteRenderer.transform.position = myTransform.position - spriteRenderer.transform.localPosition;
             }
             else if (input.clockwise)
             {
@@ -146,12 +138,10 @@ namespace Assets.Scripts.Player
                 movementPerpendicularDown = -myGround.normal;// new Vector2(movementVersor.y, -movementVersor.x).normalized;
                 if(GetComponent<PlayerDataHolder>())//TEMPORARY animator needed
                     spriteRenderer.flipX = false;
-                //spriteRenderer.transform.position = myTransform.position + spriteRenderer.transform.localPosition;
             }
             else
             {
                 Debug.LogWarning("clockwise: " + input.clockwise + "|| counterclockwise: " + input.counterClockwise);
-                //                Debug.LogError("W");
                 return Vector2.zero;
             }
 
