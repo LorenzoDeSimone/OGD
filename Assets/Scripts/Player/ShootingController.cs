@@ -43,27 +43,24 @@ namespace Assets.Scripts.Player
         {
             if (isLocalPlayer && CanShoot())
             {
-                Movable.CharacterInput missileDirection;
-                missileDirection.clockwise = missileDirection.counterClockwise = missileDirection.jump = false;
-
-                if (currShootPosition.Equals(leftShootPosition))
-                    missileDirection.counterClockwise = true;
+                Vector2 missileDirection;
+                if (leftShootPosition.Equals(currShootPosition))
+                    missileDirection = (leftShootPosition.transform.position - rightShootPosition.transform.position).normalized;
                 else
-                    missileDirection.clockwise = true;
+                    missileDirection = (rightShootPosition.transform.position - leftShootPosition.transform.position).normalized;
 
                 CmdShoot(currShootPosition.transform.position, missileDirection);
             }
         }
 
         [Command]
-        public void CmdShoot(Vector3 clientCurrShootPosition, Movable.CharacterInput missileDirection)
+        public void CmdShoot(Vector2 shootPosition, Vector2 missileDirection)
         {
-                GameObject playerMissile = (GameObject) Instantiate(Resources.Load("Prefabs/NPCs/PlayerMissile"));
-                playerMissile.transform.position = clientCurrShootPosition;
-                playerMissile.transform.right = (clientCurrShootPosition - transform.position).normalized;
-                playerMissile.GetComponent<PlayerMissile>().SetDirection(missileDirection);
-                playerMissile.gameObject.SetActive(true);
-                NetworkServer.Spawn(playerMissile);
+            GameObject playerMissile = (GameObject) Instantiate(Resources.Load("Prefabs/NPCs/PlayerMissile"));
+            playerMissile.transform.position = shootPosition;
+            playerMissile.transform.right = missileDirection;
+            playerMissile.gameObject.SetActive(true);
+            NetworkServer.Spawn(playerMissile);
         }
 
         public bool CanShoot()
