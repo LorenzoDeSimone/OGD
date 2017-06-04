@@ -8,6 +8,7 @@ public class InputManager : NetworkBehaviour {
     private static bool counterclockwisePressed=false, clockwisePressed=false;
     private InputController localPlayerInputController = null;
     private ShootingController localPlayerShootingController = null;
+    private Animator localPlayerAnimator;
 
     // Use this for initialization
     void Start ()
@@ -25,6 +26,7 @@ public class InputManager : NetworkBehaviour {
         {
             localPlayerInputController = PlayerDataHolder.GetLocalPlayer().GetComponent<InputController>();
             localPlayerShootingController = PlayerDataHolder.GetLocalPlayer().gameObject.GetComponent<ShootingController>();
+            localPlayerAnimator = PlayerDataHolder.GetLocalPlayer().gameObject.GetComponent<Animator>();
         }
 
         Movable.CharacterInput input;
@@ -33,17 +35,24 @@ public class InputManager : NetworkBehaviour {
         if (counterclockwisePressed || Input.GetKey(KeyCode.LeftArrow))
         {
             input.counterClockwise = true;
+            localPlayerAnimator.SetBool("moving", true);
             localPlayerInputController.RequestMovement(input);
         }
         else if (clockwisePressed   || Input.GetKey(KeyCode.RightArrow))
         {
             input.clockwise = true;
+            localPlayerAnimator.SetBool("moving", true);
             localPlayerInputController.RequestMovement(input);
+        }
+        else
+        {
+            localPlayerAnimator.SetBool("moving", false);
         }
 
         if(Input.GetKeyDown(KeyCode.Space))
         {
             input.jump = true;
+            localPlayerAnimator.SetTrigger("jump");
             localPlayerInputController.RequestMovement(input);
         }
 

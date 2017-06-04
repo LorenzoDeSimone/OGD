@@ -1,6 +1,6 @@
 ﻿public class ToggleOnline : SliderHelper
 {
-    protected override void Init()
+    protected override void Init(float newValue)
     {
     }
 

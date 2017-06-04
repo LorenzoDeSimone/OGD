@@ -6,8 +6,9 @@ public class PlayerNumberSelector : SliderHelper {
 
     public Text textField;
 
-    protected override void Init()
+    protected override void Init(float newValue)
     {
+        lobbyController.minPlayers = (int)newValue;
     }
 
     protected override void OnValueChanged(float newValue)

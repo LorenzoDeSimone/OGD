@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
-using System;
 
 namespace Assets.Scripts.Player
 {
     class PlayerDataHolder : NetworkBehaviour
     {
         private static GameObject localPlayer;
+        public PlayerDresser dresser;
 
         [SyncVar (hook = "SyncNewPoints")]
         int playerPoints = 0;
@@ -14,10 +14,6 @@ namespace Assets.Scripts.Player
         [SyncVar]
         public int playerId = 0;
         public bool paintsThePlayer = true;
-
-        [Header("Sprites and Animators")]
-        public Sprite[] playerSprites;
-        public RuntimeAnimatorController[] animatorControllers;
         
         private void Start()
         {
@@ -26,13 +22,6 @@ namespace Assets.Scripts.Player
 
             InitPlayer();
         }
-
-        /*
-        private void OnGUI()
-        {
-            GUI.Box(new Rect(10, 10*playerId, 100, 90), string.Format("{0} {1}", playerPoints, playerId));
-        }
-        */
 
         public void AddPoints(int pointsToAdd)
         {
@@ -50,7 +39,16 @@ namespace Assets.Scripts.Player
         {
             System.Random rand = new System.Random();
             int matchSize = (int)NetworkManager.singleton.matchSize;
-            playerPoints -= rand.Next(2,5) + matchSize - PointManager.instance.GetPlayerRankPosition(GetPlayerNetworkId(),matchSize);
+            int tempPoints = playerPoints;
+            tempPoints -= rand.Next(2,5) + matchSize - PointManager.instance.GetPlayerRankPosition(GetPlayerNetworkId(),matchSize);
+            if(tempPoints < 0)
+            {
+                playerPoints = 0;
+            }
+            else
+            {
+                playerPoints = tempPoints;
+            }
         }
 
         //argument needed from sync var PRE-hook... -1 for bar init
@@ -58,25 +56,17 @@ namespace Assets.Scripts.Player
         {
             if(newValue > 0)
                 playerPoints = newValue;
-            PointManager.instance.UpdateBar(GetPlayerNetworkId(), newValue);
+            if(PointManager.instance != null)
+                PointManager.instance.UpdateBar(GetPlayerNetworkId(), newValue);
         }
 
         private void InitPlayer()
         {
             TryToPaintPlayer();
-            AddSprite();
+            dresser.DressPlayer(GetComponent<SpriteRenderer>(), GetPlayerNetworkId());
+            GetComponent<Animator>().runtimeAnimatorController = dresser.GetAnimator(GetPlayerNetworkId());
             //Send event with -1 for bar init
             SyncNewPoints(-1);
-        }
-
-        private void AddSprite()
-        {
-            Sprite newSprite = playerSprites[playerId % playerSprites.Length];
-            gameObject.GetComponent<SpriteRenderer>().sprite = newSprite;
-            /*
-            RuntimeAnimatorController newController = animatorControllers[playerId % animatorControllers.Length];
-            gameObject.GetComponent<Animator>().runtimeAnimatorController = newController;
-            */
         }
 
         private void TryToPaintPlayer()
