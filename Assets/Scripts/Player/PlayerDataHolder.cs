@@ -7,14 +7,15 @@ namespace Assets.Scripts.Player
     {
         private static GameObject localPlayer;
         public PlayerDresser dresser;
+        System.Random rand = new System.Random();
 
-        [SyncVar (hook = "SyncNewPoints")]
+        [SyncVar(hook = "SyncNewPoints")]
         int playerPoints = 0;
-        
+
         [SyncVar]
         public int playerId = 0;
         public bool paintsThePlayer = true;
-        
+
         private void Start()
         {
             if (isLocalPlayer)
@@ -37,26 +38,37 @@ namespace Assets.Scripts.Player
         [Command]
         private void CmdDecresePoints()
         {
-            System.Random rand = new System.Random();
             int matchSize = (int)NetworkManager.singleton.matchSize;
             int tempPoints = playerPoints;
-            tempPoints -= rand.Next(2,5) + matchSize - PointManager.instance.GetPlayerRankPosition(GetPlayerNetworkId(),matchSize);
-            if(tempPoints < 0)
+
+            int malus = rand.Next(2, 5) + matchSize - PointManager.instance.GetPlayerRankPosition(GetPlayerNetworkId(), matchSize);
+            tempPoints -= malus; 
+
+            if (tempPoints < 0)
             {
                 playerPoints = 0;
             }
             else
             {
                 playerPoints = tempPoints;
+
+                GameObject go;
+                for (int i = 0; i < malus; i++)
+                {
+                    Vector2 newPos = transform.position + transform.up * rand.Next(3, 5) + transform.right * rand.Next(-3, 4);
+                    go = Instantiate((GameObject)Resources.Load("Prefabs/Collectables/DroppedCoin"), newPos, Quaternion.identity);
+                    go.GetComponent<Rigidbody2D>().velocity = (newPos - (Vector2)transform.position).normalized;
+                    NetworkServer.Spawn(go); 
+                }
             }
         }
 
         //argument needed from sync var PRE-hook... -1 for bar init
         private void SyncNewPoints(int newValue)
         {
-            if(newValue > 0)
+            if (newValue > 0)
                 playerPoints = newValue;
-            if(PointManager.instance != null)
+            if (PointManager.instance != null)
                 PointManager.instance.UpdateBar(GetPlayerNetworkId(), newValue);
         }
 

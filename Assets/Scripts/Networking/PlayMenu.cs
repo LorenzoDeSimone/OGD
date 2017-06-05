@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.Networking
 {
-    abstract class PlayMenu : NetworkBehaviour
+    abstract class PlayMenu : MonoBehaviour
     {
         protected const string CHARS_POOL = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789-";
         protected const int NAME_LENGHT = 16;

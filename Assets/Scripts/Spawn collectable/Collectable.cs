@@ -14,13 +14,13 @@ namespace Assets.Scripts.Spawn_collectable
          * the hook  
          */
         [SyncVar( hook = "UpdateNetworkState")]
-        bool networkActiveState = true;
+        protected bool networkActiveState = true;
 
         public int pointValue = 1;
         public int pointScaler = 1;
 
-        SpriteRenderer mySprite;
-        Collider2D myCollider;
+        protected SpriteRenderer mySprite;
+        protected Collider2D myCollider;
 
         private void Start()
         {
