@@ -226,7 +226,7 @@ MonoBehaviour:
   m_SyncSpin: 0
   m_MovementTheshold: 0.01
   m_VelocityThreshold: 0
-  m_SnapThreshold: 0.02
+  m_SnapThreshold: 2
   m_InterpolateRotation: 1
   m_InterpolateMovement: 0.6
 --- !u!114 &114336541416094412
@@ -297,6 +297,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dresser: {fileID: 11400000, guid: 08ada4db82981c14d940c31bbdcb7ebd, type: 2}
+  minDroppedCoinSpeed: 10
+  maxDroppedCoinSpeed: 20
   playerId: 0
   paintsThePlayer: 0
 --- !u!114 &114591764407061358
