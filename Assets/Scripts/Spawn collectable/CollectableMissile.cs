@@ -9,14 +9,14 @@ namespace Assets.Scripts.Spawn_collectable
     {
         protected override void RealUpdate(bool b, int id)
         {
-            networkActiveState = b;
-            mySprite.enabled = b;
-            myCollider.enabled = b;
             foreach (GameObject go in GameObject.FindGameObjectsWithTag("Player"))
             {
                 PlayerDataHolder pDH = go.GetComponent<PlayerDataHolder>();
-                if (pDH.playerId == id)
+                if (pDH.playerId == id && !pDH.PlayerHaveMissile())
                 {
+                    networkActiveState = b;
+                    mySprite.enabled = b;
+                    myCollider.enabled = b;
                     pDH.CmdAddMissile();
                     break;
                 }
