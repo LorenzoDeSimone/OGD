@@ -15,15 +15,21 @@ namespace Assets.Scripts.Player
         int playerPoints = 0;
         [SyncVar(hook = "SyncMissile")]
         bool playerMissile = false;
+        [SyncVar(hook = "SyncFlip")]
+        bool flip;
 
         [SyncVar]
         public int playerId = 0;
         public bool paintsThePlayer = true;
 
+        SpriteRenderer mySpriteRenderer;
+
         private void Start()
         {
             if (isLocalPlayer)
                 SetLocalPlayer(gameObject);
+
+            mySpriteRenderer = GetComponent<SpriteRenderer>();
 
             InitPlayer();
         }
@@ -177,6 +183,26 @@ namespace Assets.Scripts.Player
         public static GameObject GetLocalPlayer()
         {
             return localPlayer;
+        }
+
+        internal void FlipSprite(bool b)
+        {
+            Debug.LogWarning("1");
+            CmdFlipSprite(b);
+        }
+
+        [Command]
+        private void CmdFlipSprite(bool b)
+        {
+            Debug.LogWarning("2");
+            flip = b;
+        }
+
+        private void SyncFlip(bool b)
+        {
+            Debug.LogWarning("3");
+            flip = b;
+            mySpriteRenderer.flipX = b;
         }
     }
 }
