@@ -8,6 +8,7 @@ namespace Assets.Scripts.Player
     {
         private static GameObject localPlayer;
         public PlayerDresser dresser;
+        public float minDroppedCoinSpeed, maxDroppedCoinSpeed;
 
         [SyncVar(hook = "SyncNewPoints")]
         int playerPoints = 0;
@@ -53,18 +54,39 @@ namespace Assets.Scripts.Player
             }
         }
 
+        public Vector3 GetRandomVersor()
+        {
+            if (Random.Range(0f, 1f) >= 0.5f)
+                return (transform.up + transform.right).normalized;
+            else
+                return (transform.up - transform.right).normalized;
+            //float randomAngle = Random.Range(0f, Mathf.PI * 2);
+            //return new Vector2(Mathf.Sin(randomAngle), Mathf.Cos(randomAngle)).normalized;
+        }
+
         private void DropCoins(int malus)
         {
             GameObject go;
-            Vector2 newPos;
-
+            Vector2 movementVersor;
+            Vector3 playerExtents = localPlayer.GetComponent<Collider2D>().bounds.extents;
             for (int i = 0; i < malus; i++)
             {
-                newPos = transform.position + transform.up* Random.Range(2.0f, 5.0f) + (Vector3)(Random.Range(2.0f, 5.0f)*Random.insideUnitCircle);
-                go = Instantiate((GameObject)Resources.Load("Prefabs/Collectables/DroppedCoin"), newPos, Quaternion.identity);
+
+                movementVersor = GetRandomVersor();
+                //((transform.up    * Random.Range(playerExtents.y, playerExtents.y + 1f) +
+                //transform.right   * Random.Range(-playerExtents.x, playerExtents.x)) - transform.position).normalized;
+                Debug.DrawRay(transform.position, movementVersor, Color.cyan);
+
+                //(Vector3)(Random.Range(2.0f, 5.0f)*Random.insideUnitCircle());
+                go = Instantiate((GameObject)Resources.Load("Prefabs/Collectables/DroppedCoin"), transform.position, Quaternion.identity);
+                DroppedCoin droppedCoin = go.GetComponent<DroppedCoin>();
+                droppedCoin.SetMovementVersor(movementVersor);
+                go.GetComponent<Movable>().speed = Random.Range(minDroppedCoinSpeed, maxDroppedCoinSpeed);
+                //Debug.LogError("w");
                 NetworkServer.Spawn(go);
             }
         }
+
 
         //argument needed from sync var PRE-hook... -1 for bar init
         private void SyncNewPoints(int newValue)
