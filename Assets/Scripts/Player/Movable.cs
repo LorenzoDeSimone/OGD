@@ -15,6 +15,8 @@ namespace Assets.Scripts.Player
         public float EdgeCheckMultiplier = 1.1f;
         public float jumpControlStopWindow = 0.2f;
 
+        public bool useUnityPhisics = false;
+
         private static readonly float rotationEpsilon = 0.999f;
 
         private RaycastHit2D myGround;
@@ -31,6 +33,8 @@ namespace Assets.Scripts.Player
         public bool thisAgentCanJump = false;
         public bool thisAgentHasGravity = false;
 
+        private Vector3 myForces;
+
         public struct CharacterInput
         {
             public bool counterClockwise;
@@ -44,6 +48,8 @@ namespace Assets.Scripts.Player
             myTransform = GetComponent<Transform>();
             myRadar = GetComponentInChildren<Radar>();
 
+            myForces = new Vector3(0, 0, 0);
+
             myGround = myRadar.GetMyGround();
 
             spriteRenderer = GetComponent<SpriteRenderer>();
@@ -54,6 +60,8 @@ namespace Assets.Scripts.Player
         {
             myGround = myRadar.GetMyGround();
             ApplyRotation(false);
+            if(!useUnityPhisics)
+                transform.position += myForces * Time.deltaTime;
         }
 
         void FixedUpdate()
@@ -73,7 +81,12 @@ namespace Assets.Scripts.Player
             gravityVersor = -myGround.normal;
 
             Debug.DrawRay(myTransform.position, gravityVersor, Color.red);
-            GetComponent<Rigidbody2D>().AddForce(gravityVersor * myGravityField.mass);///distance);
+            if(useUnityPhisics)
+                GetComponent<Rigidbody2D>().AddForce(gravityVersor * myGravityField.mass);///distance);
+            else if (!IsGrounded())
+                ApplyForce(gravityVersor * myGravityField.mass);///distance);
+            else if(controlsEnabled)
+                myForces = Vector3.zero;
         }
 
         private void ApplyRotation(bool forceTargetRotation)
@@ -184,8 +197,11 @@ namespace Assets.Scripts.Player
         public void Jump()
         {
             if (IsGrounded())
-            {            
-                GetComponent<Rigidbody2D>().AddForce(myGround.normal * jumpPower);
+            {
+                if(useUnityPhisics)
+                    GetComponent<Rigidbody2D>().AddForce(myGround.normal * jumpPower);
+                else
+                    ApplyForce(myGround.normal * jumpPower);
                 controlsEnabled = false;
                 StartCoroutine(JumpControlEnable());
             }
@@ -208,6 +224,11 @@ namespace Assets.Scripts.Player
             yield return new WaitForSeconds(jumpControlStopWindow);
             Debug.Log("enabling");
             controlsEnabled = true;
+        }
+
+        private void ApplyForce(Vector3 dir)
+        {
+            myForces += dir/50;
         }
     }
 }
