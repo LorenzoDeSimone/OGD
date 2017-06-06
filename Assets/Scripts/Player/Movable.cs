@@ -52,6 +52,7 @@ namespace Assets.Scripts.Player
             myForces = new Vector3(0, 0, 0);
 
             myGround = myRadar.GetMyGround();
+            pDH = GetComponent<PlayerDataHolder>();
 
             spriteRenderer = GetComponent<SpriteRenderer>();
             controlsEnabled = true;
@@ -138,21 +139,19 @@ namespace Assets.Scripts.Player
             {
                 movementVersor = new Vector3(-myGround.normal.y, myGround.normal.x);
                 movementPerpendicularDown = -myGround.normal;//new Vector2(-movementVersor.y, movementVersor.x).normalized;
-                SaveFlipPlayer(true);
+                SafeFlipPlayer(true);
             }
             else if (input.clockwise)
             {
                 movementVersor = new Vector3(myGround.normal.y, -myGround.normal.x);
                 movementPerpendicularDown = -myGround.normal;// new Vector2(movementVersor.y, -movementVersor.x).normalized;
-                SaveFlipPlayer(false);
+                SafeFlipPlayer(false);
             }
             else
             {
                 Debug.LogWarning("clockwise: " + input.clockwise + "|| counterclockwise: " + input.counterClockwise);
                 return Vector2.zero;
             }
-
-
 
             Vector2 nextMovablePoint = myPosition + movementVersor * speed * speed/60f;
             Vector2 BackRaycastDirection = -movementVersor;//(myGravityField.transform.position - myTransform.position).normalized;
@@ -193,7 +192,7 @@ namespace Assets.Scripts.Player
             return movementVersor;
         }
 
-        private void SaveFlipPlayer(bool b)
+        private void SafeFlipPlayer(bool b)
         {
             if (pDH != null)
                 pDH.FlipSprite(b);
