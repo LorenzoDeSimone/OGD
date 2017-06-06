@@ -45,7 +45,6 @@ namespace Assets.Scripts.Networking
                 {
                     if (networkExplorer == null || networkExplorer.broadcastsReceived == null)
                     {
-                        i--;
                         continue;
                     }
 
@@ -101,6 +100,7 @@ namespace Assets.Scripts.Networking
                 }
             }
             while (!startdAsClient && !startedAsServer);
+            Debug.LogWarning("Exiting with " + startdAsClient + " and " + startedAsServer);
         }
 
         private void SafeStopBroadcast()

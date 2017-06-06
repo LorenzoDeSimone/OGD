@@ -289,7 +289,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b76d8353ab6d6d5448b60d3ff09b5185, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  matchTime: 10
+  matchTime: 90
   timer: {fileID: 1018893471065052, guid: d3820fe95dc002a47ab3b0f973f97f78, type: 2}
   victoryScreenHolder: {fileID: 1648704762638588, guid: cd1a61dd02ee4004bb1e2140860baf1a,
     type: 2}
