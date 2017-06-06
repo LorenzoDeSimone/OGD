@@ -14,15 +14,20 @@ namespace Assets.Scripts.Spawn_collectable
          * the hook  
          */
         [SyncVar( hook = "UpdateNetworkState")]
-        bool networkActiveState = true;
+        protected bool networkActiveState = true;
 
         public int pointValue = 1;
         public int pointScaler = 1;
 
-        SpriteRenderer mySprite;
-        Collider2D myCollider;
+        protected SpriteRenderer mySprite;
+        protected Collider2D myCollider;
 
         private void Start()
+        {
+            Init();
+        }
+
+        protected void Init()
         {
             mySprite = GetComponent<SpriteRenderer>();
             myCollider = GetComponent<Collider2D>();
@@ -45,6 +50,11 @@ namespace Assets.Scripts.Spawn_collectable
 
         [Command]
         private void CmdUpdateServerState(bool b, int id)
+        {
+            RealUpdate(b, id);
+        }
+
+        protected void RealUpdate(bool b, int id)
         {
             networkActiveState = b;
             mySprite.enabled = b;

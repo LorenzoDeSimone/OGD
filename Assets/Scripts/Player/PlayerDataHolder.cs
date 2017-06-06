@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Spawn_collectable;
+using UnityEngine;
 using UnityEngine.Networking;
 
 namespace Assets.Scripts.Player
@@ -8,13 +9,13 @@ namespace Assets.Scripts.Player
         private static GameObject localPlayer;
         public PlayerDresser dresser;
 
-        [SyncVar (hook = "SyncNewPoints")]
+        [SyncVar(hook = "SyncNewPoints")]
         int playerPoints = 0;
-        
+
         [SyncVar]
         public int playerId = 0;
         public bool paintsThePlayer = true;
-        
+
         private void Start()
         {
             if (isLocalPlayer)
@@ -37,26 +38,41 @@ namespace Assets.Scripts.Player
         [Command]
         private void CmdDecresePoints()
         {
-            System.Random rand = new System.Random();
             int matchSize = (int)NetworkManager.singleton.matchSize;
-            int tempPoints = playerPoints;
-            tempPoints -= rand.Next(2,5) + matchSize - PointManager.instance.GetPlayerRankPosition(GetPlayerNetworkId(),matchSize);
-            if(tempPoints < 0)
+            int malus = Random.Range(2, 5) + matchSize - PointManager.instance.GetPlayerRankPosition(GetPlayerNetworkId(), matchSize);
+
+            if (playerPoints - malus < 0)
             {
+                DropCoins(playerPoints);
                 playerPoints = 0;
+
             }
             else
             {
-                playerPoints = tempPoints;
+                DropCoins(malus);
+                playerPoints -= malus;
+            }
+        }
+
+        private void DropCoins(int malus)
+        {
+            GameObject go;
+            Vector2 newPos;
+
+            for (int i = 0; i < malus; i++)
+            {
+                newPos = transform.position + transform.up* Random.Range(2.0f, 5.0f) + (Vector3)(Random.Range(2.0f, 5.0f)*Random.insideUnitCircle);
+                go = Instantiate((GameObject)Resources.Load("Prefabs/Collectables/DroppedCoin"), newPos, Quaternion.identity);
+                NetworkServer.Spawn(go);
             }
         }
 
         //argument needed from sync var PRE-hook... -1 for bar init
         private void SyncNewPoints(int newValue)
         {
-            if(newValue > 0)
+            if (newValue > 0)
                 playerPoints = newValue;
-            if(PointManager.instance != null)
+            if (PointManager.instance != null)
                 PointManager.instance.UpdateBar(GetPlayerNetworkId(), newValue);
         }
 

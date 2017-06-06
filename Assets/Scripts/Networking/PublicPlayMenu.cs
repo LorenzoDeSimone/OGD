@@ -43,15 +43,6 @@ namespace Assets.Scripts.Networking
                 {
                     foreach (MatchInfoSnapshot mis in lobbyController.publicMatches)
                     {
-                        string m = "";
-                        m += mis.hostNodeId + "node\n";
-                        m += mis.networkId + "ner\n";
-                        m += "my\n";
-                        m +=  lobbyController.networkAddress + "node\n";
-                        m += lobbyController.networkPort + "ner\n";
-                        m += netId + "ntd\n";
-                        Debug.LogWarning(m);
-
                         if (mis.currentSize > 0)
                         {
                             lobbyController.joiningMatch = true;

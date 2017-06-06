@@ -34,8 +34,8 @@ namespace Assets.Scripts.Networking
 
             do
             {
-                if (networkExplorer.running)
-                    networkExplorer.StopBroadcast();
+                Debug.LogWarning("Searching");
+                SafeStopBroadcast();
                 yield return new WaitForSeconds(0.1f);
                 networkExplorer.Initialize();
                 yield return new WaitForSeconds(0.1f);
@@ -54,7 +54,20 @@ namespace Assets.Scripts.Networking
                         IEnumerator bss = networkExplorer.broadcastsReceived.Values.GetEnumerator();
                         bss.MoveNext();
                         lobbyController.networkAddress = ((NetworkBroadcastResult)bss.Current).serverAddress;
-                        lobbyController.StartClient();
+                        yield return new WaitForSeconds(0.1f);
+
+                        SafeStopBroadcast();
+
+                        try
+                        {
+                            lobbyController.StartClient();
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.LogWarning(e.Message);
+                            continue;
+                        }
+
                         startdAsClient = true;
                     }
                     yield return new WaitForSeconds(waitTime);
@@ -62,15 +75,17 @@ namespace Assets.Scripts.Networking
 
                 if (!startdAsClient)
                 {
-                    if (networkExplorer.running)
-                        networkExplorer.StopBroadcast();
+                    SafeStopBroadcast();
                     yield return new WaitForSeconds(0.1f);
+
                     try
                     {
                         lobbyController.StartHost();
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
+                        Debug.LogWarning(e.Message);
+                        continue;
                     }
                     finally
                     {
@@ -86,6 +101,12 @@ namespace Assets.Scripts.Networking
                 }
             }
             while (!startdAsClient && !startedAsServer);
+        }
+
+        private void SafeStopBroadcast()
+        {
+            if (networkExplorer.running)
+                networkExplorer.StopBroadcast();
         }
 
         protected override void TryInitMenu()
