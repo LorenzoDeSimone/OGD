@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
+using Assets.Scripts.Spawn_collectable;
 
 namespace Assets.Scripts.Player
 {
