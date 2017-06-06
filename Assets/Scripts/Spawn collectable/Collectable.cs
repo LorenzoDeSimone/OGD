@@ -24,6 +24,11 @@ namespace Assets.Scripts.Spawn_collectable
 
         private void Start()
         {
+            Init();
+        }
+
+        protected void Init()
+        {
             mySprite = GetComponent<SpriteRenderer>();
             myCollider = GetComponent<Collider2D>();
         }
@@ -44,7 +49,12 @@ namespace Assets.Scripts.Spawn_collectable
         }
 
         [Command]
-        protected virtual void CmdUpdateServerState(bool b, int id)
+        private void CmdUpdateServerState(bool b, int id)
+        {
+            RealUpdate(b, id);
+        }
+
+        protected void RealUpdate(bool b, int id)
         {
             networkActiveState = b;
             mySprite.enabled = b;

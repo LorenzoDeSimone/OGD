@@ -6,8 +6,12 @@ namespace Assets.Scripts.Spawn_collectable
 {
     public class DroppedCoin : Collectable
     {
-        Vector2 direction = Vector2.one;
         bool stop = false;
+
+        private void Start()
+        {
+            Init();
+        }
 
         private void OnTriggerEnter2D(Collider2D coll)
         {
@@ -22,21 +26,16 @@ namespace Assets.Scripts.Spawn_collectable
         }
 
         [Command]
-        protected override void CmdUpdateServerState(bool b, int id)
+        private void CmdUpdateServerState(bool b, int id)
         {
-            base.CmdUpdateServerState(b, id);
+            RealUpdate(b, id);
             NetworkServer.UnSpawn(gameObject);
-            NetworkServer.Destroy(gameObject);
+            Destroy(gameObject);
         }
 
         public void Stop()
         {
             stop = true;
-        }
-
-        public void SetDirection(Vector2 newDir)
-        {
-            direction = newDir;
         }
     }
 

@@ -8,7 +8,6 @@ namespace Assets.Scripts.Player
     {
         private static GameObject localPlayer;
         public PlayerDresser dresser;
-        System.Random rand = new System.Random();
 
         [SyncVar(hook = "SyncNewPoints")]
         int playerPoints = 0;
@@ -40,7 +39,7 @@ namespace Assets.Scripts.Player
         private void CmdDecresePoints()
         {
             int matchSize = (int)NetworkManager.singleton.matchSize;
-            int malus = rand.Next(2, 5) + matchSize - PointManager.instance.GetPlayerRankPosition(GetPlayerNetworkId(), matchSize);
+            int malus = Random.Range(2, 5) + matchSize - PointManager.instance.GetPlayerRankPosition(GetPlayerNetworkId(), matchSize);
 
             if (playerPoints - malus < 0)
             {
@@ -58,9 +57,11 @@ namespace Assets.Scripts.Player
         private void DropCoins(int malus)
         {
             GameObject go;
+            Vector2 newPos;
+
             for (int i = 0; i < malus; i++)
             {
-                Vector2 newPos = transform.position + transform.up * rand.Next(3, 5) + transform.right * rand.Next(-3, 4);
+                newPos = transform.position + transform.up* Random.Range(2.0f, 5.0f) + (Vector3)(Random.Range(2.0f, 5.0f)*Random.insideUnitCircle);
                 go = Instantiate((GameObject)Resources.Load("Prefabs/Collectables/DroppedCoin"), newPos, Quaternion.identity);
                 NetworkServer.Spawn(go);
             }
