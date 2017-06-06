@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using Assets.Scripts.Spawn_collectable;
+using System.Collections;
 
 namespace Assets.Scripts.Player
 {
@@ -8,7 +9,7 @@ namespace Assets.Scripts.Player
     {
         private static GameObject localPlayer;
         public PlayerDresser dresser;
-        public float minDroppedCoinSpeed, maxDroppedCoinSpeed;
+        public float minDroppedCoinSpeed, maxDroppedCoinSpeed, disabledControlsTimeWindow= 0.5f;
 
         [SyncVar(hook = "SyncNewPoints")]
         int playerPoints = 0;
@@ -64,7 +65,15 @@ namespace Assets.Scripts.Player
         public void OnHit()
         {
             CmdDecresePoints();
+            localPlayer.GetComponent<Movable>().hit = true;
+            StartCoroutine(StopPlayerMovement(disabledControlsTimeWindow));
             SyncNewPoints(playerPoints);
+        }
+        
+        private IEnumerator StopPlayerMovement(float disabledControlsTimeWindow)
+        {
+            yield return new WaitForSecondsRealtime(disabledControlsTimeWindow);
+            localPlayer.GetComponent<Movable>().hit = false;
         }
 
         [Command]
