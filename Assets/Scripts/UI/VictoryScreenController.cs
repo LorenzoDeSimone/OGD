@@ -37,16 +37,19 @@ namespace Assets.Scripts.UI
             float offset;
             GameObject go;
             PlayerScore ps;
+            Vector2 temp = new Vector2();
 
             foreach (int i in ofPlayersAndPoints.Keys)
             {
                 go = Instantiate(playerScorePrefab, scoresHolder);
                 ps = go.GetComponent<PlayerScore>();
-                ps.SetSprite(dresser.GetSprite(i));
+                ps.SetSprites(dresser.GetSprite(i),PointManager.instance.GetPointBar(i));
                 ps.SetPoints(ofPlayersAndPoints[i], PointManager.instance.GetTotalPoints());
-                offset = ((float)PointManager.instance.GetPlayerRankPosition(i)-1) * size;
-                ((RectTransform)ps.transform).anchorMin.Set(offset,0);
-                ((RectTransform)ps.transform).anchorMax.Set(offset+size,1);
+                offset = (PointManager.instance.GetMatchSize() - PointManager.instance.GetPlayerRankPosition(i)) * size;
+                temp.Set(0, offset);
+                ((RectTransform)ps.transform).anchorMin = temp;
+                temp.Set(1, offset+size);
+                ((RectTransform)ps.transform).anchorMax = temp;
             }
         }
 

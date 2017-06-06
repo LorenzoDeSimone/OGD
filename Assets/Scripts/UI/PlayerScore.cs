@@ -8,15 +8,16 @@ namespace Assets.Scripts.UI
     {
         public Image playerImage;
         public Image scoreBarImage;
-        Sprite playerSprite;
         int playerPoints;
         int totalPoints;
 
         private void Start()
         {
-            Vector2 temp = scoreBarImage.rectTransform.anchorMax;
-            scoreBarImage.rectTransform.anchorMax.Set(temp.x, playerPoints / (float)totalPoints);
-            playerImage.sprite = playerSprite;
+            Vector2 temp = Vector2.zero;
+            temp.Set(playerPoints / (float)totalPoints, 1);
+            scoreBarImage.rectTransform.anchorMax = temp;
+            temp.Set(0, 0);
+            scoreBarImage.rectTransform.anchorMin = temp;
         }
 
         public void SetPoints(int pp, int tp)
@@ -25,9 +26,10 @@ namespace Assets.Scripts.UI
             totalPoints = tp;
         }
 
-        public void SetSprite(Sprite sprite)
+        public void SetSprites(Sprite ps, Sprite bs)
         {
-            playerSprite = sprite;
+            scoreBarImage.sprite = bs;
+            playerImage.sprite = ps;
         }
     }
 

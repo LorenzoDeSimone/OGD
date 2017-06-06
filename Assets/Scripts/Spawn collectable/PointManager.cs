@@ -52,7 +52,7 @@ public class PointManager : MonoBehaviour
     private void AddNewBar(int playerNetID)
     {
         GameObject go;
-        Sprite newSprite = barSprites[playerNetID % barSprites.Length];
+        Sprite newSprite = GetPointBar(playerNetID);
         
         try
         {
@@ -70,6 +70,11 @@ public class PointManager : MonoBehaviour
 
         ofPlayersAndBars[playerNetID] = go.GetComponent<RectTransform>();
         ofPlayersAndPoints[playerNetID] = 0;
+    }
+
+    internal Sprite GetPointBar(int pID)
+    {
+        return barSprites[pID % barSprites.Length];
     }
 
     float offSet;
