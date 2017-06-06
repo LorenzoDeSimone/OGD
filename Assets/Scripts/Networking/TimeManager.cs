@@ -14,7 +14,7 @@ public class TimeManager : NetworkBehaviour
     }
 
     string minutes, seconds;
-    int numMinutes, numSeconds;
+    int numSeconds;
     float remainingSeconds;
 
     private IEnumerator CountDown()
@@ -23,15 +23,11 @@ public class TimeManager : NetworkBehaviour
         if (remainingSeconds >= 0)
         {
             numSeconds = (int)(remainingSeconds % 60);
-            numMinutes = (int)(remainingSeconds / 60);
+            minutes = "" + (int)(remainingSeconds / 60);
             if (numSeconds < 10)
                 seconds = "0" + numSeconds;
             else
                 seconds = "" + numSeconds;
-            if (numMinutes < 10)
-                minutes = "0" + numMinutes;
-            else
-                minutes = "" + numMinutes;
 
             myText.text = minutes + ":" + seconds;
             yield return new WaitForSecondsRealtime(1);
