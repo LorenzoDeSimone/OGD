@@ -34,6 +34,7 @@ namespace Assets.Scripts.Player
         public bool thisAgentHasGravity = false;
 
         private Vector3 myForces;
+        private PlayerDataHolder pDH;
 
         public struct CharacterInput
         {
@@ -137,15 +138,13 @@ namespace Assets.Scripts.Player
             {
                 movementVersor = new Vector3(-myGround.normal.y, myGround.normal.x);
                 movementPerpendicularDown = -myGround.normal;//new Vector2(-movementVersor.y, movementVersor.x).normalized;
-                if (GetComponent<PlayerDataHolder>())//TEMPORARY animator needed
-                    spriteRenderer.flipX = true;
+                SaveFlipPlayer(true);
             }
             else if (input.clockwise)
             {
                 movementVersor = new Vector3(myGround.normal.y, -myGround.normal.x);
                 movementPerpendicularDown = -myGround.normal;// new Vector2(movementVersor.y, -movementVersor.x).normalized;
-                if(GetComponent<PlayerDataHolder>())//TEMPORARY animator needed
-                    spriteRenderer.flipX = false;
+                SaveFlipPlayer(false);
             }
             else
             {
@@ -192,6 +191,12 @@ namespace Assets.Scripts.Player
 
             myTransform.position = myPosition + movementVersor * speed * Time.deltaTime;
             return movementVersor;
+        }
+
+        private void SaveFlipPlayer(bool b)
+        {
+            if (pDH != null)
+                pDH.FlipSprite(b);
         }
 
         public void Jump()

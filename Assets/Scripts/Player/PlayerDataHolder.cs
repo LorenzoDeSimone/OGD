@@ -1,5 +1,4 @@
-﻿using Assets.Scripts.Spawn_collectable;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Networking;
 
 namespace Assets.Scripts.Player
@@ -115,6 +114,10 @@ namespace Assets.Scripts.Player
         public static GameObject GetLocalPlayer()
         {
             return localPlayer;
+        }
+
+        internal void FlipSprite(bool b)
+        {
         }
     }
 }
