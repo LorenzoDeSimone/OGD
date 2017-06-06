@@ -29,7 +29,8 @@ namespace Assets.Scripts.Player
         private GameObject groundCheck1, groundCheck2;
 
         private SpriteRenderer spriteRenderer;
-        private bool controlsEnabled;
+        private bool controlsEnabled = true;
+        public bool hit = false;
         public bool thisAgentCanJump = false;
         public bool thisAgentHasGravity = false;
 
@@ -55,7 +56,6 @@ namespace Assets.Scripts.Player
             pDH = GetComponent<PlayerDataHolder>();
 
             spriteRenderer = GetComponent<SpriteRenderer>();
-            controlsEnabled = true;
         }
 
         void Update()
@@ -215,6 +215,7 @@ namespace Assets.Scripts.Player
         {
             return IsGrounded()            &&
                    myGround.collider!=null &&
+                   !hit                    &&
                    controlsEnabled;//Insert other booleans in && for other situations in which the player cannot move
         }
 
