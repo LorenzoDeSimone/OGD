@@ -184,6 +184,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   despawnTime: 10
+  minTimeForExplosion: 0.1
 --- !u!114 &114744579425764790
 MonoBehaviour:
   m_ObjectHideFlags: 1
