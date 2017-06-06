@@ -19,4 +19,7 @@ EditorBuildSettings:
     guid: 4d921ee221800af4f8a0966289acb399
   - enabled: 1
     path: Assets/Scenes/Sviluppo/DropCoinTest.unity
+    guid: 465eca4636553e646914e347fd20952b
+  - enabled: 1
+    path: Assets/Scenes/Sviluppo/VictoryTest.unity
     guid: 00000000000000000000000000000000

@@ -3,6 +3,7 @@ using Assets.Scripts.Player;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using System.Linq;
+using System;
 
 public class PointManager : MonoBehaviour
 {
@@ -41,6 +42,11 @@ public class PointManager : MonoBehaviour
         }
 
         ScalePointsBars();
+    }
+
+    internal int GetMatchSize()
+    {
+        return ofPlayersAndPoints.Keys.Count;
     }
 
     private void AddNewBar(int playerNetID)
@@ -124,9 +130,9 @@ public class PointManager : MonoBehaviour
         return sum;
     }
 
-    public int GetPlayerRankPosition(int playerId,int playerNum)
+    public int GetPlayerRankPosition(int playerId)
     {
-        int count = 4;
+        int count = ofPlayersAndPoints.Keys.Count;
         foreach(int id in ofPlayersAndPoints.Keys)
         {
             if(id != playerId && ofPlayersAndPoints[playerId] > ofPlayersAndPoints[id])

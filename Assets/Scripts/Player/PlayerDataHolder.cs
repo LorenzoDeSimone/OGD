@@ -38,8 +38,7 @@ namespace Assets.Scripts.Player
         [Command]
         private void CmdDecresePoints()
         {
-            int matchSize = (int)NetworkManager.singleton.matchSize;
-            int malus = Random.Range(2, 5) + matchSize - PointManager.instance.GetPlayerRankPosition(GetPlayerNetworkId(), matchSize);
+            int malus = Random.Range(2, 5) + PointManager.instance.GetMatchSize() - PointManager.instance.GetPlayerRankPosition(GetPlayerNetworkId());
 
             if (playerPoints - malus < 0)
             {

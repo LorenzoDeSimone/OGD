@@ -13,12 +13,11 @@ namespace Assets.Scripts.UI
     {
         [Header("Time of victory screen in seconds")]
         public float vicotoryScreenTime = 4;
-
-        public string poinbarHolderTag = "PointBarHolder";
         public string controlsHolderTag = "ControlsHolder";
 
         public RectTransform scoresHolder;
         public GameObject playerScorePrefab;
+        public PlayerDresser dresser;
 
         private NetworkLobbyController lobbyController;
 
@@ -31,48 +30,23 @@ namespace Assets.Scripts.UI
             StartCoroutine(PrepareToDisconnect());
         }
 
-        /*
-         * May Lorenzo forgive me...
-         */
         private void FillScoreboard()
         {
-            PointManager pointManager = GameObject.FindGameObjectWithTag(poinbarHolderTag).GetComponent<PointManager>();
-            GameObject newPlayerScore;
-            Dictionary<int, int> ofPlayersAndPoints = pointManager.GetPointsForPlayers();
-            float offset = 0.0f;
-            Vector2 newAnchorMax;
-            Vector2 newAnchorMin;
+            Dictionary<int, int> ofPlayersAndPoints = PointManager.instance.GetPointsForPlayers();
+            float size = 1 / (float)ofPlayersAndPoints.Keys.Count;
+            float offset;
+            GameObject go;
+            PlayerScore ps;
 
-            foreach(int i in ofPlayersAndPoints.Keys)
+            foreach (int i in ofPlayersAndPoints.Keys)
             {
-                newPlayerScore = Instantiate(playerScorePrefab, scoresHolder);
-
-                newPlayerScore.GetComponent<Image>().color = PlayerColor.GetColor(i);
-
-                newAnchorMax = ((RectTransform)newPlayerScore.transform).anchorMax;
-                newAnchorMin = ((RectTransform)newPlayerScore.transform).anchorMin;
-                newAnchorMin.x = offset;
-                newAnchorMax.x = offset + 1/(float)ofPlayersAndPoints.Count;
-                offset = newAnchorMax.x;
-
-                if (pointManager.GetTotalPoints() > 0)
-                {
-
-                    if (ofPlayersAndPoints[i] <= 0)
-                    {
-                        newAnchorMax.y = 0.1f;
-                    }
-                    else
-                    {
-                        newAnchorMax.y = ofPlayersAndPoints[i] / (float)pointManager.GetTotalPoints();
-                    }
-                }
-                else
-                {
-                    newAnchorMax.y = 1 / (float)ofPlayersAndPoints.Count;
-                }
-                ((RectTransform)newPlayerScore.transform).anchorMax = newAnchorMax;
-                ((RectTransform)newPlayerScore.transform).anchorMin = newAnchorMin;
+                go = Instantiate(playerScorePrefab, scoresHolder);
+                ps = go.GetComponent<PlayerScore>();
+                ps.SetSprite(dresser.GetSprite(i));
+                ps.SetPoints(ofPlayersAndPoints[i], PointManager.instance.GetTotalPoints());
+                offset = ((float)PointManager.instance.GetPlayerRankPosition(i)-1) * size;
+                ((RectTransform)ps.transform).anchorMin.Set(offset,0);
+                ((RectTransform)ps.transform).anchorMax.Set(offset+size,1);
             }
         }
 

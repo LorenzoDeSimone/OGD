@@ -11,12 +11,17 @@ namespace Assets.Scripts.Player
 
         public void DressPlayer(SpriteRenderer rend, int playerId)
         {
-            rend.sprite = playerSprites[playerId % playerSprites.Length];
+            rend.sprite = GetSprite(playerId);
         }
 
         public AnimatorOverrideController GetAnimator(int playerId)
         {
             return animators[playerId % playerSprites.Length];
+        }
+
+        public Sprite GetSprite(int playerId)
+        {
+            return playerSprites[playerId % playerSprites.Length];
         }
     }
 
