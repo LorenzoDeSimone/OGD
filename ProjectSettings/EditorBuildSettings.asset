@@ -9,17 +9,8 @@ EditorBuildSettings:
     path: Assets/Scenes/Sviluppo/Lobby.unity
     guid: cff004e9efbf49147aa5564e181700ce
   - enabled: 1
-    path: Assets/Scenes/Sviluppo/GameTest.unity
-    guid: ea2a1c28b714ce046a87cd45b8532628
-  - enabled: 1
-    path: Assets/Scenes/Sviluppo/MissileTest.unity
-    guid: b800c376aff7f1c4e9e4a3c63e546ec0
-  - enabled: 1
     path: Assets/Scenes/Sviluppo/Patroller Bot.unity
     guid: 4d921ee221800af4f8a0966289acb399
   - enabled: 1
-    path: Assets/Scenes/Sviluppo/DropCoinTest.unity
-    guid: 465eca4636553e646914e347fd20952b
-  - enabled: 1
-    path: Assets/Scenes/Sviluppo/VictoryTest.unity
+    path: Assets/Scenes/Game.unity
     guid: 00000000000000000000000000000000

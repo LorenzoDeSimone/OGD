@@ -178,20 +178,17 @@ namespace Assets.Scripts.Player
 
         internal void FlipSprite(bool b)
         {
-            Debug.LogWarning("1");
             CmdFlipSprite(b);
         }
 
         [Command]
         private void CmdFlipSprite(bool b)
         {
-            Debug.LogWarning("2");
             flip = b;
         }
 
         private void SyncFlip(bool b)
         {
-            Debug.LogWarning("3");
             flip = b;
             mySpriteRenderer.flipX = b;
         }
