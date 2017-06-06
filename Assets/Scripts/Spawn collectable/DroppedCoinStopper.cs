@@ -1,12 +1,15 @@
 ﻿using UnityEngine;
 
-public class DroppedCoinStopper : MonoBehaviour
+namespace Assets.Scripts.Spawn_collectable
 {
-    private void OnTriggerEnter2D(Collider2D coll)
+    public class DroppedCoinStopper : MonoBehaviour
     {
-        if(coll.CompareTag("Platform"))
+        private void OnTriggerEnter2D(Collider2D coll)
         {
-            transform.parent.gameObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            if (coll.CompareTag("Platform"))
+            {
+                transform.parent.gameObject.GetComponent<DroppedCoin>().Stop();
+            }
         }
-    }
+    } 
 }

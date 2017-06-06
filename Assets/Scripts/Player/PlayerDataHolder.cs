@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Spawn_collectable;
+using UnityEngine;
 using UnityEngine.Networking;
 
 namespace Assets.Scripts.Player
@@ -57,7 +58,7 @@ namespace Assets.Scripts.Player
                 {
                     Vector2 newPos = transform.position + transform.up * rand.Next(3, 5) + transform.right * rand.Next(-3, 4);
                     go = Instantiate((GameObject)Resources.Load("Prefabs/Collectables/DroppedCoin"), newPos, Quaternion.identity);
-                    go.GetComponent<Rigidbody2D>().velocity = (newPos - (Vector2)transform.position).normalized;
+                    go.GetComponent<DroppedCoin>().SetDirection( (newPos - (Vector2)transform.position).normalized );
                     NetworkServer.Spawn(go); 
                 }
             }

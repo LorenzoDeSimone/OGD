@@ -34,6 +34,7 @@ namespace Assets.Scripts.Networking
 
             do
             {
+                Debug.LogWarning("Searching");
                 if (networkExplorer.running)
                     networkExplorer.StopBroadcast();
                 yield return new WaitForSeconds(0.1f);
@@ -69,8 +70,10 @@ namespace Assets.Scripts.Networking
                     {
                         lobbyController.StartHost();
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
+                        Debug.LogWarning(e.Message);
+                        continue;
                     }
                     finally
                     {
