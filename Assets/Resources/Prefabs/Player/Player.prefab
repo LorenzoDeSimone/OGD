@@ -269,6 +269,7 @@ MonoBehaviour:
   rotationSpeed: 10
   EdgeCheckMultiplier: 1.01
   jumpControlStopWindow: 0.2
+  useUnityPhisics: 1
   thisAgentCanJump: 1
   thisAgentHasGravity: 1
 --- !u!114 &114504489635193244
