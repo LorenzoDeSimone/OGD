@@ -54,7 +54,7 @@ namespace Assets.Scripts.Spawn_collectable
             RealUpdate(b, id);
         }
 
-        protected void RealUpdate(bool b, int id)
+        protected virtual void RealUpdate(bool b, int id)
         {
             networkActiveState = b;
             mySprite.enabled = b;
@@ -64,7 +64,7 @@ namespace Assets.Scripts.Spawn_collectable
                 PlayerDataHolder pDH = go.GetComponent<PlayerDataHolder>();
                 if (pDH.playerId == id)
                 {
-                    pDH.AddPoints(pointValue * pointScaler);
+                    pDH.CmdAddPoints(pointValue * pointScaler);
                     break;
                 }
             }
@@ -85,7 +85,7 @@ namespace Assets.Scripts.Spawn_collectable
 
         private void AddPointsToPlayer(PlayerDataHolder playerDataHolder)
         {
-            playerDataHolder.AddPoints(pointValue * pointScaler);
+            playerDataHolder.CmdAddPoints(pointValue * pointScaler);
         }
     }
 }

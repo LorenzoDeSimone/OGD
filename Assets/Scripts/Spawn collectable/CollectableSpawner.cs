@@ -9,6 +9,7 @@ namespace Assets.Scripts.Spawn_collectable
     class CollectableSpawner : NetworkBehaviour
     {
         public GameObject collectablePrefab;
+        public GameObject missilePrefab;
         public GameObject countdown;
 
         public int minCountdown = 10;
@@ -42,9 +43,16 @@ namespace Assets.Scripts.Spawn_collectable
             GameObject go;
             foreach ( Transform t in transform )
             {
-                if(t.gameObject.tag == "SpawnPoint")
+                if(t.gameObject.tag == "SpawnPointCoin")
                 {
                     go = Instantiate(collectablePrefab, t.position, Quaternion.identity, transform);
+                    collectables.Add(go);
+                    NetworkServer.Spawn(go);
+                    positions.Add(t.position);
+                }
+                if (t.gameObject.tag == "SpawnPointMissile")
+                {
+                    go = Instantiate(missilePrefab, t.position, Quaternion.identity, transform);
                     collectables.Add(go);
                     NetworkServer.Spawn(go);
                     positions.Add(t.position);
