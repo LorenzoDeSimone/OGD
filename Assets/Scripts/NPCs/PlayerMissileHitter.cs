@@ -8,16 +8,21 @@ public class PlayerMissileHitter : MonoBehaviour
 {
     public float despawnTime = 10f;
     PlayerMissile myMissile;
+    public float minTimeForExplosion = 0.1f;
+    bool canExplode = false;
 
     private void Start()
     {
         myMissile = GetComponentInParent<PlayerMissile>();
+        StartCoroutine(ShootingCooldown(minTimeForExplosion));
     }
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
         PlayerDataHolder player = collider.gameObject.GetComponent<PlayerDataHolder>();
-        if (myMissile.isServer)//Only server can check missiles collisions
+        PlayerMissile otherPlayerMissile = collider.gameObject.GetComponent<PlayerMissile>();
+
+        if (myMissile.isServer && canExplode)//Only server can check missiles collisions
         {
             if (player)
             {
@@ -25,7 +30,17 @@ public class PlayerMissileHitter : MonoBehaviour
                 //Debug.LogError("Player Hit! " + target.gameObject.name);
                 myMissile.DestroyMissile();
             }
+            else if (otherPlayerMissile)
+            {
+                myMissile.DestroyMissile();
+            }
         }
+    }
+
+    IEnumerator<WaitForSeconds> ShootingCooldown(float minTimeForExplosion)
+    {
+        yield return new WaitForSeconds(minTimeForExplosion);
+        canExplode = true;
     }
 }
 

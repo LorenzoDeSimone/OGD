@@ -46,20 +46,12 @@ namespace Assets.Scripts.Player
 
             myGround = myRadar.GetMyGround();
 
-            if (thisAgentCanJump)
-            {
-                groundCheck1 = myTransform.Find("Ground Check 1").gameObject;
-                groundCheck2 = myTransform.Find("Ground Check 2").gameObject;
-            }
-
             spriteRenderer = GetComponent<SpriteRenderer>();
             controlsEnabled = true;
         }
 
         void Update()
         {
-            //Debug.LogError("Velocity:" + myRigidBody.velocity);
-            //Debug.Log(syncTime / syncDelay);
             myGround = myRadar.GetMyGround();
             ApplyRotation(false);
         }
@@ -110,17 +102,18 @@ namespace Assets.Scripts.Player
 
         public bool IsGrounded()
         {
-            if(thisAgentCanJump)
-                return Physics2D.OverlapArea(groundCheck1.transform.position, groundCheck2.transform.position, LayerMask.GetMask("Walkable"));
+            if (thisAgentCanJump)
+                return Physics2D.OverlapCircle(myTransform.position, GetCollider().bounds.extents.y, LayerMask.GetMask("Walkable"));
+            //return Physics2D.OverlapArea(groundCheck1.transform.position, groundCheck2.transform.position, LayerMask.GetMask("Walkable"));
             else
                 return true;
         }
 
         //Movement routines called by the input manager
-        public void Move(CharacterInput input)
+        public Vector2 Move(CharacterInput input)//returns new movement versor just for checking
         {
             if (!CanMove())
-                return;
+                return Vector2.zero;
 
             Vector2 myPosition = myTransform.position;
 
@@ -136,21 +129,20 @@ namespace Assets.Scripts.Player
             {
                 movementVersor = new Vector3(-myGround.normal.y, myGround.normal.x);
                 movementPerpendicularDown = -myGround.normal;//new Vector2(-movementVersor.y, movementVersor.x).normalized;
-                spriteRenderer.flipX = true;
-                //spriteRenderer.transform.position = myTransform.position - spriteRenderer.transform.localPosition;
+                if (GetComponent<PlayerDataHolder>())//TEMPORARY animator needed
+                    spriteRenderer.flipX = true;
             }
             else if (input.clockwise)
             {
                 movementVersor = new Vector3(myGround.normal.y, -myGround.normal.x);
                 movementPerpendicularDown = -myGround.normal;// new Vector2(movementVersor.y, -movementVersor.x).normalized;
-                spriteRenderer.flipX = false;
-                //spriteRenderer.transform.position = myTransform.position + spriteRenderer.transform.localPosition;
+                if(GetComponent<PlayerDataHolder>())//TEMPORARY animator needed
+                    spriteRenderer.flipX = false;
             }
             else
             {
                 Debug.LogWarning("clockwise: " + input.clockwise + "|| counterclockwise: " + input.counterClockwise);
-//                Debug.LogError("W");
-                return;
+                return Vector2.zero;
             }
 
 
@@ -191,6 +183,7 @@ namespace Assets.Scripts.Player
             }
 
             myTransform.position = myPosition + movementVersor * speed * Time.deltaTime;
+            return movementVersor;
         }
 
         public void Jump()

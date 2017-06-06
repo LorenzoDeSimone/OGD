@@ -12,6 +12,8 @@ public class PlayerMissile : NetworkBehaviour
     private Movable.CharacterInput myDirection;
     private Radar myRadar;
     private bool firstHitWithAGravityField = true;
+    private bool isDirectionOnGroundClockwise;
+    public static int clockwise = 0, counterclockwise = 1;
 
     private void Start()
     {
@@ -38,15 +40,22 @@ public class PlayerMissile : NetworkBehaviour
                 myDirection.counterClockwise = true;
             else
                 myDirection.clockwise = true;
-
             firstHitWithAGravityField = false;
         }
 
-        if(myGround.collider!=null)
-            myMovable.Move(myDirection);
-        //else//If the missile doesn't have a ground during its starts, it follows a straight line until the radar finds something(or the players shoots in air targeting another planet)
-        //transform.position = transform.position + transform.right * myMovable.speed * Time.deltaTime;
+        if(myGround.collider != null && !firstHitWithAGravityField)
+            transform.right = myMovable.Move(myDirection);
     }
+
+    public void SetStartDirection(bool isDirectionCounterClockwise)
+    {
+        myDirection.clockwise = myDirection.counterClockwise = myDirection.jump = false;
+        if (isDirectionCounterClockwise)
+            myDirection.counterClockwise = true;
+        else
+            myDirection.clockwise = true;
+    }
+
 
     public void DestroyMissile()
     {
@@ -60,5 +69,4 @@ public class PlayerMissile : NetworkBehaviour
         NetworkServer.UnSpawn(gameObject);
         Destroy(gameObject);
     }
-
 }

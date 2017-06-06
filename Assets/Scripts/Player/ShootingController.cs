@@ -7,10 +7,13 @@ namespace Assets.Scripts.Player
 {
     public class ShootingController : NetworkBehaviour
     {
+        public float shootingCooldown= 0.15f;
+
         private PlayerDataHolder playerData;
         private Radar myRadar;
         private GameObject currShootPosition, leftShootPosition, rightShootPosition;
         private Movable myMovable;
+        private bool shootCoolDownOK = true;
 
         void Start()
         {
@@ -44,30 +47,49 @@ namespace Assets.Scripts.Player
             if (isLocalPlayer && CanShoot())
             {
                 Vector2 missileDirection;
-                if (leftShootPosition.Equals(currShootPosition))
-                    missileDirection = (leftShootPosition.transform.position - rightShootPosition.transform.position).normalized;
-                else
-                    missileDirection = (rightShootPosition.transform.position - leftShootPosition.transform.position).normalized;
+                bool isStartDirectionCounterClockwise;
 
-                CmdShoot(currShootPosition.transform.position, missileDirection);
+                if (leftShootPosition.Equals(currShootPosition))
+                {
+                    isStartDirectionCounterClockwise = true;
+                    missileDirection = (leftShootPosition.transform.position - rightShootPosition.transform.position).normalized;
+                }
+                else
+                {
+                    isStartDirectionCounterClockwise = false;
+                    missileDirection = (rightShootPosition.transform.position - leftShootPosition.transform.position).normalized;
+                }
+
+
+                CmdShoot(currShootPosition.transform.position, missileDirection, isStartDirectionCounterClockwise);
+                shootCoolDownOK = false;
+                StartCoroutine(ShootingCooldown(shootingCooldown));
             }
         }
 
         [Command]
-        public void CmdShoot(Vector2 shootPosition, Vector2 missileDirection)
+        public void CmdShoot(Vector2 shootPosition, Vector2 missileDirection, bool isStartDirectionCounterClockwise)
         {
             GameObject playerMissile = (GameObject) Instantiate(Resources.Load("Prefabs/NPCs/PlayerMissile"));
             playerMissile.transform.position = shootPosition;
             playerMissile.transform.right = missileDirection;
+            playerMissile.GetComponent<PlayerMissile>().SetStartDirection(isStartDirectionCounterClockwise);
             playerMissile.gameObject.SetActive(true);
             NetworkServer.Spawn(playerMissile);
         }
 
         public bool CanShoot()
         {
-            return true;//Placeholder before missile count implementation
+            return shootCoolDownOK;//Placeholder before missile count implementation
         }
 
-}
+
+        IEnumerator<WaitForSeconds> ShootingCooldown(float shootingCooldown)
+        {
+            yield return new WaitForSeconds(shootingCooldown);
+            shootCoolDownOK = true;
+        }
+
+    }
 
 }
