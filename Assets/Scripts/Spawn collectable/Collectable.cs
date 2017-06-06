@@ -44,7 +44,7 @@ namespace Assets.Scripts.Spawn_collectable
         }
 
         [Command]
-        private void CmdUpdateServerState(bool b, int id)
+        protected virtual void CmdUpdateServerState(bool b, int id)
         {
             networkActiveState = b;
             mySprite.enabled = b;

@@ -40,10 +40,7 @@ namespace Assets.Scripts.Player
         private void CmdDecresePoints()
         {
             int matchSize = (int)NetworkManager.singleton.matchSize;
-            int tempPoints = playerPoints;
-
             int malus = rand.Next(2, 5) + matchSize - PointManager.instance.GetPlayerRankPosition(GetPlayerNetworkId(), matchSize);
-            tempPoints -= malus; 
 
             if (tempPoints < 0)
             {
@@ -58,7 +55,6 @@ namespace Assets.Scripts.Player
                 {
                     Vector2 newPos = transform.position + transform.up * rand.Next(3, 5) + transform.right * rand.Next(-3, 4);
                     go = Instantiate((GameObject)Resources.Load("Prefabs/Collectables/DroppedCoin"), newPos, Quaternion.identity);
-                    go.GetComponent<DroppedCoin>().SetDirection( (newPos - (Vector2)transform.position).normalized );
                     NetworkServer.Spawn(go); 
                 }
             }
