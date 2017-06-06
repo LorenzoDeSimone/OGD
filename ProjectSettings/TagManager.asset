@@ -11,6 +11,8 @@ TagManager:
   - PointBarHolder
   - ControlsHolder
   - SpawnPoint
+  - SpawnPointCoin
+  - SpawnPointMissile
   layers:
   - Default
   - TransparentFX

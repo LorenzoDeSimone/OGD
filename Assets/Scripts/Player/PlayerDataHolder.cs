@@ -1,5 +1,4 @@
-﻿using Assets.Scripts.Spawn_collectable;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Networking;
 
 namespace Assets.Scripts.Player
@@ -11,6 +10,8 @@ namespace Assets.Scripts.Player
 
         [SyncVar(hook = "SyncNewPoints")]
         int playerPoints = 0;
+        [SyncVar(hook = "SyncMissile")]
+        bool playerMissile = false;
 
         [SyncVar]
         public int playerId = 0;
@@ -23,10 +24,39 @@ namespace Assets.Scripts.Player
 
             InitPlayer();
         }
-
-        public void AddPoints(int pointsToAdd)
+        [Command]
+        public void CmdAddPoints(int pointsToAdd)
         {
             playerPoints += pointsToAdd;
+        }
+
+        [Command]
+        public void CmdAddMissile()
+        {
+            playerMissile = true;
+        }
+
+        [Command]
+        public void CmdRemoveMissile()
+        {
+            playerMissile = false;
+        }
+
+        public bool PlayerHaveMissile()
+        {
+            return playerMissile;
+        }
+
+        public void SyncMissile(bool b)
+        {
+            playerMissile = b;
+            if (isLocalPlayer)
+            {
+                if (b)
+                    MissileButton.instance.Activate();
+                else
+                    MissileButton.instance.Deactivate(); 
+            }
         }
 
         public void OnHit()
