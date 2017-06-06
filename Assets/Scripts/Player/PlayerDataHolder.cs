@@ -43,14 +43,14 @@ namespace Assets.Scripts.Player
 
             if (playerPoints - malus < 0)
             {
-                playerPoints = 0;
                 DropCoins(playerPoints);
+                playerPoints = 0;
 
             }
             else
             {
-                playerPoints -= malus;
                 DropCoins(malus);
+                playerPoints -= malus;
             }
         }
 
