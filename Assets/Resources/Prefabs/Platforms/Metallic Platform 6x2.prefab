@@ -140,7 +140,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1445355496078138}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8, y: 1.6600001, z: 0}
+  m_LocalPosition: {x: -8, y: 1.6600001, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4210200359453520}
@@ -201,6 +201,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   collectablePrefab: {fileID: 1583727756323638, guid: 21536bbcfca5c2c4a9ea58c33494e4f4,
+    type: 2}
+  missilePrefab: {fileID: 1583727756323638, guid: 0b583c29d3329a4408a172d0fd55dae9,
     type: 2}
   countdown: {fileID: 1233439009769682, guid: b9b6d1c20d2f20942a717f507f110682, type: 2}
   minCountdown: 10
