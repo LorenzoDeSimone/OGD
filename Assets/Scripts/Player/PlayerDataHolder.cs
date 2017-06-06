@@ -42,21 +42,27 @@ namespace Assets.Scripts.Player
             int matchSize = (int)NetworkManager.singleton.matchSize;
             int malus = rand.Next(2, 5) + matchSize - PointManager.instance.GetPlayerRankPosition(GetPlayerNetworkId(), matchSize);
 
-            if (tempPoints < 0)
+            if (playerPoints - malus < 0)
             {
                 playerPoints = 0;
+                DropCoins(playerPoints);
+
             }
             else
             {
-                playerPoints = tempPoints;
+                playerPoints -= malus;
+                DropCoins(malus);
+            }
+        }
 
-                GameObject go;
-                for (int i = 0; i < malus; i++)
-                {
-                    Vector2 newPos = transform.position + transform.up * rand.Next(3, 5) + transform.right * rand.Next(-3, 4);
-                    go = Instantiate((GameObject)Resources.Load("Prefabs/Collectables/DroppedCoin"), newPos, Quaternion.identity);
-                    NetworkServer.Spawn(go); 
-                }
+        private void DropCoins(int malus)
+        {
+            GameObject go;
+            for (int i = 0; i < malus; i++)
+            {
+                Vector2 newPos = transform.position + transform.up * rand.Next(3, 5) + transform.right * rand.Next(-3, 4);
+                go = Instantiate((GameObject)Resources.Load("Prefabs/Collectables/DroppedCoin"), newPos, Quaternion.identity);
+                NetworkServer.Spawn(go);
             }
         }
 
