@@ -289,7 +289,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b76d8353ab6d6d5448b60d3ff09b5185, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  matchTime: 90
+  matchTime: 12
   timer: {fileID: 1018893471065052, guid: d3820fe95dc002a47ab3b0f973f97f78, type: 2}
   victoryScreenHolder: {fileID: 1648704762638588, guid: cd1a61dd02ee4004bb1e2140860baf1a,
     type: 2}
@@ -837,6 +837,18 @@ Prefab:
       propertyPath: m_Name
       value: MetallicPlatform 6x2 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1142757745800392, guid: 5081209272d2aac4d9da6f9d1cbe3c94, type: 2}
+      propertyPath: m_TagString
+      value: SpawnPointCoin
+      objectReference: {fileID: 0}
+    - target: {fileID: 1477301871020488, guid: 5081209272d2aac4d9da6f9d1cbe3c94, type: 2}
+      propertyPath: m_TagString
+      value: SpawnPointCoin
+      objectReference: {fileID: 0}
+    - target: {fileID: 1192199764542648, guid: 5081209272d2aac4d9da6f9d1cbe3c94, type: 2}
+      propertyPath: m_TagString
+      value: SpawnPointCoin
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5081209272d2aac4d9da6f9d1cbe3c94, type: 2}
   m_IsPrefabParent: 0
@@ -998,6 +1010,18 @@ Prefab:
       value: 
       objectReference: {fileID: 1583727756323638, guid: 21536bbcfca5c2c4a9ea58c33494e4f4,
         type: 2}
+    - target: {fileID: 1192199764542648, guid: 5081209272d2aac4d9da6f9d1cbe3c94, type: 2}
+      propertyPath: m_TagString
+      value: SpawnPointCoin
+      objectReference: {fileID: 0}
+    - target: {fileID: 1142757745800392, guid: 5081209272d2aac4d9da6f9d1cbe3c94, type: 2}
+      propertyPath: m_TagString
+      value: SpawnPointCoin
+      objectReference: {fileID: 0}
+    - target: {fileID: 1477301871020488, guid: 5081209272d2aac4d9da6f9d1cbe3c94, type: 2}
+      propertyPath: m_TagString
+      value: SpawnPointCoin
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5081209272d2aac4d9da6f9d1cbe3c94, type: 2}
   m_IsPrefabParent: 0
@@ -1074,6 +1098,22 @@ Prefab:
       value: 
       objectReference: {fileID: 1583727756323638, guid: 21536bbcfca5c2c4a9ea58c33494e4f4,
         type: 2}
+    - target: {fileID: 1783057947386000, guid: aa73be220fba6a140afdbe45ac93384c, type: 2}
+      propertyPath: m_TagString
+      value: SpawnPointCoin
+      objectReference: {fileID: 0}
+    - target: {fileID: 1485723090976366, guid: aa73be220fba6a140afdbe45ac93384c, type: 2}
+      propertyPath: m_TagString
+      value: SpawnPointCoin
+      objectReference: {fileID: 0}
+    - target: {fileID: 1823227278270536, guid: aa73be220fba6a140afdbe45ac93384c, type: 2}
+      propertyPath: m_TagString
+      value: SpawnPointCoin
+      objectReference: {fileID: 0}
+    - target: {fileID: 1990165425494938, guid: aa73be220fba6a140afdbe45ac93384c, type: 2}
+      propertyPath: m_TagString
+      value: SpawnPointCoin
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: aa73be220fba6a140afdbe45ac93384c, type: 2}
   m_IsPrefabParent: 0
@@ -1301,6 +1341,18 @@ Prefab:
       propertyPath: m_RootOrder
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 1477301871020488, guid: 5081209272d2aac4d9da6f9d1cbe3c94, type: 2}
+      propertyPath: m_TagString
+      value: SpawnPointCoin
+      objectReference: {fileID: 0}
+    - target: {fileID: 1192199764542648, guid: 5081209272d2aac4d9da6f9d1cbe3c94, type: 2}
+      propertyPath: m_TagString
+      value: SpawnPointCoin
+      objectReference: {fileID: 0}
+    - target: {fileID: 1142757745800392, guid: 5081209272d2aac4d9da6f9d1cbe3c94, type: 2}
+      propertyPath: m_TagString
+      value: SpawnPointCoin
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5081209272d2aac4d9da6f9d1cbe3c94, type: 2}
   m_IsPrefabParent: 0
@@ -1388,6 +1440,22 @@ Prefab:
     - target: {fileID: 1787905787674056, guid: aa73be220fba6a140afdbe45ac93384c, type: 2}
       propertyPath: m_Name
       value: Planet (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1485723090976366, guid: aa73be220fba6a140afdbe45ac93384c, type: 2}
+      propertyPath: m_TagString
+      value: SpawnPointCoin
+      objectReference: {fileID: 0}
+    - target: {fileID: 1783057947386000, guid: aa73be220fba6a140afdbe45ac93384c, type: 2}
+      propertyPath: m_TagString
+      value: SpawnPointCoin
+      objectReference: {fileID: 0}
+    - target: {fileID: 1990165425494938, guid: aa73be220fba6a140afdbe45ac93384c, type: 2}
+      propertyPath: m_TagString
+      value: SpawnPointCoin
+      objectReference: {fileID: 0}
+    - target: {fileID: 1823227278270536, guid: aa73be220fba6a140afdbe45ac93384c, type: 2}
+      propertyPath: m_TagString
+      value: SpawnPointCoin
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: aa73be220fba6a140afdbe45ac93384c, type: 2}
@@ -1694,6 +1762,18 @@ Prefab:
       value: 
       objectReference: {fileID: 1583727756323638, guid: 21536bbcfca5c2c4a9ea58c33494e4f4,
         type: 2}
+    - target: {fileID: 1192199764542648, guid: 5081209272d2aac4d9da6f9d1cbe3c94, type: 2}
+      propertyPath: m_TagString
+      value: SpawnPointCoin
+      objectReference: {fileID: 0}
+    - target: {fileID: 1477301871020488, guid: 5081209272d2aac4d9da6f9d1cbe3c94, type: 2}
+      propertyPath: m_TagString
+      value: SpawnPointCoin
+      objectReference: {fileID: 0}
+    - target: {fileID: 1142757745800392, guid: 5081209272d2aac4d9da6f9d1cbe3c94, type: 2}
+      propertyPath: m_TagString
+      value: SpawnPointCoin
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5081209272d2aac4d9da6f9d1cbe3c94, type: 2}
   m_IsPrefabParent: 0

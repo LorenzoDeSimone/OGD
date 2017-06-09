@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.UI
@@ -7,6 +6,7 @@ namespace Assets.Scripts.UI
     public class PlayerScore : MonoBehaviour
     {
         public Image playerImage;
+        public Image mask;
         public Image scoreBarImage;
         int playerPoints;
         int totalPoints;
@@ -14,10 +14,9 @@ namespace Assets.Scripts.UI
         private void Start()
         {
             Vector2 temp = Vector2.zero;
-            temp.Set(playerPoints / (float)totalPoints, 1);
-            scoreBarImage.rectTransform.anchorMax = temp;
-            temp.Set(0, 0);
             scoreBarImage.rectTransform.anchorMin = temp;
+            temp.Set(playerPoints / (float)totalPoints, 1);
+            mask.rectTransform.anchorMax = temp;
         }
 
         public void SetPoints(int pp, int tp)
@@ -29,7 +28,9 @@ namespace Assets.Scripts.UI
         public void SetSprites(Sprite ps, Sprite bs)
         {
             scoreBarImage.sprite = bs;
+            scoreBarImage.preserveAspect = false;
             playerImage.sprite = ps;
+            playerImage.preserveAspect = true;
         }
     }
 
