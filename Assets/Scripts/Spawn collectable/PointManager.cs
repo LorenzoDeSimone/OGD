@@ -140,9 +140,19 @@ public class PointManager : MonoBehaviour
         int count = ofPlayersAndPoints.Keys.Count;
         foreach(int id in ofPlayersAndPoints.Keys)
         {
-            if(id != playerId && ofPlayersAndPoints[playerId] > ofPlayersAndPoints[id])
+            if(id != playerId)
             {
-                count--;
+                if (ofPlayersAndPoints[playerId] > ofPlayersAndPoints[id])
+                {
+                    count--; 
+                }
+                else if(ofPlayersAndPoints[playerId] == ofPlayersAndPoints[id])
+                {
+                    if(id>playerId)
+                    {
+                        count--;
+                    }
+                }
             }
         }
         return count;
