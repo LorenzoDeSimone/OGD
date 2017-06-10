@@ -9,7 +9,7 @@ namespace Assets.Scripts.Player
     {
         private static GameObject localPlayer;
         public PlayerDresser dresser;
-        public float minDroppedCoinSpeed, maxDroppedCoinSpeed, disabledControlsTimeWindow= 0.5f;
+        public float disabledControlsTimeWindow= 0.5f;
 
         [SyncVar(hook = "SyncNewPoints")]
         int playerPoints = 0;
@@ -100,35 +100,47 @@ namespace Assets.Scripts.Player
             }
         }
 
-        public Vector3 GetRandomVersor()
-        {
-            if (Random.Range(0f, 1f) >= 0.5f)
-                return (transform.up + transform.right).normalized;
-            else
-                return (transform.up - transform.right).normalized;
-            //float randomAngle = Random.Range(0f, Mathf.PI * 2);
-            //return new Vector2(Mathf.Sin(randomAngle), Mathf.Cos(randomAngle)).normalized;
-        }
-
         private void DropCoins(int malus)
         {
             GameObject go;
-            Vector2 movementVersor;
+            Vector3 movementVersor;
             Vector3 playerExtents = localPlayer.GetComponent<Collider2D>().bounds.extents;
+            RaycastHit2D myGround= GetComponentInChildren<Radar>().GetMyGround();
+
             for (int i = 0; i < malus; i++)
             {
+                Vector3 airPoint, groundRaycastStartPoint, groundPoint;
 
-                movementVersor = GetRandomVersor();
+                if (Random.Range(0f, 1f) >= 0.5f)
+                {
+                    movementVersor = (transform.up + transform.right).normalized;
+                    airPoint = transform.position + movementVersor * Random.Range(playerExtents.y * 1.5f, playerExtents.y * 3);
+                    groundRaycastStartPoint = transform.position + transform.right * Random.Range(playerExtents.x * 10f, playerExtents.x * 20f);
+                }
+                else
+                {
+                    movementVersor = (transform.up - transform.right).normalized;
+                    airPoint = transform.position + movementVersor * Random.Range(playerExtents.y * 1.5f, playerExtents.y * 3);
+                    groundRaycastStartPoint = transform.position - transform.right * Random.Range(playerExtents.x * 10f, playerExtents.x * 20f);
+                }
+
+                RaycastHit2D groundPointHit2D = Physics2D.Raycast(groundRaycastStartPoint,
+                                                                  myGround.collider.transform.position - groundRaycastStartPoint,
+                                                                  Mathf.Infinity,
+                                                                  LayerMask.GetMask("Walkable"));
+
+                
+
+                groundPoint = groundPointHit2D.point;
                 //((transform.up    * Random.Range(playerExtents.y, playerExtents.y + 1f) +
                 //transform.right   * Random.Range(-playerExtents.x, playerExtents.x)) - transform.position).normalized;
-                Debug.DrawRay(transform.position, movementVersor, Color.cyan);
+                //Debug.DrawRay(transform.position, movementVersor, Color.cyan);
+                Debug.DrawLine(transform.position, airPoint, Color.cyan);
+                Debug.DrawLine(airPoint, groundPoint, Color.green);
 
-                //(Vector3)(Random.Range(2.0f, 5.0f)*Random.insideUnitCircle());
                 go = Instantiate((GameObject)Resources.Load("Prefabs/Collectables/DroppedCoin"), transform.position, Quaternion.identity);
                 DroppedCoin droppedCoin = go.GetComponent<DroppedCoin>();
-                droppedCoin.SetMovementVersor(movementVersor);
-                go.GetComponent<Movable>().speed = Random.Range(minDroppedCoinSpeed, maxDroppedCoinSpeed);
-                //Debug.LogError("w");
+                droppedCoin.SetCurvePoints(transform.position, airPoint, groundPoint);
                 NetworkServer.Spawn(go);
             }
         }

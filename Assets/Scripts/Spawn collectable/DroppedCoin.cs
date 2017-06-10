@@ -9,10 +9,12 @@ namespace Assets.Scripts.Spawn_collectable
     {
         bool stop = false;
         bool onGround = false;
-        Vector3 movementVersor;
+        private Vector3 startPoint, airPoint, groundPoint;
         public float uncollectableTimeWindow = 0.5f;
         private bool isCollectable = false;
-        
+        private float time=0f;
+        public float timeToReachGround = 2f;
+
         private void Start()
         {
             Init();
@@ -22,31 +24,33 @@ namespace Assets.Scripts.Spawn_collectable
         private void OnTriggerEnter2D(Collider2D coll)
         {
             PlayerDataHolder player = coll.gameObject.GetComponent<PlayerDataHolder>();
+            Platform platform = coll.gameObject.GetComponent<Platform>();
 
             if (isCollectable && player)// && coll.Equals(player.GetCharacterCapsuleCollider2D()))
                 CmdUpdateServerState(false, coll.gameObject.GetComponent<PlayerDataHolder>().playerId);
-        }
 
-        public void OnCollisionEnter2D(Collision2D collision)
-        {
-            Platform gravityField = collision.collider.GetComponent<Platform>();
-            if(gravityField!=null)
-            {
-                GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-                GetComponent<Movable>().enabled = false;
+            if (platform)
                 onGround = true;
-            }
         }
 
         private void Update()
         {
             if (!onGround)
-                transform.position = transform.position + movementVersor * GetComponent<Movable>().speed * Time.deltaTime;
+            {
+                time += Time.deltaTime;
+                float normalizedTime = time / timeToReachGround;
+
+                transform.position = Mathf.Pow((1 - normalizedTime), 2) * startPoint +
+                                     2 * (1 - normalizedTime) * normalizedTime * airPoint +
+                                     Mathf.Pow(normalizedTime, 2) * groundPoint; 
+            }
         }
 
-        public void SetMovementVersor(Vector3 movementVersor)
+        public void SetCurvePoints(Vector3 startPoint, Vector3 airPoint, Vector3 groundPoint)
         {
-            this.movementVersor = movementVersor;
+            this.startPoint = startPoint;
+            this.airPoint = airPoint;
+            this.groundPoint = groundPoint;
         }
 
         [Command]
