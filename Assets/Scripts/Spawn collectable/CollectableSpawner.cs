@@ -12,16 +12,19 @@ namespace Assets.Scripts.Spawn_collectable
         public GameObject missilePrefab;
         public GameObject countdown;
 
+        public bool spawnNpc = true;
         public int minCountdown = 10;
         public int maxCountdown = 20;
 
         private HashSet<GameObject> collectables;
         private List<Vector3> positions;
         private CountDown countdownCounter;
+        private NpcSpawner npcSpawner;
 
         private void Start()
         {
             GameObject go;
+            npcSpawner = transform.parent.parent.gameObject.GetComponent<NpcSpawner>();
             collectables = new HashSet<GameObject>();
             positions = new List<Vector3>();
             try
@@ -35,22 +38,22 @@ namespace Assets.Scripts.Spawn_collectable
                 NetworkServer.Spawn(go);
             }
             countdownCounter = go.GetComponent<CountDown>();
-            StartCoroutine(firstCountdown());
+            StartCoroutine(FirstCountdown());
         }
 
         private void InitCollectables()
         {
             GameObject go;
-            foreach ( Transform t in transform )
+            foreach (Transform t in transform)
             {
-                if(t.gameObject.tag == "SpawnPointCoin")
+                if (t.gameObject.tag == "SpawnPointCoin")
                 {
                     go = Instantiate(collectablePrefab, t.position, Quaternion.identity, transform);
                     collectables.Add(go);
                     NetworkServer.Spawn(go);
                     positions.Add(t.position);
                 }
-                if (t.gameObject.tag == "SpawnPointMissile")
+                else if (t.gameObject.tag == "SpawnPointMissile")
                 {
                     go = Instantiate(missilePrefab, t.position, Quaternion.identity, transform);
                     collectables.Add(go);
@@ -65,7 +68,7 @@ namespace Assets.Scripts.Spawn_collectable
         {
             Collectable c;
             Vector3 temp;
-            int i,j;
+            int i, j;
             for (i = 0; i < positions.Count - 1; i++)
             {
                 j = Random.Range(0, positions.Count);
@@ -83,22 +86,35 @@ namespace Assets.Scripts.Spawn_collectable
             }
         }
 
-        private IEnumerator firstCountdown()
+        private IEnumerator FirstCountdown()
         {
             InitCollectables();
             yield return new WaitForSecondsRealtime(3);
             countdownCounter.RpcChangeNetworkState(0);
-            StartCoroutine(startCountdown());
+            StartCoroutine(StartCountdown());
         }
 
-        private IEnumerator startCountdown()
+        private IEnumerator StartCountdown()
         {
             int countdown = Random.Range(minCountdown, maxCountdown + 1);
             countdownCounter.RpcChangeNetworkState(countdown);
             yield return new WaitForSecondsRealtime(countdown);
             SpawnCoins();
+            if (spawnNpc)
+                SpawnNpc();
             yield return new WaitForSecondsRealtime(3);
-            StartCoroutine(startCountdown());
+            StartCoroutine(StartCountdown());
+        }
+
+        private void SpawnNpc()
+        {
+            GameObject npcPrefab = npcSpawner.getNpc();
+            if (npcPrefab != null)
+            {
+                Transform platfomTransform = transform.parent;
+                GameObject go = Instantiate(npcPrefab, platfomTransform.position + platfomTransform.up + npcPrefab.transform.up, Quaternion.identity, transform);
+                NetworkServer.Spawn(go);
+            }
         }
     }
 }
