@@ -601,7 +601,7 @@ MonoBehaviour:
   - {fileID: 1809339051065658, guid: 1e89c5e3968aadc43bf2c8ff38cfa47b, type: 2}
   minTime: 30
   maxTime: 30
-  npcPrefabChosen: {fileID: 0}
+  numNpcMax: 3
 --- !u!114 &221655974
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -632,7 +632,7 @@ MonoBehaviour:
     i13: 0
     i14: 0
     i15: 0
-  m_ServerOnly: 1
+  m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
 --- !u!1 &363220295
 GameObject:
