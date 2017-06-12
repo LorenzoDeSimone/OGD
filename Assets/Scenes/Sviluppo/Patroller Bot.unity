@@ -546,8 +546,8 @@ MonoBehaviour:
   barSprites:
   - {fileID: 21300000, guid: 832429827d16e1348814fd66117f0bea, type: 3}
   - {fileID: 21300000, guid: 64052e8ef4fbfc44eaa949f3f15669c5, type: 3}
-  - {fileID: 21300000, guid: 61f57a05f0ada4748a143abbefe41a01, type: 3}
   - {fileID: 21300000, guid: a5e6152f157e06242b029b80b678866c, type: 3}
+  - {fileID: 21300000, guid: 61f57a05f0ada4748a143abbefe41a01, type: 3}
 --- !u!1 &221655971
 GameObject:
   m_ObjectHideFlags: 0
@@ -1691,7 +1691,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
