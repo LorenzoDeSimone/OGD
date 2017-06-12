@@ -12,7 +12,8 @@ public class NpcSpawner : NetworkBehaviour
     private  GameObject npcPrefabChosen;
     private List<GameObject> platforms;
     private int numNpc;
-
+    
+    [Server]
     void Start()
     {
         npcPrefabChosen = null;
