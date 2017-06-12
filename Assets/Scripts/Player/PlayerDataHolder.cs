@@ -140,8 +140,8 @@ namespace Assets.Scripts.Player
 
                 go = Instantiate((GameObject)Resources.Load("Prefabs/Collectables/DroppedCoin"), transform.position, Quaternion.identity);
                 DroppedCoin droppedCoin = go.GetComponent<DroppedCoin>();
-                droppedCoin.SetCurvePoints(transform.position, airPoint, groundPoint);
                 NetworkServer.Spawn(go);
+                droppedCoin.SetCurvePoints(transform.position, airPoint, groundPoint);
             }
         }
 

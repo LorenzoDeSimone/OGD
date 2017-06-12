@@ -9,7 +9,8 @@ namespace Assets.Scripts.Spawn_collectable
     {
         bool stop = false;
         bool onGround = false;
-        private Vector3 startPoint, airPoint, groundPoint;
+        [SyncVar]
+        public Vector3 startPoint, airPoint, groundPoint;
         public float uncollectableTimeWindow = 0.5f;
         private bool isCollectable = false;
         private float time=0f;
