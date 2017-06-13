@@ -17,26 +17,25 @@ public class TimeManager : NetworkBehaviour
 
     string minutes, seconds;
     int numSeconds;
-    double remaningTime;
 
     private IEnumerator CountDown()
     {
-        remaningTime = endTime - Network.time;
-        if (remaningTime >= 0)
+        if (endTime >= 0)
         {
-            numSeconds = (int)(remaningTime % 60);
-            minutes = "" + (int)(remaningTime / 60);
+            numSeconds = (int)(endTime % 60);
+            minutes = "" + (int)(endTime / 60);
             if (numSeconds < 10)
                 seconds = "0" + numSeconds;
             else
                 seconds = "" + numSeconds;
 
             myText.text = minutes + ":" + seconds;
+            endTime--;
         }
-            yield return new WaitForSecondsRealtime(1);
-            StartCoroutine(CountDown());
+        yield return new WaitForSecondsRealtime(1);
+        StartCoroutine(CountDown());
     }
-    
+
     public void SetEndTime(double num)
     {
         endTime = num;
