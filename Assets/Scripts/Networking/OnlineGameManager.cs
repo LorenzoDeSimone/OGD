@@ -9,7 +9,7 @@ namespace Assets.Scripts.Networking
     class OnlineGameManager : NetworkBehaviour
     {
         [Header("Time of a match in seconds")]
-        public float matchTime = 180;
+        public double matchTime = 180;
         public GameObject timer;
 
         public GameObject victoryScreenHolder;
@@ -17,14 +17,14 @@ namespace Assets.Scripts.Networking
         void Start()
         {
             timer = Instantiate(timer);
-            timer.GetComponent<TimeManager>().SetEndTime(matchTime);
+            timer.GetComponent<TimeManager>().SetEndTime(Network.time + matchTime);
             NetworkServer.Spawn(timer);
             StartCoroutine(StartMatchCountDown());
         }
 
         private IEnumerator StartMatchCountDown()
         {
-            yield return new WaitForSecondsRealtime(matchTime);
+            yield return new WaitForSecondsRealtime((float)matchTime);
             EndMatch();
         }
 
