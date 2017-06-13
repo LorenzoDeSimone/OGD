@@ -8,7 +8,7 @@ namespace Assets.Scripts.Spawn_collectable
     public class DroppedCoin : Collectable
     {
         bool stop = false;
-        bool onGround = false;
+        //bool onGround = false;
         [SyncVar]
         public Vector3 startPoint, airPoint, groundPoint;
         public float uncollectableTimeWindow = 0.5f;
@@ -32,13 +32,13 @@ namespace Assets.Scripts.Spawn_collectable
         private void OnTriggerEnter2D(Collider2D coll)
         {
             Platform platform = coll.gameObject.GetComponent<Platform>();
-            if (platform)
-                onGround = true;
+            //if (platform)
+            //    onGround = true;
         }
 
         private void Update()
         {
-            if (!onGround)
+            if (time <= timeToReachGround)
             {
                 time += Time.deltaTime;
                 float normalizedTime = time / timeToReachGround;
