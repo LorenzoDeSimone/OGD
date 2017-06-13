@@ -13,7 +13,7 @@ public class CountDown : NetworkBehaviour
     {
         myText = GetComponentInChildren<Text>();
         mySprite = GetComponentInChildren<SpriteRenderer>();
-        mySprite.enabled = false;
+        mySprite.enabled = true;
     }
     
     [ClientRpc]
@@ -33,6 +33,6 @@ public class CountDown : NetworkBehaviour
             count--;
         }
         myText.text = "";
-        mySprite.enabled = false;
+        //mySprite.enabled = false;
     }
 }
