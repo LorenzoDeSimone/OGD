@@ -89,62 +89,16 @@ namespace Assets.Scripts.Player
 
             if (playerPoints - malus < 0)
             {
-                DropCoins(playerPoints);
+                GetComponent<CoinDropper>().DropCoins(playerPoints);
                 playerPoints = 0;
 
             }
             else
             {
-                DropCoins(malus);
+                GetComponent<CoinDropper>().DropCoins(malus);
                 playerPoints -= malus;
             }
         }
-
-        private void DropCoins(int malus)
-        {
-            GameObject go;
-            Vector3 movementVersor;
-            Vector3 playerExtents = localPlayer.GetComponent<Collider2D>().bounds.extents;
-            RaycastHit2D myGround= GetComponentInChildren<Radar>().GetMyGround();
-
-            for (int i = 0; i < malus; i++)
-            {
-                Vector3 airPoint, groundRaycastStartPoint, groundPoint;
-
-                if (Random.Range(0f, 1f) >= 0.5f)
-                {
-                    movementVersor = (transform.up + transform.right).normalized;
-                    airPoint = transform.position + movementVersor * Random.Range(playerExtents.y * 1.5f, playerExtents.y * 3);
-                    groundRaycastStartPoint = transform.position + transform.right * Random.Range(playerExtents.x * 10f, playerExtents.x * 20f);
-                }
-                else
-                {
-                    movementVersor = (transform.up - transform.right).normalized;
-                    airPoint = transform.position + movementVersor * Random.Range(playerExtents.y * 1.5f, playerExtents.y * 3);
-                    groundRaycastStartPoint = transform.position - transform.right * Random.Range(playerExtents.x * 10f, playerExtents.x * 20f);
-                }
-
-                RaycastHit2D groundPointHit2D = Physics2D.Raycast(groundRaycastStartPoint,
-                                                                  myGround.collider.transform.position - groundRaycastStartPoint,
-                                                                  Mathf.Infinity,
-                                                                  LayerMask.GetMask("Walkable"));
-
-                
-
-                groundPoint = groundPointHit2D.point;
-                //((transform.up    * Random.Range(playerExtents.y, playerExtents.y + 1f) +
-                //transform.right   * Random.Range(-playerExtents.x, playerExtents.x)) - transform.position).normalized;
-                //Debug.DrawRay(transform.position, movementVersor, Color.cyan);
-                Debug.DrawLine(transform.position, airPoint, Color.cyan);
-                Debug.DrawLine(airPoint, groundPoint, Color.green);
-
-                go = Instantiate((GameObject)Resources.Load("Prefabs/Collectables/DroppedCoin"), transform.position, Quaternion.identity);
-                DroppedCoin droppedCoin = go.GetComponent<DroppedCoin>();
-                NetworkServer.Spawn(go);
-                droppedCoin.SetCurvePoints(transform.position, airPoint, groundPoint);
-            }
-        }
-
 
         //argument needed from sync var PRE-hook... -1 for bar init
         private void SyncNewPoints(int newValue)

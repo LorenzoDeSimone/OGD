@@ -5,41 +5,39 @@ using UnityEngine.Networking;
 
 public class TimeManager : NetworkBehaviour
 {
+    [SyncVar]
     private float endTime;
     private Text myText;
 
     private void Start()
     {
         myText = GetComponentInChildren<Text>();
+        StartCoroutine(CountDown());
     }
 
     string minutes, seconds;
     int numSeconds;
-    float remainingSeconds;
 
     private IEnumerator CountDown()
     {
-        remainingSeconds = endTime - Time.time;
-        if (remainingSeconds >= 0)
+        if (endTime >= 0)
         {
-            numSeconds = (int)(remainingSeconds % 60);
-            minutes = "" + (int)(remainingSeconds / 60);
+            numSeconds = (int)(endTime % 60);
+            minutes = "" + (int)(endTime / 60);
             if (numSeconds < 10)
                 seconds = "0" + numSeconds;
             else
                 seconds = "" + numSeconds;
 
             myText.text = minutes + ":" + seconds;
-            yield return new WaitForSecondsRealtime(1);
-
-            StartCoroutine(CountDown());
+            endTime--;
         }
+            yield return new WaitForSecondsRealtime(1);
+            StartCoroutine(CountDown());
     }
-
-    [ClientRpc]
-    public void RpcSetEndTime(float num)
+    
+    public void SetEndTime(float num)
     {
-        endTime = Time.time + num;
-        StartCoroutine(CountDown());
+        endTime = num;
     }
 }
