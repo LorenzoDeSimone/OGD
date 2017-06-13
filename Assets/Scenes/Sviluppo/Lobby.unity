@@ -2421,8 +2421,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loadingSpinner: {fileID: 230085974}
   loadingMessage: {fileID: 1382901246}
-  waitTime: 0.3
-  attempts: 3
+  waitTime: 0.1
+  attempts: 5
 --- !u!1 &1761448994
 GameObject:
   m_ObjectHideFlags: 0
@@ -3362,7 +3362,7 @@ MonoBehaviour:
   m_BroadcastKey: 9741
   m_BroadcastVersion: 1
   m_BroadcastSubVersion: 1
-  m_BroadcastInterval: 1000
+  m_BroadcastInterval: 100
   m_UseNetworkManager: 1
   m_BroadcastData: is there anybody out there?
   m_ShowGUI: 0
