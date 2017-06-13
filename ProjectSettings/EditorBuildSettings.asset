@@ -15,5 +15,5 @@ EditorBuildSettings:
     path: Assets/Scenes/Game.unity
     guid: 1ce0722ee83687140bd6153a15e58490
   - enabled: 1
-    path: Assets/Scenes/Sviluppo/VictoryTest.unity
+    path: Assets/Scenes/Sviluppo/AnimationTest.unity
     guid: 00000000000000000000000000000000
