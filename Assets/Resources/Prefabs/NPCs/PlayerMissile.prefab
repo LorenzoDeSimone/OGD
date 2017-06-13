@@ -184,7 +184,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   despawnTime: 10
-  minTimeForExplosion: 0.1
 --- !u!114 &114744579425764790
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -244,8 +243,10 @@ MonoBehaviour:
   speed: 11
   jumpPower: 0
   rotationSpeed: 10
-  EdgeCheckMultiplier: 1.1
+  edgeCheckMultiplier: 1.1
   jumpControlStopWindow: 0.2
+  useUnityPhisics: 0
+  hit: 0
   thisAgentCanJump: 0
   thisAgentHasGravity: 0
 --- !u!114 &114912440225334284
@@ -259,7 +260,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 452a61f782bf90248ab92367382439fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  despawnTime: 10
+  despawnTime: 5
+  startSpeedBoost: 10
+  decelerationLerp: 0.5
 --- !u!212 &212794495238141648
 SpriteRenderer:
   m_ObjectHideFlags: 1

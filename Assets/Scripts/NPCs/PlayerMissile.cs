@@ -43,14 +43,25 @@ public class PlayerMissile : NetworkBehaviour
             transform.position = transform.position + transform.right * myMovable.speed * Time.deltaTime;
         else if (myGround.collider != null && firstHitWithAGravityField)
         {
-            myDirection.counterClockwise = myDirection.clockwise = myDirection.jump = false;
             Vector2 counterClockWiseDirection = new Vector3(-myGround.normal.y, myGround.normal.x);
             Vector2 clockwiseDirection = new Vector3(myGround.normal.y, -myGround.normal.x);
 
-            if (Vector2.Dot(transform.right, counterClockWiseDirection) > Vector2.Dot(transform.right, clockwiseDirection))
+            float dotCounterclockwise = Vector2.Dot(transform.right, counterClockWiseDirection);
+            float dotClockwise = Vector2.Dot(transform.right, clockwiseDirection);
+
+            //If in air, checks for mor coherent angle rotation around planet
+            if (dotCounterclockwise > dotClockwise)
+            {
+                myDirection.counterClockwise = myDirection.clockwise = myDirection.jump = false;
                 myDirection.counterClockwise = true;
-            else
+            }
+            else if (dotCounterclockwise < dotClockwise)
+            {
+                myDirection.counterClockwise = myDirection.clockwise = myDirection.jump = false;
                 myDirection.clockwise = true;
+            }
+            //NB! If the dot is exactly the same, keep the original direction set by the player
+
             firstHitWithAGravityField = false;
         }
 
