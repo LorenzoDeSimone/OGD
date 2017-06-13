@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4857344821854566}
   m_Layer: 8
   m_Name: SpawnPosition (2)
-  m_TagString: SpawnPoint
+  m_TagString: SpawnPointCoin
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -36,7 +36,7 @@ GameObject:
   - component: {fileID: 4349154233922390}
   m_Layer: 8
   m_Name: SpawnPosition (1)
-  m_TagString: SpawnPoint
+  m_TagString: SpawnPointCoin
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -69,7 +69,7 @@ GameObject:
   - component: {fileID: 4270554455315980}
   m_Layer: 8
   m_Name: SpawnPosition
-  m_TagString: SpawnPoint
+  m_TagString: SpawnPointMissile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -140,7 +140,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1445355496078138}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -8, y: 1.6600001, z: 0}
+  m_LocalPosition: {x: 8, y: -6.34, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4210200359453520}
@@ -205,6 +205,7 @@ MonoBehaviour:
   missilePrefab: {fileID: 1583727756323638, guid: 0b583c29d3329a4408a172d0fd55dae9,
     type: 2}
   countdown: {fileID: 1233439009769682, guid: b9b6d1c20d2f20942a717f507f110682, type: 2}
+  spawnNpc: 1
   minCountdown: 10
   maxCountdown: 20
 --- !u!114 &114430095139713686

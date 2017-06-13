@@ -220,7 +220,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_TransformSyncMode: 2
-  m_SendInterval: 0.06666667
+  m_SendInterval: 0.033333335
   m_SyncRotationAxis: 3
   m_RotationSyncCompression: 0
   m_SyncSpin: 0
@@ -228,7 +228,7 @@ MonoBehaviour:
   m_VelocityThreshold: 0
   m_SnapThreshold: 2
   m_InterpolateRotation: 1
-  m_InterpolateMovement: 0.6
+  m_InterpolateMovement: 0.8
 --- !u!114 &114336541416094412
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -270,6 +270,7 @@ MonoBehaviour:
   EdgeCheckMultiplier: 1.01
   jumpControlStopWindow: 0.2
   useUnityPhisics: 1
+  hit: 0
   thisAgentCanJump: 1
   thisAgentHasGravity: 1
 --- !u!114 &114504489635193244
@@ -297,8 +298,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dresser: {fileID: 11400000, guid: 08ada4db82981c14d940c31bbdcb7ebd, type: 2}
-  minDroppedCoinSpeed: 10
-  maxDroppedCoinSpeed: 20
+  disabledControlsTimeWindow: 0.5
   playerId: 0
   paintsThePlayer: 0
 --- !u!114 &114591764407061358

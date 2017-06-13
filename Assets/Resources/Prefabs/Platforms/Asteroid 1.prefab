@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4019828908126178}
   m_Layer: 8
   m_Name: SpawnPosition (1)
-  m_TagString: SpawnPoint
+  m_TagString: SpawnPointCoin
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -36,7 +36,7 @@ GameObject:
   - component: {fileID: 4428020682757742}
   m_Layer: 8
   m_Name: SpawnPosition (2)
-  m_TagString: SpawnPoint
+  m_TagString: SpawnPointCoin
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -52,7 +52,6 @@ GameObject:
   - component: {fileID: 212133297007446244}
   - component: {fileID: 114913177026308012}
   - component: {fileID: 70673482670294068}
-  - component: {fileID: 114643578705859728}
   m_Layer: 8
   m_Name: Asteroid 1
   m_TagString: Platform
@@ -70,7 +69,7 @@ GameObject:
   - component: {fileID: 4557912690886834}
   m_Layer: 8
   m_Name: SpawnPosition (3)
-  m_TagString: SpawnPoint
+  m_TagString: SpawnPointCoin
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -102,7 +101,7 @@ GameObject:
   - component: {fileID: 4183443635962580}
   m_Layer: 8
   m_Name: SpawnPosition
-  m_TagString: SpawnPoint
+  m_TagString: SpawnPointCoin
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -183,7 +182,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1787905787674056}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -10.34, z: 0}
+  m_LocalPosition: {x: 0, y: 5.65, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4317128062491944}
@@ -204,7 +203,7 @@ CapsuleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 2.5, y: 2.5}
-  m_Direction: 0
+  m_Direction: 1
 --- !u!114 &114249400485247036
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -237,17 +236,6 @@ MonoBehaviour:
     i15: 76
   m_ServerOnly: 1
   m_LocalPlayerAuthority: 0
---- !u!114 &114643578705859728
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1787905787674056}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2d46ae1f04ca084bb0110f5177314a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114661331437017846
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -261,8 +249,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collectablePrefab: {fileID: 1583727756323638, guid: 21536bbcfca5c2c4a9ea58c33494e4f4,
     type: 2}
-  missilePrefab: {fileID: 0}
+  missilePrefab: {fileID: 1583727756323638, guid: 0b583c29d3329a4408a172d0fd55dae9,
+    type: 2}
   countdown: {fileID: 1233439009769682, guid: b9b6d1c20d2f20942a717f507f110682, type: 2}
+  spawnNpc: 1
   minCountdown: 10
   maxCountdown: 20
 --- !u!114 &114913177026308012

@@ -9,7 +9,8 @@ namespace Assets.Scripts.Spawn_collectable
     {
         bool stop = false;
         bool onGround = false;
-        private Vector3 startPoint, airPoint, groundPoint;
+        [SyncVar]
+        public Vector3 startPoint, airPoint, groundPoint;
         public float uncollectableTimeWindow = 0.5f;
         private bool isCollectable = false;
         private float time=0f;
@@ -21,14 +22,16 @@ namespace Assets.Scripts.Spawn_collectable
             StartCoroutine(UncollectableTime(uncollectableTimeWindow));
         }
 
-        private void OnTriggerEnter2D(Collider2D coll)
+        private void OnTriggerStay2D(Collider2D coll)
         {
             PlayerDataHolder player = coll.gameObject.GetComponent<PlayerDataHolder>();
-            Platform platform = coll.gameObject.GetComponent<Platform>();
-
             if (isCollectable && player)// && coll.Equals(player.GetCharacterCapsuleCollider2D()))
                 CmdUpdateServerState(false, coll.gameObject.GetComponent<PlayerDataHolder>().playerId);
+        }
 
+        private void OnTriggerEnter2D(Collider2D coll)
+        {
+            Platform platform = coll.gameObject.GetComponent<Platform>();
             if (platform)
                 onGround = true;
         }

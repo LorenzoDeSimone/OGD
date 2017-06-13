@@ -2421,8 +2421,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loadingSpinner: {fileID: 230085974}
   loadingMessage: {fileID: 1382901246}
-  waitTime: 0.1
-  attempts: 5
+  waitTime: 0.3
+  attempts: 3
 --- !u!1 &1761448994
 GameObject:
   m_ObjectHideFlags: 0
@@ -3251,6 +3251,7 @@ MonoBehaviour:
   - {fileID: 1018893471065052, guid: d3820fe95dc002a47ab3b0f973f97f78, type: 2}
   - {fileID: 1957054407011920, guid: 160b3ad49e43c7c4d89dfd1490aa46e6, type: 2}
   - {fileID: 1583727756323638, guid: 0b583c29d3329a4408a172d0fd55dae9, type: 2}
+  - {fileID: 1809339051065658, guid: 1e89c5e3968aadc43bf2c8ff38cfa47b, type: 2}
   m_CustomConfig: 0
   m_MaxConnections: 4
   m_ConnectionConfig:
@@ -3361,7 +3362,7 @@ MonoBehaviour:
   m_BroadcastKey: 9741
   m_BroadcastVersion: 1
   m_BroadcastSubVersion: 1
-  m_BroadcastInterval: 100
+  m_BroadcastInterval: 1000
   m_UseNetworkManager: 1
   m_BroadcastData: is there anybody out there?
   m_ShowGUI: 0

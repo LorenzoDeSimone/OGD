@@ -12,7 +12,7 @@ namespace Assets.Scripts.Player
         public float speed = 1.0f;
         public float jumpPower = 100.0f;
         public float rotationSpeed = 5.0f;
-        public float EdgeCheckMultiplier = 1.1f;
+        public float edgeCheckMultiplier = 1.1f;
         public float jumpControlStopWindow = 0.2f;
 
         public bool useUnityPhisics = false;
@@ -30,6 +30,7 @@ namespace Assets.Scripts.Player
 
         private SpriteRenderer spriteRenderer;
         private bool controlsEnabled = true;
+
         public bool hit = false;
         public bool thisAgentCanJump = false;
         public bool thisAgentHasGravity = false;
@@ -160,7 +161,7 @@ namespace Assets.Scripts.Player
 
             //Casts a ray with the direction of the antinormal of the playne starting from the next predicted player position to see if there will be ground
             RaycastHit2D nextGroundCheck = Physics2D.Raycast(nextMovablePoint, movementPerpendicularDown,
-                                                               distanceToGround * EdgeCheckMultiplier,
+                                                               distanceToGround * edgeCheckMultiplier,
                                                                LayerMask.GetMask("Walkable"));
 
             Debug.DrawRay(myTransform.position, movementVersor, Color.magenta);
@@ -172,7 +173,7 @@ namespace Assets.Scripts.Player
                 ####<->N--|
                 ####
                 */
-                whereGroundShouldBe = nextMovablePoint + movementPerpendicularDown * distanceToGround * EdgeCheckMultiplier;
+                whereGroundShouldBe = nextMovablePoint + movementPerpendicularDown * distanceToGround * edgeCheckMultiplier;
                 platformEdge = Physics2D.Raycast(whereGroundShouldBe, BackRaycastDirection, Mathf.Infinity, LayerMask.GetMask("Walkable"));
                 if (platformEdge.collider != null && platformEdge.collider.gameObject.Equals(myGravityField.gameObject))
                 {

@@ -66,8 +66,6 @@ public class PointManager : MonoBehaviour
             go.GetComponent<Image>().sprite = newSprite;
         }
 
-        go.GetComponent<Image>().color = PlayerColor.GetColor(playerNetID);
-
         ofPlayersAndBars[playerNetID] = go.GetComponent<RectTransform>();
         ofPlayersAndPoints[playerNetID] = 0;
     }
