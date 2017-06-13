@@ -17,14 +17,13 @@ namespace Assets.Scripts.Networking
         void Start()
         {
             timer = Instantiate(timer);
+            timer.GetComponent<TimeManager>().SetEndTime(matchTime);
             NetworkServer.Spawn(timer);
             StartCoroutine(StartMatchCountDown());
         }
 
         private IEnumerator StartMatchCountDown()
         {
-            yield return new WaitForSecondsRealtime(1);
-            timer.GetComponent<TimeManager>().RpcSetEndTime(matchTime);
             yield return new WaitForSecondsRealtime(matchTime);
             EndMatch();
         }
