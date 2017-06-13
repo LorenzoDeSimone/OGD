@@ -7,7 +7,7 @@ using System.Collections;
 namespace Assets.Scripts.Player
 {
     [RequireComponent(typeof(Rigidbody2D))]
-    public class Movable : MonoBehaviour
+    public class Movable : NetworkBehaviour
     {
         public float speed = 1.0f;
         public float jumpPower = 100.0f;
