@@ -72,7 +72,6 @@ GameObject:
   - component: {fileID: 212823986057699118}
   - component: {fileID: 114381223607131814}
   - component: {fileID: 114507967478751558}
-  - component: {fileID: 114591764407061358}
   - component: {fileID: 114872215365196396}
   - component: {fileID: 114336541416094412}
   - component: {fileID: 114474970877057788}
@@ -310,20 +309,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dresser: {fileID: 11400000, guid: 08ada4db82981c14d940c31bbdcb7ebd, type: 2}
-  disabledControlsTimeWindow: 0.5
+  disabledControlsTimeWindow: 3
   playerId: 0
   paintsThePlayer: 0
---- !u!114 &114591764407061358
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1582415777413702}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2d46ae1f04ca084bb0110f5177314a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114659647149875356
 MonoBehaviour:
   m_ObjectHideFlags: 1
