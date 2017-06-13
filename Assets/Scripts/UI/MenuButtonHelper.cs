@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Networking;
+using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Assets.Scripts.UI
 {
@@ -6,6 +8,16 @@ namespace Assets.Scripts.UI
     {
         public BackButtonHelper backButtonHelper;
         public bool backButtonWillResetLobbyController = true;
+        public bool enableFastRestart = false;
+
+        internal override void Init()
+        {
+            if(enableFastRestart && !lobbyController.Online && lobbyController.GetFastStart())
+            {
+                lobbyController.SetFastStart(false);
+                TriggerHelper();
+            }
+        }
 
         public override void TriggerHelper()
         {

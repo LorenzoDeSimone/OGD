@@ -9,7 +9,8 @@ namespace Assets.Scripts.Networking
     {
         NetworkDiscovery networkExplorer;
 
-        public float waitTime = 0.3f;
+        public float waitTime = 0.1f;
+        [Header("Base connection attempts value, a random bias vill be added")]
         public int attempts = 5;
 
         protected override void InitMenu()
@@ -31,6 +32,7 @@ namespace Assets.Scripts.Networking
         {
             bool startdAsClient = false;
             bool startedAsServer = false;
+            bool restart = false;
 
             do
             {
@@ -41,7 +43,7 @@ namespace Assets.Scripts.Networking
                 yield return new WaitForSeconds(0.1f);
                 networkExplorer.StartAsClient();
 
-                for (int i = 0; i < attempts; i++)
+                for (int i = 0; i < GetRandomAttempts(); i++)
                 {
                     if (networkExplorer == null || networkExplorer.broadcastsReceived == null)
                     {
@@ -96,10 +98,24 @@ namespace Assets.Scripts.Networking
                         networkExplorer.Initialize();
                         yield return new WaitForSeconds(0.1f);
                         networkExplorer.StartAsServer();
+                        
+                        yield return new WaitForSeconds(waitTime* GetRandomAttempts());
+
+                        if (NetworkServer.connections.Count < 2)
+                        {
+                            networkExplorer.StopBroadcast();
+                            yield return new WaitForSeconds(0.1f);
+                            startedAsServer = false;
+                            lobbyController.SetFastStart(true);
+                            yield return new WaitForSeconds(0.1f);
+                            lobbyController.StopHost();
+                        }
                     }
                 }
+            
             }
-            while (!startdAsClient && !startedAsServer);
+            while ( (!startdAsClient && !startedAsServer) && !restart );
+            if(restart)
             Debug.LogWarning("Exiting with " + startdAsClient + " and " + startedAsServer);
         }
 
@@ -116,6 +132,11 @@ namespace Assets.Scripts.Networking
                 lobbyController.currentPlayMenu = this;
                 InitMenu();
             }
+        }
+
+        private int GetRandomAttempts()
+        {
+            return attempts + UnityEngine.Random.Range(-2, 2);
         }
     }
 }

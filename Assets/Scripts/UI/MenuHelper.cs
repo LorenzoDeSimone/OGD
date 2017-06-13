@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using Assets.Scripts.Networking;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 
 namespace Assets.Scripts.UI
 {
@@ -11,6 +12,7 @@ namespace Assets.Scripts.UI
     {
         public List<GameObject> toActivate;
         public List<GameObject> toDeactivate;
+        protected NetworkLobbyController lobbyController;
 
         private Button attachedButton;
 
@@ -18,6 +20,8 @@ namespace Assets.Scripts.UI
         {
             attachedButton = GetComponent<Button>();
             attachedButton.onClick.AddListener(TriggerHelper);
+            lobbyController = (NetworkLobbyController)NetworkManager.singleton;
+            Init();
         }
 
         public abstract void TriggerHelper();
@@ -29,5 +33,19 @@ namespace Assets.Scripts.UI
                 go.SetActive(setVal);
             }
         }
+
+        void OnEnable()
+        {
+            if(lobbyController == null)
+            {
+                lobbyController = (NetworkLobbyController)NetworkManager.singleton;
+                if(lobbyController)
+                {
+                    Init();
+                }
+            }
+        }
+
+        internal abstract void Init();
     }
 }

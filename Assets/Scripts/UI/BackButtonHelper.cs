@@ -9,12 +9,6 @@ namespace Assets.Scripts.UI
     class BackButtonHelper : MenuHelper
     {
         internal bool resetLobbyController = true;
-        NetworkLobbyController lobbyController;
-
-        void OnEnable()
-        {
-            lobbyController = (NetworkLobbyController)NetworkManager.singleton;
-        }
 
         public override void TriggerHelper()
         {
@@ -27,6 +21,10 @@ namespace Assets.Scripts.UI
             {
                 SetListsStates();
             }
+        }
+
+        internal override void Init()
+        {
         }
 
         private IEnumerator ResetLobbyWhenReady()

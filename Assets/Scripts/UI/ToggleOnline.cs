@@ -2,13 +2,19 @@
 {
     protected override void Init(float newValue)
     {
+        UpdateState(newValue);
     }
 
     protected override void OnValueChanged(float newValue)
     {
-        if((int)newValue == 0)
+        UpdateState(newValue);
+    }
+
+    private void UpdateState(float newValue)
+    {
+        if ((int)newValue == 0)
         {
-            lobbyController.Online = true; 
+            lobbyController.Online = true;
         }
         else
         {
