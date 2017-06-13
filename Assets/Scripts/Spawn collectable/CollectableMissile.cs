@@ -12,7 +12,7 @@ namespace Assets.Scripts.Spawn_collectable
             foreach (GameObject go in GameObject.FindGameObjectsWithTag("Player"))
             {
                 PlayerDataHolder pDH = go.GetComponent<PlayerDataHolder>();
-                if (pDH.playerId == id && !pDH.PlayerHaveMissile())
+                if (pDH!= null && pDH.playerId == id && !pDH.PlayerHaveMissile())
                 {
                     networkActiveState = b;
                     mySprite.enabled = b;

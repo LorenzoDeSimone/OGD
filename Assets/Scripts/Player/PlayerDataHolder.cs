@@ -71,7 +71,7 @@ namespace Assets.Scripts.Player
         public void OnHit()
         {
             CmdDecresePoints();
-            localPlayer.GetComponent<Movable>().hit = true;
+            GetComponent<Movable>().hit = true;
             StartCoroutine(StopPlayerMovement(disabledControlsTimeWindow));
             SyncNewPoints(playerPoints);
         }

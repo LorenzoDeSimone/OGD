@@ -22,14 +22,16 @@ namespace Assets.Scripts.Spawn_collectable
             StartCoroutine(UncollectableTime(uncollectableTimeWindow));
         }
 
-        private void OnTriggerEnter2D(Collider2D coll)
+        private void OnTriggerStay2D(Collider2D coll)
         {
             PlayerDataHolder player = coll.gameObject.GetComponent<PlayerDataHolder>();
-            Platform platform = coll.gameObject.GetComponent<Platform>();
-
             if (isCollectable && player)// && coll.Equals(player.GetCharacterCapsuleCollider2D()))
                 CmdUpdateServerState(false, coll.gameObject.GetComponent<PlayerDataHolder>().playerId);
+        }
 
+        private void OnTriggerEnter2D(Collider2D coll)
+        {
+            Platform platform = coll.gameObject.GetComponent<Platform>();
             if (platform)
                 onGround = true;
         }

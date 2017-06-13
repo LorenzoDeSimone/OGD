@@ -15,16 +15,27 @@ public class PlayerMissile : NetworkBehaviour
     private bool isDirectionOnGroundClockwise;
     public static int clockwise = 0, counterclockwise = 1;
 
+    public float startSpeedBoost = 2;
+    public float decelerationLerp = 0.5f;
+    private float endSpeed;
+
     private void Start()
     {
         myMovable = GetComponent<Movable>();
         myRadar = GetComponentInChildren<Radar>();
+        endSpeed   = myMovable.speed;
+        myMovable.speed += startSpeedBoost;
         StartCoroutine(DespawnCountdown(despawnTime));
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (myMovable.speed > endSpeed)
+        {
+            myMovable.speed = Mathf.Lerp(myMovable.speed, endSpeed, decelerationLerp);
+            Debug.LogWarning(myMovable.speed);
+        }
         RaycastHit2D myGround = myRadar.GetMyGround();
         //Debug.LogError("www");   
 
