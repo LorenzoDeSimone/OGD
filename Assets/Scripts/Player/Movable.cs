@@ -31,6 +31,7 @@ namespace Assets.Scripts.Player
         private SpriteRenderer spriteRenderer;
         private bool controlsEnabled = true;
 
+        [SyncVar]
         public bool hit = false;
         public bool thisAgentCanJump = false;
         public bool thisAgentHasGravity = false;

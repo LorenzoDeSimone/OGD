@@ -71,15 +71,21 @@ namespace Assets.Scripts.Player
         public void OnHit()
         {
             CmdDecresePoints();
-            GetComponent<Movable>().hit = true;
             StartCoroutine(StopPlayerMovement(disabledControlsTimeWindow));
             SyncNewPoints(playerPoints);
         }
         
         private IEnumerator StopPlayerMovement(float disabledControlsTimeWindow)
         {
+            CmdSyncHitBool(true);
             yield return new WaitForSecondsRealtime(disabledControlsTimeWindow);
-            localPlayer.GetComponent<Movable>().hit = false;
+            CmdSyncHitBool(false);
+        }
+
+        [Command]
+        private void CmdSyncHitBool(bool b)
+        {
+            GetComponent<Movable>().hit = b;
         }
 
         [Command]
