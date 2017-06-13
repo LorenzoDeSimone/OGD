@@ -309,7 +309,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dresser: {fileID: 11400000, guid: 08ada4db82981c14d940c31bbdcb7ebd, type: 2}
-  disabledControlsTimeWindow: 3
+  disabledControlsTimeWindow: 2
   playerId: 0
   paintsThePlayer: 0
 --- !u!114 &114659647149875356
