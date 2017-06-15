@@ -7,6 +7,7 @@ using Assets.Scripts.Player;
 public class PlayerMissileHitter : MonoBehaviour
 {
     public float despawnTime = 10f;
+    public GameObject explosion;
     PlayerMissile myMissile;
     Movable myMovable;
 
@@ -26,10 +27,14 @@ public class PlayerMissileHitter : MonoBehaviour
             {
                 player.OnHit();
                 //Debug.LogError("Player Hit! " + target.gameObject.name);
+                GameObject go = Instantiate(explosion, transform.position, transform.rotation);
+                NetworkServer.Spawn(go);
                 myMissile.DestroyMissile();
             }
             else if (otherPlayerMissile)
             {
+                GameObject go = Instantiate(explosion, transform.position, transform.rotation);
+                NetworkServer.Spawn(go);
                 myMissile.DestroyMissile();
             }
         }
