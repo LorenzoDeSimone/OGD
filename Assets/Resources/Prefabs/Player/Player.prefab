@@ -220,7 +220,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_TransformSyncMode: 2
-  m_SendInterval: 0.033333335
+  m_SendInterval: 0.071428575
   m_SyncRotationAxis: 3
   m_RotationSyncCompression: 0
   m_SyncSpin: 0
@@ -228,7 +228,7 @@ MonoBehaviour:
   m_VelocityThreshold: 0
   m_SnapThreshold: 2
   m_InterpolateRotation: 1
-  m_InterpolateMovement: 0.8
+  m_InterpolateMovement: 0.6
 --- !u!114 &114191074697070924
 MonoBehaviour:
   m_ObjectHideFlags: 1
