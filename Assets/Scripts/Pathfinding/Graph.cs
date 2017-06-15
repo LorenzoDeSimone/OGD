@@ -32,7 +32,7 @@ public class Graph {
 		return data [n].ToArray ();
 	}
 
-	public Node[] getNodes() {
+	public Node[] GetNodes() {
 		return data.Keys.ToArray ();
 	}
 

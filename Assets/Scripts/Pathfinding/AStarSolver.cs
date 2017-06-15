@@ -6,12 +6,12 @@ public delegate float HeuristicFunction(Node from, Node to);
 
 public class AStarSolver {
 
-	public static bool immediateStop = false;
+	public static bool immediateStop = true;
 	
 	// two set of nodes (1)
 
-	public static List<Node> visited;
-	public static List<Node> unvisited;
+	public List<Node> visited;
+	public List<Node> unvisited;
 
 	// data structures to extend nodes (2)
 
@@ -23,11 +23,11 @@ public class AStarSolver {
 
 	protected static Dictionary<Node, NodeExtension> status;
 
-	public static Edge[] Solve(Graph g, Node start, Node goal, HeuristicFunction heuristic) {
+	public Edge[] Solve(Graph g, Node start, Node goal, HeuristicFunction heuristic) {
 
 		// setup sets (1)
 		visited = new List<Node>();
-		unvisited = new List<Node> (g.getNodes ());
+		unvisited = new List<Node> (g.GetNodes ());
 
 		// set all node tentative distance (2)
 		status = new Dictionary<Node, NodeExtension> ();
@@ -80,7 +80,7 @@ public class AStarSolver {
 	}
 
 	// iterate on the unvisited set and get the lowest weight
-	protected static Node GetNextNode() {
+	protected Node GetNextNode() {
 		Node candidate = null;
 		float cDistance = float.MaxValue;
 		foreach (Node n in unvisited) {
@@ -96,7 +96,7 @@ public class AStarSolver {
 	}
 
 	// chek if the goal has been reached in an optimal way
-	protected static bool CheckSearchComplete(Node goal, List<Node> nl) {
+	protected bool CheckSearchComplete(Node goal, List<Node> nl) {
 		// check if we reached the goal
 		if (status [goal].distance == float.MaxValue) return false;
 		// check if the first hit is ok 

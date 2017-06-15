@@ -19,7 +19,7 @@ public class DijkstraStepSolver : DijkstraSolver {
 
 		// setup sets (1)
 		visited = new List<Node>();
-		unvisited = new List<Node> (g.getNodes ());
+		unvisited = new List<Node> (g.GetNodes ());
 
 		// set all node tentative distance (2)
 		status = new Dictionary<Node, NodeExtension> ();

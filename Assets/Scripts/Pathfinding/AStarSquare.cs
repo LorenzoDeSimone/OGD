@@ -8,33 +8,6 @@ public class AStarSquare : DijkstraSquare {
 	public bool stopAtFirstHit = false;
 	public Material visitedMaterial = null;
 
-	void Start () {
-		if (sceneObject != null) {
-
-			// create a x * y matrix of nodes (and scene objects)
-			matrix = CreateGrid(sceneObject, x, y, gap);
-
-			// create a graph and put random edges inside
-			g = new Graph();
-			CreateLabyrinth(g, matrix, edgeProbability);
-
-			// ask A* to solve the problem
-			AStarSolver.immediateStop = stopAtFirstHit;
-			Edge[] path = AStarSolver.Solve(g, matrix[0, 0], matrix[x - 1, y - 1], EuclideanEstimator);
-
-			// Outline visited nodes
-			OutlineSet(AStarSolver.visited, visitedMaterial);
-
-			// check if there is a solution
-			if (path.Length == 0) {
-				Debug.Log ("No solution");
-			} else {
-				// if yes, outline it
-				OutlinePath(path, trackMaterial);
-			}
-		}
-	}
-
 	protected void OutlineSet(List<Node> set, Material m) {
 		if (m == null) return;
 		foreach (Node n in set) {
@@ -42,7 +15,7 @@ public class AStarSquare : DijkstraSquare {
 		}
 	}
 
-	protected float EuclideanEstimator(Node from, Node to) {
+	protected static float EuclideanEstimator(Node from, Node to) {
 		return Vector3.Distance(from.sceneObject.transform.position,to.sceneObject.transform.position);
 	}
 

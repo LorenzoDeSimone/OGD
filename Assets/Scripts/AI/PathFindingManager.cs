@@ -5,8 +5,8 @@ using UnityEngine.Networking;
 
 public class PathFindingManager : NetworkBehaviour {
 
-    public int maxDistanceAdjacencies = 10;
-    private Graph graph;
+    public static int maxDistanceAdjacencies = 10;
+    private static Graph graph;
 
     void Start ()
     {
@@ -17,19 +17,23 @@ public class PathFindingManager : NetworkBehaviour {
         connectPlatform();
     }
 
-    private void connectPlatform()
+    public static Graph GetGraph()
+    {
+        return graph;
+    }
+
+    private static void connectPlatform()
     {
         float distance;
         for (int i = 0; i < graph.getNodesLength() - 1; i++)
             for (int j = i + 1; j < graph.getNodesLength(); j++)
             {
-                distance = graph.getNodes()[i].sceneObject.GetComponent<Collider2D>().Distance(graph.getNodes()[j].sceneObject.GetComponent<Collider2D>()).distance;
+                distance = graph.GetNodes()[i].sceneObject.GetComponent<Collider2D>().Distance(graph.GetNodes()[j].sceneObject.GetComponent<Collider2D>()).distance;
                 if (distance < maxDistanceAdjacencies)
                 {
-                    Debug.DrawLine(graph.getNodes()[i].sceneObject.transform.position, graph.getNodes()[j].sceneObject.transform.position, Color.green);
-                    graph.AddEdge(new Edge(graph.getNodes()[i], graph.getNodes()[j], 1));
+                    //Debug.DrawLine(graph.getNodes()[i].sceneObject.transform.position, graph.getNodes()[j].sceneObject.transform.position, Color.green);
+                    graph.AddEdge(new Edge(graph.GetNodes()[i], graph.GetNodes()[j], 1));
                 }
             }
-        //Debug.LogError("ciao");
     }
 }
