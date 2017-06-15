@@ -36,4 +36,8 @@ public class Graph {
 		return data.Keys.ToArray ();
 	}
 
+    public int getNodesLength()
+    {
+        return data.Keys.Count;
+    }
 }
