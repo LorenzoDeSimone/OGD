@@ -27,7 +27,7 @@ public class PlayerMissileHitter : MonoBehaviour
             {
                 player.OnHit();
                 //Debug.LogError("Player Hit! " + target.gameObject.name);
-                GameObject go = Instantiate(explosion, transform.position, transform.rotation);
+                GameObject go = Instantiate(explosion, player.transform.position, transform.rotation);
                 NetworkServer.Spawn(go);
                 myMissile.DestroyMissile();
             }
