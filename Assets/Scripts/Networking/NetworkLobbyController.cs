@@ -30,6 +30,7 @@ namespace Assets.Scripts.Networking
         bool online = true;
         NetworkDiscovery networkExplorer;
         bool fastRestart = false;
+        bool lanFixedMode = true;
 
         private void Start()
         {

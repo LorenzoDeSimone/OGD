@@ -5,13 +5,18 @@ using UnityEngine.Networking;
 
 namespace Assets.Scripts.Networking
 {
-    class LanPlayMenu : PlayMenu
+    public class LanPlayMenu : PlayMenu
     {
         NetworkDiscovery networkExplorer;
 
         public float waitTime = 0.1f;
         [Header("Base connection attempts value, a random bias vill be added")]
         public int attempts = 5;
+        public bool fixedRoles = true;
+        public bool isHostingMatch = false;
+        bool startdAsClient = false;
+        bool startedAsServer = false;
+        bool restart = false;
 
         protected override void InitMenu()
         {
@@ -24,82 +29,41 @@ namespace Assets.Scripts.Networking
         protected override void TryJoinMatch()
         {
             lobbyController.readyToReset = false;
-            StartCoroutine(SearchMatch());
+            if (!fixedRoles)
+            {
+                StartCoroutine(SearchMatch());
+            }
+            else
+            {
+                if (isHostingMatch)
+                {
+                    StartCoroutine(RunServer());
+                }
+                else
+                {
+                    StartCoroutine(RunClient());
+                }
+            }
         }
 
 
         protected override IEnumerator SearchMatch()
         {
-            bool startdAsClient = false;
-            bool startedAsServer = false;
-            bool restart = false;
-
             do
             {
                 Debug.LogWarning("Searching");
-                SafeStopBroadcast();
-                yield return new WaitForSeconds(0.1f);
-                networkExplorer.Initialize();
-                yield return new WaitForSeconds(0.1f);
-                networkExplorer.StartAsClient();
+                startedAsServer = false;
+                startdAsClient = false;
 
-                for (int i = 0; i < GetRandomAttempts(); i++)
-                {
-                    if (networkExplorer == null || networkExplorer.broadcastsReceived == null)
-                    {
-                        continue;
-                    }
-
-                    if (networkExplorer.broadcastsReceived.Count > 0)
-                    {
-                        IEnumerator bss = networkExplorer.broadcastsReceived.Values.GetEnumerator();
-                        bss.MoveNext();
-                        lobbyController.networkAddress = ((NetworkBroadcastResult)bss.Current).serverAddress;
-                        yield return new WaitForSeconds(0.1f);
-
-                        SafeStopBroadcast();
-
-                        try
-                        {
-                            lobbyController.StartClient();
-                        }
-                        catch (Exception e)
-                        {
-                            Debug.LogWarning(e.Message);
-                            continue;
-                        }
-
-                        startdAsClient = true;
-                    }
-                    yield return new WaitForSeconds(waitTime);
-                }
+                yield return RunClient();
 
                 if (!startdAsClient)
                 {
-                    SafeStopBroadcast();
-                    yield return new WaitForSeconds(0.1f);
-
-                    try
-                    {
-                        lobbyController.StartHost();
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.LogWarning(e.Message);
-                        continue;
-                    }
-                    finally
-                    {
-                        startedAsServer = true;
-                    }
+                    yield return RunServer();
 
                     if (startedAsServer)
                     {
-                        networkExplorer.Initialize();
-                        yield return new WaitForSeconds(0.1f);
-                        networkExplorer.StartAsServer();
-                        
-                        yield return new WaitForSeconds(waitTime* GetRandomAttempts());
+                        yield return new WaitForSeconds(waitTime * GetRandomAttempts());
 
                         if (NetworkServer.connections.Count < 2)
                         {
@@ -112,11 +76,76 @@ namespace Assets.Scripts.Networking
                         }
                     }
                 }
-            
+
             }
-            while ( (!startdAsClient && !startedAsServer) && !restart );
-            if(restart)
+            while ((!startdAsClient && !startedAsServer) && !restart);
+
             Debug.LogWarning("Exiting with " + startdAsClient + " and " + startedAsServer);
+        }
+
+        private IEnumerator RunServer()
+        {
+            SafeStopBroadcast();
+            yield return new WaitForSeconds(0.1f);
+
+            try
+            {
+                lobbyController.StartHost();
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning(e.Message);
+            }
+            finally
+            {
+                startedAsServer = true;
+            }
+
+            if (startedAsServer)
+            {
+                networkExplorer.Initialize();
+                yield return new WaitForSeconds(0.1f);
+                networkExplorer.StartAsServer();
+            }
+        }
+
+        private IEnumerator RunClient()
+        {
+
+            SafeStopBroadcast();
+            yield return new WaitForSeconds(0.1f);
+            networkExplorer.Initialize();
+            yield return new WaitForSeconds(0.1f);
+            networkExplorer.StartAsClient();
+
+            for (int i = 0; i < GetRandomAttempts(); i++)
+            {
+                if (networkExplorer == null || networkExplorer.broadcastsReceived == null)
+                {
+                    continue;
+                }
+                if (networkExplorer.broadcastsReceived.Count > 0)
+                {
+                    IEnumerator bss = networkExplorer.broadcastsReceived.Values.GetEnumerator();
+                    bss.MoveNext();
+                    lobbyController.networkAddress = ((NetworkBroadcastResult)bss.Current).serverAddress;
+                    yield return new WaitForSeconds(0.1f);
+
+                    SafeStopBroadcast();
+
+                    try
+                    {
+                        lobbyController.StartClient();
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogWarning(e.Message);
+                    }
+
+                    startdAsClient = true;
+                }
+                yield return new WaitForSeconds(waitTime);
+            }
         }
 
         private void SafeStopBroadcast()
