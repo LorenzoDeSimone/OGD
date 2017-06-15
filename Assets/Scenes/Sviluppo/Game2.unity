@@ -1997,6 +1997,10 @@ Prefab:
       propertyPath: endGO
       value: 
       objectReference: {fileID: 551475486}
+    - target: {fileID: 1809339051065658, guid: 1e89c5e3968aadc43bf2c8ff38cfa47b, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1e89c5e3968aadc43bf2c8ff38cfa47b, type: 2}
   m_IsPrefabParent: 0
