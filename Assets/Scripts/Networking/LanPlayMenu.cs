@@ -41,7 +41,7 @@ namespace Assets.Scripts.Networking
                 }
                 else
                 {
-                    StartCoroutine(RunClient());
+                    StartCoroutine(LoopRunClient());
                 }
             }
         }
@@ -111,7 +111,6 @@ namespace Assets.Scripts.Networking
 
         private IEnumerator RunClient()
         {
-
             SafeStopBroadcast();
             yield return new WaitForSeconds(0.1f);
             networkExplorer.Initialize();
@@ -124,28 +123,57 @@ namespace Assets.Scripts.Networking
                 {
                     continue;
                 }
-                if (networkExplorer.broadcastsReceived.Count > 0)
+
+                InnerClientLoop();
+            }
+        }
+
+        private IEnumerator LoopRunClient()
+        {
+            SafeStopBroadcast();
+            yield return new WaitForSeconds(0.1f);
+            networkExplorer.Initialize();
+            yield return new WaitForSeconds(0.1f);
+            networkExplorer.StartAsClient();
+
+            do
+            {
+                if (networkExplorer == null || networkExplorer.broadcastsReceived == null)
                 {
-                    IEnumerator bss = networkExplorer.broadcastsReceived.Values.GetEnumerator();
-                    bss.MoveNext();
-                    lobbyController.networkAddress = ((NetworkBroadcastResult)bss.Current).serverAddress;
-                    yield return new WaitForSeconds(0.1f);
+                    continue;
+                }
 
-                    SafeStopBroadcast();
+                yield return InnerClientLoop();
+            }
+            while (!startdAsClient);
+        }
 
-                    try
-                    {
-                        lobbyController.StartClient();
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.LogWarning(e.Message);
-                    }
+        private IEnumerator InnerClientLoop()
+        {
+            if (networkExplorer.broadcastsReceived.Count > 0)
+            {
+                IEnumerator bss = networkExplorer.broadcastsReceived.Values.GetEnumerator();
+                bss.MoveNext();
 
+                lobbyController.networkAddress = ((NetworkBroadcastResult)bss.Current).serverAddress;
+                yield return new WaitForSeconds(0.1f);
+
+                SafeStopBroadcast();
+
+                try
+                {
+                    lobbyController.StartClient();
+                }
+                catch (Exception e)
+                {
+                    Debug.LogWarning(e.Message);
+                }
+                finally
+                {
                     startdAsClient = true;
                 }
-                yield return new WaitForSeconds(waitTime);
             }
+            yield return new WaitForSeconds(waitTime);
         }
 
         private void SafeStopBroadcast()

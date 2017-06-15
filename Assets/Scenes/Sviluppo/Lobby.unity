@@ -3691,7 +3691,7 @@ MonoBehaviour:
   m_BroadcastInterval: 100
   m_UseNetworkManager: 1
   m_BroadcastData: is there anybody out there?
-  m_ShowGUI: 0
+  m_ShowGUI: 1
   m_OffsetX: 0
   m_OffsetY: 100
 --- !u!1 &2135801295

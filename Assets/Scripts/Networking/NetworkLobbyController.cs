@@ -109,7 +109,7 @@ namespace Assets.Scripts.Networking
                 Debug.LogWarning("Player dsconnection error " + e.Message);
             }
         }
-
+        
         int i = 0;
         public override bool OnLobbyServerSceneLoadedForPlayer(GameObject lobbyPlayer, GameObject gamePlayer)
         {
