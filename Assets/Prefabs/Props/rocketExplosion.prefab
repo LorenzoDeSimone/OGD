@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 21200000}
   - component: {fileID: 9500000}
   - component: {fileID: 8200000}
-  - component: {fileID: 11400002}
+  - component: {fileID: 114276417645511864}
+  - component: {fileID: 114044276403393028}
   m_Layer: 0
   m_Name: rocketExplosion
   m_TagString: Untagged
@@ -129,21 +130,6 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &11400002
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00f5e5a47c1508049b9a7edff5307220, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  destroyOnAwake: 0
-  awakeDestroyDelay: 0
-  findChild: 0
-  namedChild: 
 --- !u!212 &21200000
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -174,7 +160,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1024582385
-  m_SortingLayer: 4
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300006, guid: ec8e34c97ef2ee34395623fb7e4b0054, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -195,3 +181,46 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 100000}
   m_IsPrefabParent: 1
+--- !u!114 &114044276403393028
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00f5e5a47c1508049b9a7edff5307220, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114276417645511864
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 66
+    i1: 64
+    i2: 75
+    i3: 247
+    i4: 209
+    i5: 76
+    i6: 52
+    i7: 47
+    i8: 105
+    i9: 105
+    i10: 12
+    i11: 153
+    i12: 97
+    i13: 167
+    i14: 83
+    i15: 13
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
