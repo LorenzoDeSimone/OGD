@@ -174,6 +174,7 @@ namespace Assets.Scripts.Networking
             {
                 StopMatchMaker();
             }
+
             StopClient();
             StopHost();
 
