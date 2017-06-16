@@ -14,6 +14,10 @@ namespace Assets.Scripts.Networking
         void Start()
         {
             toggle = GetComponent<Toggle>();
+
+#if UNITY_STANDALONE_WIN
+            toggle.isOn = true;
+#endif
             UpdateServerMode();
         }
 
