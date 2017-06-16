@@ -13,18 +13,16 @@ public class PatrollerBot : NetworkBehaviour
     Movable.CharacterInput input;
     AStarStepSolver currentAStarStepSolver;
     private GameObject planetToReach;
+    private bool isPathfindingCoroutineRunning;
 
     void Start()
     {
         myMovable = GetComponent<Movable>();
         myRadar = GetComponentInChildren<Radar>();
         input = new Movable.CharacterInput();
-        input.counterClockwise = input.clockwise = input.jump = false;
-        planetToReach = null;
-        if (Random.Range(0, 2) == 0)
-            input.clockwise = true;
-        else
-            input.counterClockwise = true;
+        RandomizeDirection();
+        planetToReach = myRadar.GetMyGround().collider.gameObject;
+        isPathfindingCoroutineRunning = false;
     }
 
     private Node GetNodeFromGameObject(GameObject go)
@@ -37,36 +35,51 @@ public class PatrollerBot : NetworkBehaviour
         return null;
     }
 
+    private void RandomizeDirection()
+    {
+        input.counterClockwise = input.clockwise = input.jump = false;
+        if (Random.Range(0, 2) == 0)
+            input.clockwise = true;
+        else
+            input.counterClockwise = true;
+    }
+
     void Update()
     {
         input.jump = false;
 
-        if (planetToReach == null && myMovable.IsGrounded())
+        if (!myMovable.IsGrounded())
+            return;
+
+        //The agent reached its target planet
+        if(GameObject.ReferenceEquals(planetToReach, myRadar.GetMyGround().collider.gameObject))
         {
-            Graph graph = PathFindingManager.GetGraph();
-            Radar targetPlayerRadar = PlayerDataHolder.GetLocalPlayer().GetComponentInChildren<Radar>();
-
-            Node start = GetNodeFromGameObject(myRadar.GetMyGround().collider.gameObject);
-            Node end = GetNodeFromGameObject(targetPlayerRadar.GetMyGround().collider.gameObject);
-
-            if (!start.sceneObject.Equals(end.sceneObject))
+            if(!isPathfindingCoroutineRunning)
             {
-                currentAStarStepSolver = new AStarStepSolver(start, end);
-                planetToReach = null;
-                StartCoroutine(CalculatePath());
+                Graph graph = PathFindingManager.GetGraph();
+                Radar targetPlayerRadar = PlayerDataHolder.GetLocalPlayer().GetComponentInChildren<Radar>();
+                Node start = GetNodeFromGameObject(myRadar.GetMyGround().collider.gameObject);
+                Node end = GetNodeFromGameObject(targetPlayerRadar.GetMyGround().collider.gameObject);
+                if (!GameObject.ReferenceEquals(start.sceneObject, end.sceneObject))
+                {
+                    currentAStarStepSolver = new AStarStepSolver(start, end);
+                    isPathfindingCoroutineRunning = true;
+                    RandomizeDirection();
+                    StartCoroutine(CalculatePath());
+                }
             }
         }
-        else if (planetToReach != null && myMovable.IsGrounded())
+        else
         {
             RaycastHit2D planetToReachCheck = Physics2D.Raycast(transform.position, transform.up,
-                                                                Mathf.Infinity,
+                                                                PathFindingManager.maxDistanceAdjacencies,
                                                                 LayerMask.GetMask("Walkable"));
 
-            if (planetToReachCheck.collider != null && planetToReachCheck.collider.gameObject.Equals(planetToReach))
-            {
+            //Debug.DrawRay(transform.position, transform.up * PathFindingManager.maxDistanceAdjacencies, Color.green);
+
+            if (planetToReachCheck.collider != null &&
+                        GameObject.ReferenceEquals(planetToReach, planetToReachCheck.collider.gameObject))
                 input.jump = true;
-                planetToReach = null;
-            }
         }
 
         myMovable.Move(input);
@@ -119,7 +132,7 @@ public class PatrollerBot : NetworkBehaviour
             DrawPath(path);
             Debug.LogError("Path!");
         }*/
-
-        planetToReach = path[0].to.sceneObject;
+        planetToReach = path[path.Length-1].to.sceneObject;
+        isPathfindingCoroutineRunning = false;
     }
 }
