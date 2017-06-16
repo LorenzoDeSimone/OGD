@@ -7,16 +7,11 @@ namespace Assets.Scripts.Networking
 {
     public class LanPlayMenu : PlayMenu
     {
-        NetworkDiscovery networkExplorer;
-
-        public float waitTime = 0.1f;
-        [Header("Base connection attempts value, a random bias vill be added")]
-        public int attempts = 5;
-        public bool fixedRoles = true;
         public bool isHostingMatch = false;
+
+        NetworkDiscovery networkExplorer;
         bool startdAsClient = false;
         bool startedAsServer = false;
-        bool restart = false;
 
         protected override void InitMenu()
         {
@@ -29,72 +24,27 @@ namespace Assets.Scripts.Networking
         protected override void TryJoinMatch()
         {
             lobbyController.readyToReset = false;
-            if (!fixedRoles)
+
+            if (isHostingMatch)
             {
-                StartCoroutine(SearchMatch());
+                StartCoroutine(RunServer());
             }
             else
             {
-                if (isHostingMatch)
-                {
-                    StartCoroutine(RunServer());
-                }
-                else
-                {
-                    StartCoroutine(LoopRunClient());
-                }
+                StartCoroutine(RunClient());
             }
-        }
 
-
-        protected override IEnumerator SearchMatch()
-        {
-            do
-            {
-                Debug.LogWarning("Searching");
-                startedAsServer = false;
-                startdAsClient = false;
-
-                yield return RunClient();
-
-                if (!startdAsClient)
-                {
-                    yield return RunServer();
-
-                    if (startedAsServer)
-                    {
-                        yield return new WaitForSeconds(waitTime * GetRandomAttempts());
-
-                        if (NetworkServer.connections.Count < 2)
-                        {
-                            networkExplorer.StopBroadcast();
-                            yield return new WaitForSeconds(0.1f);
-                            startedAsServer = false;
-                            lobbyController.SetFastStart(true);
-                            yield return new WaitForSeconds(0.1f);
-                            lobbyController.StopHost();
-                        }
-                    }
-                }
-
-            }
-            while ((!startdAsClient && !startedAsServer) && !restart);
-
-            Debug.LogWarning("Exiting with " + startdAsClient + " and " + startedAsServer);
         }
 
         private IEnumerator RunServer()
         {
-            SafeStopBroadcast();
-            yield return new WaitForSeconds(0.1f);
-
             try
             {
                 lobbyController.StartHost();
             }
             catch (Exception e)
             {
-                Debug.LogWarning(e.Message);
+                Debug.LogError(e.Message);
             }
             finally
             {
@@ -111,27 +61,6 @@ namespace Assets.Scripts.Networking
 
         private IEnumerator RunClient()
         {
-            SafeStopBroadcast();
-            yield return new WaitForSeconds(0.1f);
-            networkExplorer.Initialize();
-            yield return new WaitForSeconds(0.1f);
-            networkExplorer.StartAsClient();
-
-            for (int i = 0; i < GetRandomAttempts(); i++)
-            {
-                if (networkExplorer == null || networkExplorer.broadcastsReceived == null)
-                {
-                    continue;
-                }
-
-                InnerClientLoop();
-            }
-        }
-
-        private IEnumerator LoopRunClient()
-        {
-            SafeStopBroadcast();
-            yield return new WaitForSeconds(0.1f);
             networkExplorer.Initialize();
             yield return new WaitForSeconds(0.1f);
             networkExplorer.StartAsClient();
@@ -143,37 +72,35 @@ namespace Assets.Scripts.Networking
                     continue;
                 }
 
-                yield return InnerClientLoop();
+                if (networkExplorer.broadcastsReceived.Count > 0)
+                {
+
+                    foreach( NetworkBroadcastResult nbs in networkExplorer.broadcastsReceived.Values)
+                    {
+                        lobbyController.networkAddress = nbs.serverAddress;
+
+                        try
+                        {
+                            lobbyController.StartClient();
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.LogError(e.Message);
+                        }
+                        finally
+                        {
+                            startdAsClient = true;
+                            SafeStopBroadcast();
+                        }
+
+                        if (startdAsClient)
+                            break;
+                    }
+
+                }
+                yield return new WaitForSeconds(0.1f);
             }
             while (!startdAsClient);
-        }
-
-        private IEnumerator InnerClientLoop()
-        {
-            if (networkExplorer.broadcastsReceived.Count > 0)
-            {
-                IEnumerator bss = networkExplorer.broadcastsReceived.Values.GetEnumerator();
-                bss.MoveNext();
-
-                lobbyController.networkAddress = ((NetworkBroadcastResult)bss.Current).serverAddress;
-                yield return new WaitForSeconds(0.1f);
-
-                SafeStopBroadcast();
-
-                try
-                {
-                    lobbyController.StartClient();
-                }
-                catch (Exception e)
-                {
-                    Debug.LogWarning(e.Message);
-                }
-                finally
-                {
-                    startdAsClient = true;
-                }
-            }
-            yield return new WaitForSeconds(waitTime);
         }
 
         private void SafeStopBroadcast()
@@ -189,11 +116,6 @@ namespace Assets.Scripts.Networking
                 lobbyController.currentPlayMenu = this;
                 InitMenu();
             }
-        }
-
-        private int GetRandomAttempts()
-        {
-            return attempts + UnityEngine.Random.Range(-2, 2);
         }
     }
 }

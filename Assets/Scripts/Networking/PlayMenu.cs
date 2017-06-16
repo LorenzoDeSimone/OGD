@@ -18,7 +18,6 @@ namespace Assets.Scripts.Networking
 
         protected abstract void InitMenu();
         protected abstract void TryInitMenu();
-        protected abstract IEnumerator SearchMatch();
         protected abstract void TryJoinMatch();
 
         void OnEnable()

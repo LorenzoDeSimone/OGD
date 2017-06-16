@@ -12,11 +12,7 @@ namespace Assets.Scripts.UI
 
         internal override void Init()
         {
-            if(enableFastRestart && !lobbyController.Online && lobbyController.GetFastStart())
-            {
-                lobbyController.SetFastStart(false);
-                TriggerHelper();
-            }
+            //nothing to init here
         }
 
         public override void TriggerHelper()

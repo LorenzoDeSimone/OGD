@@ -21,6 +21,7 @@ namespace Assets.Scripts.Spawn_collectable
 
         protected SpriteRenderer mySprite;
         protected Collider2D myCollider;
+        protected AudioSource audioSource;
 
         private void Start()
         {
@@ -31,6 +32,7 @@ namespace Assets.Scripts.Spawn_collectable
         {
             mySprite = GetComponent<SpriteRenderer>();
             myCollider = GetComponent<Collider2D>();
+            audioSource = GetComponent<AudioSource>();
         }
 
         private void OnTriggerEnter2D(Collider2D coll)
@@ -68,6 +70,7 @@ namespace Assets.Scripts.Spawn_collectable
                     break;
                 }
             }
+            PlaySound();
         }
 
         public bool GetNetworkActiveState()
@@ -81,6 +84,11 @@ namespace Assets.Scripts.Spawn_collectable
             mySprite.enabled = b;
             myCollider.enabled = b;
             transform.position = v;
+        }
+        
+        protected void PlaySound()
+        {
+            audioSource.Play();
         }
 
         private void AddPointsToPlayer(PlayerDataHolder playerDataHolder)

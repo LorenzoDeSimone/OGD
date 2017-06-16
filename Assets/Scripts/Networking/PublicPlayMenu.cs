@@ -23,7 +23,7 @@ namespace Assets.Scripts.Networking
             StartCoroutine(SearchMatch());
         }
 
-        protected override IEnumerator SearchMatch()
+        private IEnumerator SearchMatch()
         {
             while (lobbyController.IsSearchingPublicMatch())
             {

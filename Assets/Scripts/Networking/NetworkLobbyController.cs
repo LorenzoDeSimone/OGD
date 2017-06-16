@@ -29,8 +29,6 @@ namespace Assets.Scripts.Networking
         ulong createdMatchID = (ulong)NetworkID.Invalid;
         bool online = true;
         NetworkDiscovery networkExplorer;
-        bool fastRestart = false;
-        bool lanFixedMode = true;
 
         private void Start()
         {
@@ -110,12 +108,18 @@ namespace Assets.Scripts.Networking
             }
         }
         
+        //Gives players a unique id
         int i = 0;
         public override bool OnLobbyServerSceneLoadedForPlayer(GameObject lobbyPlayer, GameObject gamePlayer)
         {
             bool ret =  base.OnLobbyServerSceneLoadedForPlayer(lobbyPlayer, gamePlayer);
             gamePlayer.GetComponent<PlayerDataHolder>().playerId = i;
             i += 1;
+
+            //reset player id
+            if (i == maxPlayers)
+                i = 0;
+
             return ret;
         }
 
@@ -170,6 +174,7 @@ namespace Assets.Scripts.Networking
             {
                 StopMatchMaker();
             }
+
             StopClient();
             StopHost();
 
@@ -195,16 +200,6 @@ namespace Assets.Scripts.Networking
         public NetworkDiscovery GetNetExplorer()
         {
             return networkExplorer;
-        }
-
-        public void SetFastStart(bool b)
-        {
-            fastRestart = b;
-        }
-
-        public bool GetFastStart()
-        {
-            return fastRestart;
         }
 
         public bool IsSearchingPublicMatch()
