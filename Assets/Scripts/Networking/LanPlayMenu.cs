@@ -17,7 +17,7 @@ namespace Assets.Scripts.Networking
         {
             networkExplorer = lobbyController.GetNetExplorer();
 
-#if UNITY_STANDALONE_WINDOWS
+#if UNITY_STANDALONE_WIN
             isHostingMatch = true;
 #endif
 
