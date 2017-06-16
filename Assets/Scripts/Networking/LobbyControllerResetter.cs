@@ -11,7 +11,7 @@ namespace Assets.Scripts.Networking
         {
             if (!first)
             {
-                ((NetworkLobbyController)NetworkManager.singleton).ResetNetworkState();
+                NetworkLobbyController.instance.ResetNetworkState();
                 first = false;
             }
         }

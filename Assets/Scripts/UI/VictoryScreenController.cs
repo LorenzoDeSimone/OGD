@@ -23,7 +23,7 @@ namespace Assets.Scripts.UI
 
         void Start()
         {
-            lobbyController = (NetworkLobbyController)NetworkManager.singleton;
+            lobbyController = NetworkLobbyController.instance;
             
             GameObject.FindGameObjectWithTag(controlsHolderTag).SetActive(false);
             FillScoreboard();
