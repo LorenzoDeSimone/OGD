@@ -29,8 +29,6 @@ namespace Assets.Scripts.Networking
         ulong createdMatchID = (ulong)NetworkID.Invalid;
         bool online = true;
         NetworkDiscovery networkExplorer;
-        bool fastRestart = false;
-        bool lanFixedMode = true;
 
         private void Start()
         {
@@ -195,16 +193,6 @@ namespace Assets.Scripts.Networking
         public NetworkDiscovery GetNetExplorer()
         {
             return networkExplorer;
-        }
-
-        public void SetFastStart(bool b)
-        {
-            fastRestart = b;
-        }
-
-        public bool GetFastStart()
-        {
-            return fastRestart;
         }
 
         public bool IsSearchingPublicMatch()
