@@ -293,7 +293,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   despawnTime: 5
-  startSpeedBoost: 10
+  startSpeedBoost: 40
   decelerationLerp: 0.5
 --- !u!198 &198839984670986416
 ParticleSystem:

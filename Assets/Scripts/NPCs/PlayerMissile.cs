@@ -28,6 +28,11 @@ public class PlayerMissile : NetworkBehaviour
         StartCoroutine(DespawnCountdown(despawnTime));
     }
 
+    public void SetFirstHitWithAGravityField(bool playerOnGround)
+    {
+        firstHitWithAGravityField = playerOnGround;
+    }
+
     // Update is called once per frame
     void Update()
     {

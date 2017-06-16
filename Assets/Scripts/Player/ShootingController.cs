@@ -73,6 +73,7 @@ namespace Assets.Scripts.Player
             GameObject playerMissile = (GameObject) Instantiate(Resources.Load("Prefabs/NPCs/PlayerMissile"));
             playerMissile.transform.position = shootPosition;
             playerMissile.transform.right = missileDirection;
+            playerMissile.GetComponent<PlayerMissile>().SetFirstHitWithAGravityField(!myMovable.IsGrounded());
             playerMissile.GetComponent<PlayerMissile>().SetStartDirection(isStartDirectionCounterClockwise);
             playerMissile.gameObject.SetActive(true);
             NetworkServer.Spawn(playerMissile);
