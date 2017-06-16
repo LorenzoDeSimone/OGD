@@ -10,7 +10,7 @@ public class PatrollerBot : NetworkBehaviour
     private Movable movement;
     Movable.CharacterInput input;
     AStarStepSolver currentAStarStepSolver;
-    bool firstTime = true;
+    bool calculateNewPath = true;
     public GameObject startGO, endGO;
 
     void Start()
@@ -34,19 +34,21 @@ public class PatrollerBot : NetworkBehaviour
 
     void Update()
     {
-        if (firstTime)
+        if (calculateNewPath)
         {
             HeuristicFunction g;
             Graph graph = PathFindingManager.GetGraph();
 
-            int i = Random.Range(0, graph.getNodesLength());
-            Node start = GetNodeFromGameObject(startGO);
-            Node end = GetNodeFromGameObject(endGO);
+            Node start = graph.GetNodes()[Random.Range(0, graph.getNodesLength())];
+            Node end = graph.GetNodes()[Random.Range(0, graph.getNodesLength())];
 
             currentAStarStepSolver = new AStarStepSolver(start, end);
             //movement.Move(input);
-            StartCoroutine(CalculatePath());
-            firstTime = false;
+            if (!start.sceneObject.Equals(end.sceneObject))
+            {
+                calculateNewPath = false;
+                StartCoroutine(CalculatePath());
+            }
         }
     }
 
@@ -56,22 +58,19 @@ public class PatrollerBot : NetworkBehaviour
             Debug.DrawLine(currEdge.from.sceneObject.transform.position, currEdge.to.sceneObject.transform.position, Color.red);
     }
 
-    private void ColorAll(List<Node> nodeList, Color color)
+    /*private void ColorAll(List<Node> nodeList, Color color)
     {
         foreach (Node n in nodeList)
             n.sceneObject.GetComponent<SpriteRenderer>().color = color;
-    }
+    }*/
 
     private IEnumerator CalculatePath()
     {
 
-        foreach (Node n in currentAStarStepSolver.unvisited)
-            n.sceneObject.GetComponent<SpriteRenderer>().color = Color.magenta;
-        foreach (Node n in currentAStarStepSolver.visited)
-            n.sceneObject.GetComponent<SpriteRenderer>().color = Color.red;
-
-        Debug.LogError("w");
-
+        //foreach (Node n in currentAStarStepSolver.unvisited)
+        //    n.sceneObject.GetComponent<SpriteRenderer>().color = Color.magenta;
+        //foreach (Node n in currentAStarStepSolver.visited)
+        //    n.sceneObject.GetComponent<SpriteRenderer>().color = Color.red;
         while (currentAStarStepSolver.Step())
         {
             //ColorAll(currentAStarStepSolver.visited, Color.red);
@@ -87,18 +86,19 @@ public class PatrollerBot : NetworkBehaviour
             //Debug.LogError("CCCC");
             //OutlineSet(currentAStarStepSolver.visited, Color.red);
             //OutlineNode(AStarStepSolver.current, Color.green);
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(0f);
         }
 
         Edge[] path = currentAStarStepSolver.solution;
 
         // check if there is a solution
-        if (path.Length == 0)
+        /*if (path.Length == 0)
             Debug.LogError("No solution");
         else
         {
             DrawPath(path);
             Debug.LogError("Path!");
-        }
+        }*/
+        calculateNewPath = true;
     }
 }

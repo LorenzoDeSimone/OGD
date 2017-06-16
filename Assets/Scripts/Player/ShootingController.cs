@@ -81,7 +81,7 @@ namespace Assets.Scripts.Player
 
         public bool CanShoot()
         {
-            return shootCoolDownOK && playerData.PlayerHaveMissile();//Placeholder before missile count implementation
+            return shootCoolDownOK && playerData.PlayerHaveMissile();
         }
 
 

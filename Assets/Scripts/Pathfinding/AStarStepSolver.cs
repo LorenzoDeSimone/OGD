@@ -53,8 +53,6 @@ public class AStarStepSolver : AStarSolver
                 // assign weight and predecessor to all neighbors (4)
                 foreach (Edge e in graph.getConnections(current))
                 {
-                    e.to.sceneObject.GetComponent<SpriteRenderer>().color = Color.magenta;
-                    //Debug.LogError("BB");
                     if (status[current].distance + e.weight < status[e.to].distance)
                     {
                         NodeExtension ne = new NodeExtension();

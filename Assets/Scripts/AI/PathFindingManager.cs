@@ -33,6 +33,7 @@ public class PathFindingManager : NetworkBehaviour {
                 {
                     //Debug.DrawLine(graph.getNodes()[i].sceneObject.transform.position, graph.getNodes()[j].sceneObject.transform.position, Color.green);
                     graph.AddEdge(new Edge(graph.GetNodes()[i], graph.GetNodes()[j], 1));
+                    graph.AddEdge(new Edge(graph.GetNodes()[j], graph.GetNodes()[i], 1));
                 }
             }
     }
