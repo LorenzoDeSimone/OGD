@@ -7,13 +7,17 @@ using UnityEngine.Networking;
 
 public class PatrollerBot : NetworkBehaviour
 {
+    public float standStillTime = 3f;
+
     private Movable myMovable;
     private Radar myRadar;
 
-    Movable.CharacterInput input;
-    AStarStepSolver currentAStarStepSolver;
+    private Movable.CharacterInput input;
+    private AStarStepSolver currentAStarStepSolver;
+
     private GameObject planetToReach;
     private bool isPathfindingCoroutineRunning;
+    private bool playerHit;
 
     void Start()
     {
@@ -23,6 +27,12 @@ public class PatrollerBot : NetworkBehaviour
         RandomizeDirection();
         planetToReach = myRadar.GetMyGround().collider.gameObject;
         isPathfindingCoroutineRunning = false;
+        playerHit = false;
+    }
+
+    public void SetPlayerHit(bool playerHit)
+    {
+        this.playerHit = playerHit;
     }
 
     private Node GetNodeFromGameObject(GameObject go)
@@ -48,7 +58,7 @@ public class PatrollerBot : NetworkBehaviour
     {
         input.jump = false;
 
-        if (!myMovable.IsGrounded())
+        if (!CanMove())
             return;
 
         //The agent reached its target planet
@@ -134,5 +144,16 @@ public class PatrollerBot : NetworkBehaviour
         }*/
         planetToReach = path[path.Length-1].to.sceneObject;
         isPathfindingCoroutineRunning = false;
+    }
+
+    private bool CanMove()
+    {
+        return isServer && myMovable.IsGrounded() && !playerHit;
+    }
+
+    public void DestroyBot()
+    {
+        NetworkServer.UnSpawn(gameObject);
+        Destroy(gameObject);
     }
 }

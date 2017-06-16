@@ -21,6 +21,8 @@ public class PlayerMissileHitter : MonoBehaviour
     {
         PlayerDataHolder player = collider.gameObject.GetComponent<PlayerDataHolder>();
         PlayerMissile otherPlayerMissile = collider.gameObject.GetComponent<PlayerMissile>();
+        PatrollerBot bot = collider.gameObject.GetComponent<PatrollerBot>();
+
         if (myMissile.isServer)//Only server can check missiles collisions
         {
             if (player)
@@ -32,6 +34,12 @@ public class PlayerMissileHitter : MonoBehaviour
                 myMissile.DestroyMissile();
             }
             else if (otherPlayerMissile)
+            {
+                GameObject go = Instantiate(explosion, transform.position, transform.rotation);
+                NetworkServer.Spawn(go);
+                myMissile.DestroyMissile();
+            }
+            else if(bot)
             {
                 GameObject go = Instantiate(explosion, transform.position, transform.rotation);
                 NetworkServer.Spawn(go);

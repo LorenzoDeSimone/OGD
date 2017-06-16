@@ -25,6 +25,7 @@ GameObject:
   - component: {fileID: 114617079283955962}
   - component: {fileID: 114452479404779282}
   - component: {fileID: 58841749116970318}
+  - component: {fileID: 114212562142806332}
   m_Layer: 9
   m_Name: Policeman Bot
   m_TagString: Untagged
@@ -49,6 +50,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1711737681050442
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4792361620594744}
+  - component: {fileID: 70445929212614290}
+  - component: {fileID: 114845311234846846}
+  m_Layer: 11
+  m_Name: Hitter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!4 &4142939750387762
 Transform:
   m_ObjectHideFlags: 1
@@ -56,9 +74,10 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1400696220740140}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 6, z: 0}
+  m_LocalPosition: {x: 0, y: -10, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 4792361620594744}
   - {fileID: 4150115641497410}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -70,6 +89,19 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1674486370647804}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4142939750387762}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4792361620594744
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1711737681050442}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -126,6 +158,21 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 1
+--- !u!70 &70445929212614290
+CapsuleCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1711737681050442}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 1, y: 1.6}
+  m_Direction: 0
 --- !u!114 &114144249341087856
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -158,6 +205,27 @@ MonoBehaviour:
     i15: 60
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
+--- !u!114 &114212562142806332
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1400696220740140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 2
+  m_SendInterval: 0.071428575
+  m_SyncRotationAxis: 3
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.01
+  m_VelocityThreshold: 0
+  m_SnapThreshold: 2
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 0.6
 --- !u!114 &114452479404779282
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -189,6 +257,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6604b7e17dcd10f49944fb5a0ca81260, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  standStillTime: 3
 --- !u!114 &114713914385736860
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -202,6 +271,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   variableGravityField: 1
   checkForGroundDown: 1
+--- !u!114 &114845311234846846
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1711737681050442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d9808a60e2e1864ab60c8f26b305ff0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!212 &212005988819520970
 SpriteRenderer:
   m_ObjectHideFlags: 1
