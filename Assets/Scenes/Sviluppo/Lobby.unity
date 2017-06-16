@@ -3643,7 +3643,7 @@ MonoBehaviour:
   m_GamePlayerPrefab: {fileID: 1582415777413702, guid: 890ee3d1764f1584c87df9061563aeeb,
     type: 2}
   m_LobbyScene: Lobby
-  m_PlayScene: Game2
+  m_PlayScene: PolicemanBot
   lobbySlots: []
   publicMatchWaitTime: 10
 --- !u!114 &2108872119

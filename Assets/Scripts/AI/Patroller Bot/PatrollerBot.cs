@@ -7,24 +7,29 @@ using UnityEngine.Networking;
 
 public class PatrollerBot : NetworkBehaviour
 {
-    private Movable movement;
+    private Movable myMovable;
+    private Radar myRadar;
+
     Movable.CharacterInput input;
     AStarStepSolver currentAStarStepSolver;
-    bool calculateNewPath = true;
-    public GameObject startGO, endGO;
+    private GameObject planetToReach;
 
     void Start()
     {
-        /*movement = GetComponent<Movable>();
+        myMovable = GetComponent<Movable>();
+        myRadar = GetComponentInChildren<Radar>();
         input = new Movable.CharacterInput();
-        input.jump = false;
-        input.counterClockwise = false;
-        input.clockwise = true;*/
+        input.counterClockwise = input.clockwise = input.jump = false;
+        planetToReach = null;
+        if (Random.Range(0, 2) == 0)
+            input.clockwise = true;
+        else
+            input.counterClockwise = true;
     }
 
     private Node GetNodeFromGameObject(GameObject go)
     {
-        foreach(Node n in PathFindingManager.GetGraph().GetNodes())
+        foreach (Node n in PathFindingManager.GetGraph().GetNodes())
         {
             if (n.sceneObject.Equals(go))
                 return n;
@@ -34,27 +39,42 @@ public class PatrollerBot : NetworkBehaviour
 
     void Update()
     {
-        if (calculateNewPath)
+        input.jump = false;
+
+        if (planetToReach == null && myMovable.IsGrounded())
         {
-            HeuristicFunction g;
             Graph graph = PathFindingManager.GetGraph();
+            Radar targetPlayerRadar = PlayerDataHolder.GetLocalPlayer().GetComponentInChildren<Radar>();
 
-            Node start = graph.GetNodes()[Random.Range(0, graph.getNodesLength())];
-            Node end = graph.GetNodes()[Random.Range(0, graph.getNodesLength())];
+            Node start = GetNodeFromGameObject(myRadar.GetMyGround().collider.gameObject);
+            Node end = GetNodeFromGameObject(targetPlayerRadar.GetMyGround().collider.gameObject);
 
-            currentAStarStepSolver = new AStarStepSolver(start, end);
-            //movement.Move(input);
             if (!start.sceneObject.Equals(end.sceneObject))
             {
-                calculateNewPath = false;
+                currentAStarStepSolver = new AStarStepSolver(start, end);
+                planetToReach = null;
                 StartCoroutine(CalculatePath());
             }
         }
+        else if (planetToReach != null && myMovable.IsGrounded())
+        {
+            RaycastHit2D planetToReachCheck = Physics2D.Raycast(transform.position, transform.up,
+                                                                Mathf.Infinity,
+                                                                LayerMask.GetMask("Walkable"));
+
+            if (planetToReachCheck.collider != null && planetToReachCheck.collider.gameObject.Equals(planetToReach))
+            {
+                input.jump = true;
+                planetToReach = null;
+            }
+        }
+
+        myMovable.Move(input);
     }
 
     private void DrawPath(Edge[] path)
     {
-        foreach(Edge currEdge in path)
+        foreach (Edge currEdge in path)
             Debug.DrawLine(currEdge.from.sceneObject.transform.position, currEdge.to.sceneObject.transform.position, Color.red);
     }
 
@@ -99,6 +119,7 @@ public class PatrollerBot : NetworkBehaviour
             DrawPath(path);
             Debug.LogError("Path!");
         }*/
-        calculateNewPath = true;
+
+        planetToReach = path[0].to.sceneObject;
     }
 }

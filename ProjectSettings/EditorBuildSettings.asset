@@ -17,3 +17,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Sviluppo/AnimationTest.unity
     guid: e242d4cc27f134d4fa506a430e529577
+  - enabled: 1
+    path: Assets/Scenes/Sviluppo/PolicemanBot.unity
+    guid: 00000000000000000000000000000000
