@@ -90,7 +90,9 @@ namespace Assets.Scripts.Networking
                         finally
                         {
                             startdAsClient = true;
+                            SafeStopBroadcast();
                         }
+
                         if (startdAsClient)
                             break;
                     }

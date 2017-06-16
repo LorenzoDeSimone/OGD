@@ -108,12 +108,18 @@ namespace Assets.Scripts.Networking
             }
         }
         
+        //Gives players a unique id
         int i = 0;
         public override bool OnLobbyServerSceneLoadedForPlayer(GameObject lobbyPlayer, GameObject gamePlayer)
         {
             bool ret =  base.OnLobbyServerSceneLoadedForPlayer(lobbyPlayer, gamePlayer);
             gamePlayer.GetComponent<PlayerDataHolder>().playerId = i;
             i += 1;
+
+            //reset player id
+            if (i == maxPlayers)
+                i = 0;
+
             return ret;
         }
 
