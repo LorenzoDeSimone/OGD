@@ -39,7 +39,7 @@ public class PlayerMissile : NetworkBehaviour
         if (myMovable.speed > endSpeed)
         {
             myMovable.speed = Mathf.Lerp(myMovable.speed, endSpeed, decelerationLerp);
-            Debug.LogWarning(myMovable.speed);
+            //Debug.LogWarning(myMovable.speed);
         }
         RaycastHit2D myGround = myRadar.GetMyGround();
         //Debug.LogError("www");   
