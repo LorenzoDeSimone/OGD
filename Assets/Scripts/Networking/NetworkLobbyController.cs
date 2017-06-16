@@ -11,6 +11,7 @@ namespace Assets.Scripts.Networking
     public class NetworkLobbyController : NetworkLobbyManager {
 
         public float publicMatchWaitTime = 10.0f;
+        public static NetworkLobbyController instance;
 
         internal bool loadingMatches = true;
         internal bool readyToReset = true;
@@ -29,6 +30,14 @@ namespace Assets.Scripts.Networking
         ulong createdMatchID = (ulong)NetworkID.Invalid;
         bool online = true;
         NetworkDiscovery networkExplorer;
+        //Gives players a unique id
+        int idCounter = 0;
+
+        private void Awake()
+        {
+            if (instance == null)
+                instance = this;
+        }
 
         private void Start()
         {
@@ -107,18 +116,16 @@ namespace Assets.Scripts.Networking
                 Debug.LogWarning("Player dsconnection error " + e.Message);
             }
         }
-        
-        //Gives players a unique id
-        int i = 0;
+
         public override bool OnLobbyServerSceneLoadedForPlayer(GameObject lobbyPlayer, GameObject gamePlayer)
         {
             bool ret =  base.OnLobbyServerSceneLoadedForPlayer(lobbyPlayer, gamePlayer);
-            gamePlayer.GetComponent<PlayerDataHolder>().playerId = i;
-            i += 1;
+            gamePlayer.GetComponent<PlayerDataHolder>().playerId = idCounter;
+            idCounter += 1;
 
             //reset player id
-            if (i == maxPlayers)
-                i = 0;
+            if (idCounter == maxPlayers)
+                idCounter = 0;
 
             return ret;
         }
@@ -164,8 +171,7 @@ namespace Assets.Scripts.Networking
         {
             StopAllCoroutines();
 
-            if (networkExplorer.running)
-                networkExplorer.StopBroadcast();
+            SafeStopBroadCast();
 
             if (currentPlayMenu)
                 currentPlayMenu.StopMatchSearch();
@@ -182,6 +188,12 @@ namespace Assets.Scripts.Networking
             searchingPublicMatch = true;
             joiningMatch = false;
             creatingMatch = true;
+        }
+
+        public void SafeStopBroadCast()
+        {
+            if (networkExplorer && networkExplorer.running)
+                networkExplorer.StopBroadcast();
         }
 
         public bool Online

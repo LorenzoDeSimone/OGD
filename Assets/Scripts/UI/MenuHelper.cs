@@ -20,7 +20,7 @@ namespace Assets.Scripts.UI
         {
             attachedButton = GetComponent<Button>();
             attachedButton.onClick.AddListener(TriggerHelper);
-            lobbyController = (NetworkLobbyController)NetworkManager.singleton;
+            lobbyController = NetworkLobbyController.instance;
             Init();
         }
 
@@ -38,7 +38,7 @@ namespace Assets.Scripts.UI
         {
             if(lobbyController == null)
             {
-                lobbyController = (NetworkLobbyController)NetworkManager.singleton;
+                lobbyController = NetworkLobbyController.instance;
                 if(lobbyController)
                 {
                     Init();

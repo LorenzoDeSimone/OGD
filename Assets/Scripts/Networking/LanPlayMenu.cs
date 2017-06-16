@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -74,33 +75,36 @@ namespace Assets.Scripts.Networking
 
                 if (networkExplorer.broadcastsReceived.Count > 0)
                 {
+                    //Last element is always the new one
+                    lobbyController.networkAddress = GetLastOf(networkExplorer.broadcastsReceived);
 
-                    foreach( NetworkBroadcastResult nbs in networkExplorer.broadcastsReceived.Values)
+                    try
                     {
-                        lobbyController.networkAddress = nbs.serverAddress;
-
-                        try
-                        {
-                            lobbyController.StartClient();
-                        }
-                        catch (Exception e)
-                        {
-                            Debug.LogError(e.Message);
-                        }
-                        finally
-                        {
-                            startdAsClient = true;
-                            SafeStopBroadcast();
-                        }
-
-                        if (startdAsClient)
-                            break;
+                        lobbyController.StartClient();
                     }
-
+                    catch (Exception e)
+                    {
+                        Debug.LogError(e.Message);
+                    }
+                    finally
+                    {
+                        startdAsClient = true;
+                        SafeStopBroadcast();
+                    }
                 }
                 yield return new WaitForSeconds(0.1f);
             }
             while (!startdAsClient);
+        }
+
+        private string GetLastOf(Dictionary<string, NetworkBroadcastResult> dict)
+        {
+            string resKey = "";
+            foreach ( string s in dict.Keys )
+            {
+                resKey = s;
+            }
+            return dict[resKey].serverAddress;
         }
 
         private void SafeStopBroadcast()

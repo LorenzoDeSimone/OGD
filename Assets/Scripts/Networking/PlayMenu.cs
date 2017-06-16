@@ -22,7 +22,7 @@ namespace Assets.Scripts.Networking
 
         void OnEnable()
         {
-            lobbyController = (NetworkLobbyController)NetworkManager.singleton;
+            lobbyController = NetworkLobbyController.instance;
             TryInitMenu();
         }
 

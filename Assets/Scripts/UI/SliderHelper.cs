@@ -13,7 +13,7 @@ public abstract class SliderHelper : MonoBehaviour
     {
         mySlider = GetComponent<Slider>();
         mySlider.onValueChanged.AddListener(OnValueChanged);
-        lobbyController = (NetworkLobbyController)NetworkManager.singleton;
+        lobbyController = NetworkLobbyController.instance;
         Init(mySlider.value);
     }
 

@@ -12,7 +12,7 @@ namespace Assets.Scripts.Networking
 
         void Start()
         {
-            lobbyController = (NetworkLobbyController)NetworkManager.singleton;
+            lobbyController = NetworkLobbyController.instance;
             onlineGameManager = GetComponent<OnlineGameManager>();
 
             NetworkLobbyController.PlayerDisconnectEvent += HandlePlayerDisconnection;
