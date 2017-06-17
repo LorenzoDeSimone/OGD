@@ -61,7 +61,9 @@ namespace Assets.Scripts.Spawn_collectable
         {
             RealUpdate(b, id);
             NetworkServer.UnSpawn(gameObject);
-            Destroy(gameObject);
+            myCollider.enabled = false;
+            mySprite.enabled = false;
+            Destroy(gameObject,5.0f);
         }
 
         IEnumerator<WaitForSeconds> UncollectableTime(float uncollectableTime)
