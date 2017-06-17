@@ -13,7 +13,7 @@ namespace Assets.Scripts.Spawn_collectable
          * syncvar - calls the hook on server and client -> only the server then calls an rpc on the clients   
          * the hook  
          */
-        [SyncVar( hook = "UpdateNetworkState")]
+        [SyncVar]
         protected bool networkActiveState = true;
 
         public int pointValue = 1;
@@ -39,21 +39,14 @@ namespace Assets.Scripts.Spawn_collectable
         {
             PlayerDataHolder player = coll.gameObject.GetComponent<PlayerDataHolder>();
 
-            if (player && isClient)// && coll.Equals(player.GetCharacterCapsuleCollider2D()))
-                CmdUpdateServerState(false, coll.gameObject.GetComponent<PlayerDataHolder>().playerId);
+            if (player)// && coll.Equals(player.GetCharacterCapsuleCollider2D()))
+                UpdateServerState(false, coll.gameObject.GetComponent<PlayerDataHolder>().playerId);
         }
 
-        private void UpdateNetworkState(bool b)
-        {
-            networkActiveState = b;
-            if (isServer)
-                RpcChangeNetworkState(b, transform.position); 
-        }
-
-        [Command]
-        private void CmdUpdateServerState(bool b, int id)
+        private void UpdateServerState(bool b, int id)
         {
             RealUpdate(b, id);
+            ChangeNetworkState(b, transform.position);
         }
 
         protected virtual void RealUpdate(bool b, int id)
@@ -66,7 +59,7 @@ namespace Assets.Scripts.Spawn_collectable
                 PlayerDataHolder pDH = go.GetComponent<PlayerDataHolder>();
                 if (pDH.playerId == id)
                 {
-                    pDH.CmdAddPoints(pointValue * pointScaler);
+                    pDH.AddPoints(pointValue * pointScaler);
                     break;
                 }
             }
@@ -78,14 +71,13 @@ namespace Assets.Scripts.Spawn_collectable
             return networkActiveState;
         }
 
-        [ClientRpc]
-        public void RpcChangeNetworkState(bool b, Vector3 v)
+        public void ChangeNetworkState(bool b, Vector3 v)
         {
             mySprite.enabled = b;
             myCollider.enabled = b;
             transform.position = v;
         }
-        
+
         protected void PlaySound()
         {
             audioSource.Play();
@@ -93,7 +85,13 @@ namespace Assets.Scripts.Spawn_collectable
 
         private void AddPointsToPlayer(PlayerDataHolder playerDataHolder)
         {
-            playerDataHolder.CmdAddPoints(pointValue * pointScaler);
+            playerDataHolder.AddPoints(pointValue * pointScaler);
+        }
+
+        [ClientRpc]
+        internal void RpcChangeNetworkState(bool v, Vector3 vector3)
+        {
+            ChangeNetworkState(v, vector3);
         }
     }
 }

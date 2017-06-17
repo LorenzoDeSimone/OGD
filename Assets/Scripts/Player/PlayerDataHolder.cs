@@ -33,20 +33,18 @@ namespace Assets.Scripts.Player
 
             InitPlayer();
         }
-        [Command]
-        public void CmdAddPoints(int pointsToAdd)
+
+        public void AddPoints(int pointsToAdd)
         {
             playerPoints += pointsToAdd;
         }
 
-        [Command]
-        public void CmdAddMissile()
+        public void AddMissile()
         {
             playerMissile = true;
         }
 
-        [Command]
-        public void CmdRemoveMissile()
+        public void RemoveMissile()
         {
             playerMissile = false;
         }
@@ -70,38 +68,36 @@ namespace Assets.Scripts.Player
 
         public void OnHit()
         {
-            CmdDecresePoints();
+            DecresePoints();
             StartCoroutine(StopPlayerMovement(disabledControlsTimeWindow));
             SyncNewPoints(playerPoints);
         }
         
         private IEnumerator StopPlayerMovement(float disabledControlsTimeWindow)
         {
-            CmdSyncHitBool(true);
+            SyncHitBool(true);
             yield return new WaitForSecondsRealtime(disabledControlsTimeWindow);
-            CmdSyncHitBool(false);
+            SyncHitBool(false);
         }
 
-        [Command]
-        private void CmdSyncHitBool(bool b)
+        private void SyncHitBool(bool b)
         {
             GetComponent<Movable>().hit = b;
         }
 
-        [Command]
-        private void CmdDecresePoints()
+        private void DecresePoints()
         {
             int malus = Random.Range(2, 5) + PointManager.instance.GetMatchSize() - PointManager.instance.GetPlayerRankPosition(GetPlayerNetworkId());
 
             if (playerPoints - malus < 0)
             {
-                GetComponent<CoinDropper>().DropCoins(playerPoints);
+                GetComponent<CoinDropper>().DropCoins(playerPoints, playerId);
                 playerPoints = 0;
 
             }
             else
             {
-                GetComponent<CoinDropper>().DropCoins(malus);
+                GetComponent<CoinDropper>().DropCoins(malus, playerId);
                 playerPoints -= malus;
             }
         }
@@ -163,7 +159,7 @@ namespace Assets.Scripts.Player
         }
 
         [Command]
-        private void CmdFlipSprite(bool b)
+        internal void CmdFlipSprite(bool b)
         {
             flip = b;
         }

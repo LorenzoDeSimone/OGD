@@ -60,7 +60,7 @@ namespace Assets.Scripts.Player
                     missileDirection = (rightShootPosition.transform.position - leftShootPosition.transform.position).normalized;
                 }
 
-                playerData.CmdRemoveMissile();
+                playerData.RemoveMissile();
                 CmdShoot(currShootPosition.transform.position, missileDirection, isStartDirectionCounterClockwise);
                 shootCoolDownOK = false;
                 StartCoroutine(ShootingCooldown(shootingCooldown));

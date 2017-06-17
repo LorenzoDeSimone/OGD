@@ -17,7 +17,7 @@ namespace Assets.Scripts.Spawn_collectable
                     networkActiveState = b;
                     mySprite.enabled = b;
                     myCollider.enabled = b;
-                    pDH.CmdAddMissile();
+                    pDH.AddMissile();
                     break;
                 }
             }

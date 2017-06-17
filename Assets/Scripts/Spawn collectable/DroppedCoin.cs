@@ -26,7 +26,7 @@ namespace Assets.Scripts.Spawn_collectable
         {
             PlayerDataHolder player = coll.gameObject.GetComponent<PlayerDataHolder>();
             if (isCollectable && player)// && coll.Equals(player.GetCharacterCapsuleCollider2D()))
-                CmdUpdateServerState(false, coll.gameObject.GetComponent<PlayerDataHolder>().playerId);
+                UpdateServerState(false, coll.gameObject.GetComponent<PlayerDataHolder>().playerId);
         }
 
         private void OnTriggerEnter2D(Collider2D coll)
@@ -56,8 +56,7 @@ namespace Assets.Scripts.Spawn_collectable
             this.groundPoint = groundPoint;
         }
 
-        [Command]
-        private void CmdUpdateServerState(bool b, int id)
+        private void UpdateServerState(bool b, int id)
         {
             RealUpdate(b, id);
             NetworkServer.UnSpawn(gameObject);

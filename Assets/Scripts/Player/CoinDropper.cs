@@ -7,11 +7,21 @@ using UnityEngine.Networking;
 
 public class CoinDropper : NetworkBehaviour
 {
-    public void DropCoins(int malus)
+    
+    public void DropCoins(int malus, int playerId)
     {
         GameObject go;
         Vector3 movementVersor;
-        Vector3 playerExtents = PlayerDataHolder.GetLocalPlayer().GetComponent<Collider2D>().bounds.extents;
+        Vector3 playerExtents = Vector3.one;
+        foreach(GameObject tgo in GameObject.FindGameObjectsWithTag("Player"))
+        {
+            PlayerDataHolder pDH = tgo.GetComponent<PlayerDataHolder>();
+            if(pDH && pDH.GetPlayerNetworkId() == playerId)
+            {
+                playerExtents = pDH.GetComponent<Collider2D>().bounds.extents;
+                break;
+            }
+        }
         RaycastHit2D myGround = GetComponentInChildren<Radar>().GetMyGround();
 
         for (int i = 0; i < malus; i++)
