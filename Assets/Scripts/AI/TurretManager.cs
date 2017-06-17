@@ -44,7 +44,15 @@ public class TurretManager : NetworkBehaviour
         else
             finalRotation = startRotation;
         transform.rotation = Quaternion.Lerp(transform.rotation, finalRotation, Time.deltaTime * rotationSpeed);
-        if (isServer && players.Count > 0 && Mathf.Abs(transform.rotation.eulerAngles.z - finalRotation.eulerAngles.z) < 0.1 && Time.time > nextShoot)
+        if (players.Count > 0 && Mathf.Abs(transform.rotation.eulerAngles.z - finalRotation.eulerAngles.z) < 1 && Time.time > nextShoot)
+        {
+            GetComponent<Animator>().Play("Shoot");
+        }
+    }
+
+    public void Shoot()
+    {
+        if (isServer)
         {
             playerMissile = (GameObject)Instantiate(Resources.Load("Prefabs/NPCs/PlayerMissile"));
             playerMissile.transform.position = transform.position;
@@ -53,8 +61,8 @@ public class TurretManager : NetworkBehaviour
             playerMissile.GetComponent<PlayerMissile>().SetStartDirection(true);
             playerMissile.gameObject.SetActive(true);
             NetworkServer.Spawn(playerMissile);
-            nextShoot = Time.time + shootRating;
         }
+        nextShoot = Time.time + shootRating;
     }
 
     private void OnTriggerEnter2D(Collider2D collider)
