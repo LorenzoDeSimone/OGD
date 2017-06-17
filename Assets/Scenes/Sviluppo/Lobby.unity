@@ -958,14 +958,14 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 1041950862}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
+  m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -1310,8 +1310,8 @@ RectTransform:
   m_Father: {fileID: 393467410}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.85, y: 0.05}
-  m_AnchorMax: {x: 0.95, y: 0.15}
+  m_AnchorMin: {x: 0.45, y: 0.05}
+  m_AnchorMax: {x: 0.55, y: 0.15}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
@@ -1682,7 +1682,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Giulia Barnaba\r\n\nLorenzo De Simone\r\n\nAndrea Jegher\r\n\n"
+  m_Text: "Giulia Barnaba\r\nGame Designer\r\n\nLorenzo De Simone\r\nGame Designer\r\nGame
+    Programmer\r\n\nAndrea Jegher\r\nGame Programmer\r\n"
 --- !u!222 &874148471
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2047,7 +2048,7 @@ MonoBehaviour:
   - {fileID: 53502880}
   toDeactivate:
   - {fileID: 344707481}
-  - {fileID: 1110808990}
+  - {fileID: 2135801295}
   backButtonHelper: {fileID: 509214115}
   backButtonWillResetLobbyController: 0
   enableFastRestart: 0
@@ -2218,8 +2219,8 @@ RectTransform:
   m_Father: {fileID: 53502881}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.15, y: 0}
-  m_AnchorMax: {x: 0.9, y: 0.6}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 0.7}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2869,7 +2870,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\rEmanuele Lattanzio\r\n\nMarta Barducchi\r\n\nValerio De Vittorio\r\n\n"
+  m_Text: "Emanuele Lattanzio\r\nGame Designer\r\nGame Programmer\r\n\nMarta Barducchi\r\nVisual
+    Artist\r\n\nValerio De Vittorio\r\nSound Designer\r\nMusic Composer\r\n"
 --- !u!222 &1653850277
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3487,8 +3489,8 @@ RectTransform:
   m_Father: {fileID: 611229680}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.45, y: 0.1}
-  m_AnchorMax: {x: 0.55, y: 0.2}
+  m_AnchorMin: {x: 0.45, y: 0.3}
+  m_AnchorMax: {x: 0.55, y: 0.4}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
