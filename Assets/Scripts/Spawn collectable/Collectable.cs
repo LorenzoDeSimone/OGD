@@ -39,7 +39,7 @@ namespace Assets.Scripts.Spawn_collectable
         {
             PlayerDataHolder player = coll.gameObject.GetComponent<PlayerDataHolder>();
 
-            if (player)// && coll.Equals(player.GetCharacterCapsuleCollider2D()))
+            if (player && isClient)// && coll.Equals(player.GetCharacterCapsuleCollider2D()))
                 CmdUpdateServerState(false, coll.gameObject.GetComponent<PlayerDataHolder>().playerId);
         }
 

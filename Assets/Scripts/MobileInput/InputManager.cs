@@ -22,6 +22,9 @@ public class InputManager : NetworkBehaviour {
     //Handles continous movement
     void Update()
     {
+        if (!isClient)
+            return;
+
         if(localPlayerInputController == null)
         {
             localPlayerInputController = PlayerDataHolder.GetLocalPlayer().GetComponent<InputController>();

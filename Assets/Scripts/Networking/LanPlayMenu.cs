@@ -41,7 +41,7 @@ namespace Assets.Scripts.Networking
         {
             try
             {
-                lobbyController.StartServer();
+                lobbyController.StartHost();
             }
             catch (Exception e)
             {
