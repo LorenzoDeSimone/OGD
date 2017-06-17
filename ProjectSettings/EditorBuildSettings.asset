@@ -22,4 +22,7 @@ EditorBuildSettings:
     guid: 653ec4af916649f499afcfebefc0c7bf
   - enabled: 1
     path: Assets/Scenes/Sviluppo/MusicScene.unity
-    guid: 00000000000000000000000000000000
+    guid: 00aae5f3cd84fc24aa14e12e11aa2c74
+  - enabled: 1
+    path: Assets/Scenes/Sviluppo/Trailer.unity
+    guid: 1496ab174a030a242a8250c2948dbbfc
