@@ -4,14 +4,14 @@ using System;
 using Assets.Scripts.Networking;
 using UnityEngine.Networking;
 
-public class BroadCastKiller : MonoBehaviour
+public class BroadcastKiller : MonoBehaviour
 {
     void Start()
     {
-        StartCoroutine(KillBroadCast());
+        StartCoroutine(KillBroadcast());
     }
 
-    private IEnumerator KillBroadCast()
+    private IEnumerator KillBroadcast()
     {
         yield return new WaitForSeconds(3);
         NetworkLobbyController.instance.SafeStopBroadCast();

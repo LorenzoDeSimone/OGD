@@ -75,7 +75,7 @@ namespace Assets.Scripts.Networking
 
                 if (networkExplorer.broadcastsReceived.Count > 0)
                 {
-                    //Last element is always the new one
+                    //Last element is always the last recived
                     lobbyController.networkAddress = GetLastOf(networkExplorer.broadcastsReceived);
 
                     try
