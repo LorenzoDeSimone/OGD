@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class PatrollerBot : NetworkBehaviour
+public class ChaserBot : NetworkBehaviour
 {
     public float standStillTime = 3f;
 
@@ -14,10 +14,23 @@ public class PatrollerBot : NetworkBehaviour
 
     private Movable.CharacterInput input;
 
+    public delegate GameObject TargetGetter();
+
+    private TargetGetter MyTargetGetter;
+
     private bool playerHit;
+    public static Dictionary<int, GameObject> PlayersGameObjects = null;
+
+    public void SetTargetGetter(TargetGetter MyTargetGetter)
+    {
+        this.MyTargetGetter = MyTargetGetter;
+    }
 
     void Start()
     {
+        if (!isServer)
+            return;
+
         myMovable = GetComponent<Movable>();
         myRadar = GetComponentInChildren<Radar>();
         myPathfinder = GetComponent<Pathfinder>();
@@ -25,6 +38,13 @@ public class PatrollerBot : NetworkBehaviour
         input = new Movable.CharacterInput();
         RandomizeDirection();
         playerHit = false;
+
+        if (PlayersGameObjects == null)
+        {
+            PlayersGameObjects = new Dictionary<int, GameObject>();
+            foreach (GameObject currPlayer in GameObject.FindGameObjectsWithTag("Player"))
+                PlayersGameObjects.Add(currPlayer.GetComponent<PlayerDataHolder>().playerId, currPlayer);
+        }
     }
 
     public void SetPlayerHit(bool playerHit)
@@ -64,7 +84,8 @@ public class PatrollerBot : NetworkBehaviour
             if(!myPathfinder.IsPathfindingStillCoroutineRunning())
             {
                 Graph graph = PathFindingManager.GetGraph();
-                Radar targetPlayerRadar = PlayerDataHolder.GetLocalPlayer().GetComponentInChildren<Radar>();
+
+                Radar targetPlayerRadar = MyTargetGetter().GetComponentInChildren<Radar>();
                 Node start = GetNodeFromGameObject(myRadar.GetMyGround().collider.gameObject);
                 Node end = GetNodeFromGameObject(targetPlayerRadar.GetMyGround().collider.gameObject);
                 if (!GameObject.ReferenceEquals(start.sceneObject, end.sceneObject))

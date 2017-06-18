@@ -7,12 +7,12 @@ using Assets.Scripts.Player;
 
 public class BotHitter : MonoBehaviour
 {
-    private PatrollerBot myBot;
+    private ChaserBot myBot;
 
     // Use this for initialization
     void Start()
     {
-        myBot = GetComponentInParent<PatrollerBot>();
+        myBot = GetComponentInParent<ChaserBot>();
     }
 
     private void OnTriggerEnter2D(Collider2D collider)

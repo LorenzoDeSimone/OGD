@@ -21,7 +21,7 @@ public class PlayerMissileHitter : MonoBehaviour
     {
         PlayerDataHolder player = collider.gameObject.GetComponent<PlayerDataHolder>();
         PlayerMissile otherPlayerMissile = collider.gameObject.GetComponent<PlayerMissile>();
-        PatrollerBot bot = collider.gameObject.GetComponent<PatrollerBot>();
+        ChaserBot bot = collider.gameObject.GetComponent<ChaserBot>();
 
         if (myMissile.isServer)//Only server can check missiles collisions
         {
