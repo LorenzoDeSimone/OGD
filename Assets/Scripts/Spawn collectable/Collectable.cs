@@ -76,12 +76,11 @@ namespace Assets.Scripts.Spawn_collectable
                     if (pDH.playerId == id)
                     {
                         pDH.CmdAddPoints(pointValue * pointScaler);
-                        if(pDH.isLocalPlayer)
-                            PlaySound();    
                         break;
                     }
                 } 
             }
+            PlaySound();
         }
 
         public bool GetNetworkActiveState()
