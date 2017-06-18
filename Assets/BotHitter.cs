@@ -28,10 +28,6 @@ public class BotHitter : MonoBehaviour
                 myBot.SetPlayerHit(true);
                 StartCoroutine(StandStill(myBot.standStillTime));
             }
-            else if (playerMissile)
-            {
-                myBot.DestroyBot();
-            }
         }
     }
 

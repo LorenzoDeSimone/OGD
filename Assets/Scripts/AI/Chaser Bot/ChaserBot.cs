@@ -15,8 +15,10 @@ public class ChaserBot : NetworkBehaviour
     private Movable.CharacterInput input;
 
     public delegate GameObject TargetGetter();
+    public delegate void OnHitHandler();
 
     private TargetGetter MyTargetGetter;
+    private OnHitHandler MyOnHit;
 
     private bool playerHit;
     public static Dictionary<int, GameObject> PlayersGameObjects = null;
@@ -24,6 +26,11 @@ public class ChaserBot : NetworkBehaviour
     public void SetTargetGetter(TargetGetter MyTargetGetter)
     {
         this.MyTargetGetter = MyTargetGetter;
+    }
+
+    public void SetOnHitHandler(OnHitHandler MyOnHitHandler)
+    {
+        this.MyOnHit = MyOnHitHandler;
     }
 
     void Start()
@@ -123,6 +130,13 @@ public class ChaserBot : NetworkBehaviour
     public void DestroyBot()
     {
         NetworkServer.UnSpawn(gameObject);
+
         Destroy(gameObject);
+    }
+    
+    public void OnHit()
+    {
+        if (MyOnHit != null)
+            MyOnHit();
     }
 }

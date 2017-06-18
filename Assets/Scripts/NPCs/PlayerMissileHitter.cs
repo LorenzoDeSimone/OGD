@@ -43,6 +43,7 @@ public class PlayerMissileHitter : MonoBehaviour
             {
                 GameObject go = Instantiate(explosion, transform.position, transform.rotation);
                 NetworkServer.Spawn(go);
+                bot.OnHit();
                 myMissile.DestroyMissile();
             }
         }
