@@ -16,9 +16,11 @@ public class ChaserBot : NetworkBehaviour
 
     public delegate GameObject TargetGetter();
     public delegate void OnHitHandler();
+    public delegate void OnCollectableHitHandler(GameObject collectable);
 
     private TargetGetter MyTargetGetter;
     private OnHitHandler MyOnHit;
+    private OnCollectableHitHandler MyOnCollectableHit;
 
     private bool playerHit;
     public static Dictionary<int, GameObject> PlayersGameObjects = null;
@@ -31,6 +33,11 @@ public class ChaserBot : NetworkBehaviour
     public void SetOnHitHandler(OnHitHandler MyOnHitHandler)
     {
         this.MyOnHit = MyOnHitHandler;
+    }
+
+    public void SetOnCollectableHit(OnCollectableHitHandler MyOnCollectableHit)
+    {
+        this.MyOnCollectableHit = MyOnCollectableHit;
     }
 
     void Start()
@@ -138,5 +145,11 @@ public class ChaserBot : NetworkBehaviour
     {
         if (MyOnHit != null)
             MyOnHit();
+    }
+
+    public void OnCollectableHit(GameObject collectable)
+    {
+        if (MyOnCollectableHit!= null)
+            MyOnCollectableHit(collectable);
     }
 }

@@ -3813,7 +3813,7 @@ MonoBehaviour:
   - {fileID: 1018893471065052, guid: d3820fe95dc002a47ab3b0f973f97f78, type: 2}
   - {fileID: 1957054407011920, guid: 160b3ad49e43c7c4d89dfd1490aa46e6, type: 2}
   - {fileID: 1583727756323638, guid: 0b583c29d3329a4408a172d0fd55dae9, type: 2}
-  - {fileID: 1809339051065658, guid: 1e89c5e3968aadc43bf2c8ff38cfa47b, type: 2}
+  - {fileID: 0}
   - {fileID: 100000, guid: 42404bf7d14c342f69690c9961a7530d, type: 2}
   m_CustomConfig: 0
   m_MaxConnections: 4

@@ -35,12 +35,18 @@ namespace Assets.Scripts.Spawn_collectable
             audioSource = GetComponent<AudioSource>();
         }
 
-        private void OnTriggerEnter2D(Collider2D coll)
+        public void OnTriggerEnter2D(Collider2D coll)
         {
             PlayerDataHolder player = coll.gameObject.GetComponent<PlayerDataHolder>();
+            ChaserBot bot = coll.gameObject.GetComponent<ChaserBot>();
 
-            if (player)// && coll.Equals(player.GetCharacterCapsuleCollider2D()))
+            if (player)
                 CmdUpdateServerState(false, coll.gameObject.GetComponent<PlayerDataHolder>().playerId);
+            if (bot)
+            {
+                CmdUpdateServerState(false, -1);
+                bot.OnCollectableHit(gameObject);
+            }
         }
 
         private void UpdateNetworkState(bool b)
@@ -61,16 +67,21 @@ namespace Assets.Scripts.Spawn_collectable
             networkActiveState = b;
             mySprite.enabled = b;
             myCollider.enabled = b;
-            foreach (GameObject go in GameObject.FindGameObjectsWithTag("Player"))
+
+            if (id!=-1)//Special Case: collected by NPC
             {
-                PlayerDataHolder pDH = go.GetComponent<PlayerDataHolder>();
-                if (pDH.playerId == id)
+                foreach (GameObject go in GameObject.FindGameObjectsWithTag("Player"))
                 {
-                    pDH.CmdAddPoints(pointValue * pointScaler);
-                    break;
-                }
+                    PlayerDataHolder pDH = go.GetComponent<PlayerDataHolder>();
+                    if (pDH.playerId == id)
+                    {
+                        pDH.CmdAddPoints(pointValue * pointScaler);
+                        if(pDH.isLocalPlayer)
+                            PlaySound();    
+                        break;
+                    }
+                } 
             }
-            PlaySound();
         }
 
         public bool GetNetworkActiveState()

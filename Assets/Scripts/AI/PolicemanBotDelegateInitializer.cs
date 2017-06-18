@@ -11,8 +11,10 @@ public class PolicemanBotDelegateInitializer : NetworkBehaviour
 	// Use this for initialization
 	void Start ()
     {
-        GetComponent<ChaserBot>().SetTargetGetter(GetBestPlayer);
-        GetComponent<ChaserBot>().SetOnHitHandler(PolicemanBotOnMissileHit);
+        ChaserBot myChaserBot = GetComponent<ChaserBot>();
+        myChaserBot.SetTargetGetter(GetBestPlayer);
+        myChaserBot.SetOnHitHandler(PolicemanBotOnMissileHit);
+        myChaserBot.SetOnCollectableHit(PolicemanBotOnCollectableHit);
     }
 
     public GameObject GetBestPlayer()
@@ -38,4 +40,8 @@ public class PolicemanBotDelegateInitializer : NetworkBehaviour
         Destroy(gameObject);
     }
 
+    public void PolicemanBotOnCollectableHit(GameObject collectable)
+    {
+       // Debug.LogError("oooo");
+    }
 }

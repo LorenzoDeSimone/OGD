@@ -6,7 +6,7 @@ public delegate float HeuristicFunction(Node from, Node to);
 
 public class AStarSolver {
 
-	public static bool immediateStop = true;
+	public bool immediateStop = true;
 	
 	// two set of nodes (1)
 
@@ -21,7 +21,7 @@ public class AStarSolver {
 		public Edge predecessor;
 	}
 
-	protected static Dictionary<Node, NodeExtension> status;
+	protected Dictionary<Node, NodeExtension> status;
 
 	public Edge[] Solve(Graph g, Node start, Node goal, HeuristicFunction heuristic) {
 
