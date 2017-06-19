@@ -35,6 +35,7 @@ namespace Assets.Scripts.Player
         public bool hit = false;
         public bool thisAgentCanJump = false;
         public bool thisAgentHasGravity = false;
+        public bool flipSprite = true;
 
         private Vector3 myForces;
         private PlayerDataHolder playerDataHolder;
@@ -141,13 +142,21 @@ namespace Assets.Scripts.Player
             {
                 movementVersor = new Vector3(-myGround.normal.y, myGround.normal.x);
                 movementPerpendicularDown = -myGround.normal;//new Vector2(-movementVersor.y, movementVersor.x).normalized;
-                SafeFlip(true);
+
+                if (flipSprite)
+                {
+                    SafeFlip(true); 
+                }
             }
             else if (input.clockwise)
             {
                 movementVersor = new Vector3(myGround.normal.y, -myGround.normal.x);
                 movementPerpendicularDown = -myGround.normal;// new Vector2(movementVersor.y, -movementVersor.x).normalized;
-                SafeFlip(false);
+
+                if (flipSprite)
+                {
+                    SafeFlip(false); 
+                }
             }
             else
             {

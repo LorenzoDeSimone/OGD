@@ -362,6 +362,7 @@ MonoBehaviour:
   hit: 0
   thisAgentCanJump: 0
   thisAgentHasGravity: 0
+  flipSprite: 0
 --- !u!114 &114912440225334284
 MonoBehaviour:
   m_ObjectHideFlags: 1
