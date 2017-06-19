@@ -32,6 +32,7 @@ namespace Assets.Scripts.Networking
         NetworkDiscovery networkExplorer;
         //Gives players a unique id
         int idCounter = 0;
+        List<GameObject> gamePlayers;
 
         private void Awake()
         {
@@ -127,7 +128,14 @@ namespace Assets.Scripts.Networking
             if (idCounter == maxPlayers)
                 idCounter = 0;
 
+            gamePlayers.Add(gamePlayer);
+
             return ret;
+        }
+
+        public List<GameObject> GetPlayersInMatch()
+        {
+            return gamePlayers;
         }
 
         public void CreateMatch(string matchName)
