@@ -12,6 +12,7 @@ namespace Assets.Scripts.Networking
         protected const int NAME_LENGHT = 16;
 
         public MaskableGraphic loadingSpinner;
+        public float spinSpeed = -1.0f;
         public MaskableGraphic loadingMessage;
 
         protected NetworkLobbyController lobbyController;
@@ -48,7 +49,7 @@ namespace Assets.Scripts.Networking
         {
             while (true)
             {
-                loadingSpinner.transform.Rotate(loadingSpinner.transform.forward, -2.0f);
+                loadingSpinner.transform.Rotate(loadingSpinner.transform.forward, spinSpeed);
                 yield return new WaitForEndOfFrame();
             }
         }
