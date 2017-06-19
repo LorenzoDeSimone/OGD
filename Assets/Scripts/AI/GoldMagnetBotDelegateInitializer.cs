@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Assets.Scripts.Player;
 using Assets.Scripts.Spawn_collectable;
+using Assets.Scripts.Networking;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -24,16 +25,18 @@ public class GoldMagnetBotDelegateInitializer : NetworkBehaviour
 
     public GameObject GetWorstPlayer()
     {
-        Dictionary<int, int> ofPlayersAndPoints = PointManager.instance.GetPointsForPlayers();
         int lowestScore = int.MaxValue;
         GameObject worstPlayer = null;
+        PlayerDataHolder currPlayerDataHolder;
 
-        foreach (int currPlayerID in ofPlayersAndPoints.Keys)
+        foreach (GameObject currPlayer  in NetworkLobbyController.instance.GetPlayersInMatch())
         {
-            if (ofPlayersAndPoints[currPlayerID] < lowestScore)
+            currPlayerDataHolder = currPlayer.GetComponent<PlayerDataHolder>();
+
+            if ( currPlayerDataHolder.GetPoints() < lowestScore)
             {
-                worstPlayer = myChaserBot.PlayersGameObjects[currPlayerID];
-                lowestScore = ofPlayersAndPoints[currPlayerID];
+                worstPlayer = currPlayer;
+                lowestScore = currPlayerDataHolder.GetPoints();
             }
         }
 
