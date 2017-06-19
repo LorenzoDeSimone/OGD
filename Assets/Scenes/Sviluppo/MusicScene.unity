@@ -832,7 +832,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 4fef93bcf23d49e4b8d0629baa9e44bb, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 06b0803fa52ed4649a85666573a7733c, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.4
   m_Pitch: 1
@@ -1577,7 +1577,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   npcPrefabs:
-  - {fileID: 1809339051065658, guid: 1e89c5e3968aadc43bf2c8ff38cfa47b, type: 2}
+  - {fileID: 0}
   minTime: 30
   maxTime: 30
   numNpcMax: 3
