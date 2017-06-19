@@ -652,9 +652,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   npcPrefabs:
-  - {fileID: 1809339051065658, guid: 1e89c5e3968aadc43bf2c8ff38cfa47b, type: 2}
-  minTime: 30
-  maxTime: 30
+  - {fileID: 1400696220740140, guid: 0cfbc3225db5d8a4394296d34488dd3c, type: 2}
+  minTime: 5
+  maxTime: 5
   numNpcMax: 3
 --- !u!114 &221655974
 MonoBehaviour:

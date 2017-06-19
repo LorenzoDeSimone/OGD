@@ -15,11 +15,14 @@ EditorBuildSettings:
     path: Assets/Scenes/Game.unity
     guid: 1ce0722ee83687140bd6153a15e58490
   - enabled: 1
+    path: Assets/Scenes/Sviluppo/NewArena.unity
+    guid: 00000000000000000000000000000000
+  - enabled: 1
+    path: Assets/Scenes/Sviluppo/AnimationTest.unity
+    guid: e242d4cc27f134d4fa506a430e529577
+  - enabled: 1
     path: Assets/Scenes/Sviluppo/Policeman Bot.unity
     guid: 49f6f69625270ad4ca1311c27d342833
   - enabled: 1
     path: Assets/Scenes/Sviluppo/Background.unity
     guid: f251bac454dd27d458a292560347f286
-  - enabled: 1
-    path: Assets/Scenes/Sviluppo/NewArena.unity
-    guid: 0d4897a92f559ff4187be2357a991904
