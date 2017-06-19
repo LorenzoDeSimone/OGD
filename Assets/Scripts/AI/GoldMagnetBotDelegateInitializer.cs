@@ -7,13 +7,15 @@ using UnityEngine.Networking;
 
 public class GoldMagnetBotDelegateInitializer : NetworkBehaviour
 {
+    private ChaserBot myChaserBot;
+
     [SyncVar]
     int coinsCollected;
 
     // Use this for initialization
     void Start()
     {
-        ChaserBot myChaserBot = GetComponent<ChaserBot>();
+        myChaserBot = GetComponent<ChaserBot>();
         myChaserBot.SetTargetGetter(GetWorstPlayer);
         myChaserBot.SetOnHitHandler(GoldMagnetBotOnMissileHit);
         myChaserBot.SetOnCollectableHit(GoldMagnetBotOnCollectableHit);
@@ -30,7 +32,7 @@ public class GoldMagnetBotDelegateInitializer : NetworkBehaviour
         {
             if (ofPlayersAndPoints[currPlayerID] < lowestScore)
             {
-                worstPlayer = ChaserBot.PlayersGameObjects[currPlayerID];
+                worstPlayer = myChaserBot.PlayersGameObjects[currPlayerID];
                 lowestScore = ofPlayersAndPoints[currPlayerID];
             }
         }

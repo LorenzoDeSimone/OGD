@@ -7,11 +7,12 @@ using UnityEngine.Networking;
 
 public class PolicemanBotDelegateInitializer : NetworkBehaviour
 {
+    private ChaserBot myChaserBot;
 
-	// Use this for initialization
-	void Start ()
+    // Use this for initialization
+    void Start ()
     {
-        ChaserBot myChaserBot = GetComponent<ChaserBot>();
+        myChaserBot = GetComponent<ChaserBot>();
         myChaserBot.SetTargetGetter(GetBestPlayer);
         myChaserBot.SetOnHitHandler(PolicemanBotOnMissileHit);
         myChaserBot.SetOnCollectableHit(PolicemanBotOnCollectableHit);
@@ -27,7 +28,7 @@ public class PolicemanBotDelegateInitializer : NetworkBehaviour
         {
             if(ofPlayersAndPoints[currPlayerID] > highestScore)
             {
-                bestPlayer = ChaserBot.PlayersGameObjects[currPlayerID];
+                bestPlayer = myChaserBot.PlayersGameObjects[currPlayerID];
                 highestScore = ofPlayersAndPoints[currPlayerID];
             }
         }
