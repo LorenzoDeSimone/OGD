@@ -38,6 +38,7 @@ namespace Assets.Scripts.Networking
         {
             if (instance == null)
                 instance = this;
+            gamePlayers = new List<GameObject>();
         }
 
         private void Start()
