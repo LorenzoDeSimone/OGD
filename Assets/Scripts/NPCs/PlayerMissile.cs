@@ -71,7 +71,7 @@ public class PlayerMissile : NetworkBehaviour
         }
 
         if(myGround.collider != null && !firstHitWithAGravityField)
-            transform.right = myMovable.Move(myDirection);
+            myMovable.Move(myDirection);
     }
 
     public void SetStartDirection(bool isDirectionCounterClockwise)

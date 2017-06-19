@@ -197,6 +197,8 @@ namespace Assets.Scripts.Networking
             searchingPublicMatch = true;
             joiningMatch = false;
             creatingMatch = true;
+
+            gamePlayers = new List<GameObject>();
         }
 
         public void SafeStopBroadCast()
