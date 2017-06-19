@@ -779,7 +779,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   npcPrefabs:
-  - {fileID: 0}
+  - {fileID: 1400696220740140, guid: 0cfbc3225db5d8a4394296d34488dd3c, type: 2}
+  - {fileID: 1041361371178542, guid: 46058b03f696f414ea0d8d2c3f1aaf4a, type: 2}
   minTime: 30
   maxTime: 30
   numNpcMax: 3
