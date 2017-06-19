@@ -108,7 +108,7 @@ namespace Assets.Scripts.Spawn_collectable
 
         private void SpawnNpc()
         {
-            /*if (npcSpawner!=null)
+            if (npcSpawner!=null)
             {
                 GameObject npcPrefab = npcSpawner.getNpc();
                 if (npcPrefab != null)
@@ -117,7 +117,7 @@ namespace Assets.Scripts.Spawn_collectable
                     GameObject go = Instantiate(npcPrefab, platfomTransform.position + platfomTransform.up + npcPrefab.transform.up, Quaternion.identity, transform);
                     NetworkServer.Spawn(go);
                 } 
-            }*/
+            }
         }
     }
 }

@@ -44,7 +44,7 @@ public class TurretManager : NetworkBehaviour
         else
             finalRotation = startRotation;
         transform.rotation = Quaternion.Lerp(transform.rotation, finalRotation, Time.deltaTime * rotationSpeed);
-        if (players.Count > 0 && Mathf.Abs(transform.rotation.eulerAngles.z - finalRotation.eulerAngles.z) < 1 && Time.time > nextShoot)
+        if (players.Count > 0 && Mathf.Abs(transform.rotation.eulerAngles.z - finalRotation.eulerAngles.z) < 10 && Time.time > nextShoot)
         {
             GetComponent<Animator>().Play("Shoot");
         }

@@ -72,14 +72,54 @@ namespace Assets.Scripts.Player
         {
             CmdDecresePoints();
             StartCoroutine(StopPlayerMovement(disabledControlsTimeWindow));
+            StartCoroutine(StartPlayerHitEffect());
             SyncNewPoints(playerPoints);
         }
-        
+
         private IEnumerator StopPlayerMovement(float disabledControlsTimeWindow)
         {
             CmdSyncHitBool(true);
             yield return new WaitForSecondsRealtime(disabledControlsTimeWindow);
             CmdSyncHitBool(false);
+        }
+
+        private bool hit, decrese;
+        private float alpha, originalRed;
+
+        private IEnumerator StartPlayerHitEffect()
+        {
+            RpcActivateClientHitEffect();
+            yield return new WaitForSecondsRealtime(disabledControlsTimeWindow);
+            hit = false;
+        }
+
+        [ClientRpc]
+        private void RpcActivateClientHitEffect()
+        {
+            StartCoroutine(clientHitEffect());
+        }
+
+        private IEnumerator clientHitEffect()
+        {
+            hit = true;
+            decrese = false;
+            originalRed = mySpriteRenderer.color.r;
+            while (hit)
+            {
+                yield return new WaitForEndOfFrame();
+                if (decrese && alpha <= 150)
+                    decrese = false;
+                else if (!decrese && alpha >= 255)
+                    decrese = true;
+
+                if (decrese)
+                    alpha -= 5;
+                else
+                    alpha += 5;
+                mySpriteRenderer.color = new Color(1, 1, 1, alpha / 255);
+            }
+            mySpriteRenderer.color = new Color(1,1,1,1);
+
         }
 
         [Command]
