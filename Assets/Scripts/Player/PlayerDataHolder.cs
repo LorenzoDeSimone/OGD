@@ -157,7 +157,7 @@ namespace Assets.Scripts.Player
             return localPlayer;
         }
 
-        internal void FlipSprite(bool b)
+        internal void FlipRemoteSprite(bool b)
         {
             CmdFlipSprite(b);
         }
@@ -171,7 +171,8 @@ namespace Assets.Scripts.Player
         private void SyncFlip(bool b)
         {
             flip = b;
-            mySpriteRenderer.flipX = b;
+            if(!isLocalPlayer)
+                mySpriteRenderer.flipX = b;
         }
     }
 }

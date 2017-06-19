@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: 114549650004906468}
   - component: {fileID: 114300415828243062}
   - component: {fileID: 114636154426849802}
+  - component: {fileID: 95572699163333832}
   m_Layer: 9
   m_Name: GoldMagnetBot
   m_TagString: Untagged
@@ -176,6 +177,23 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 1, y: 1.6}
   m_Direction: 0
+--- !u!95 &95572699163333832
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1041361371178542}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: 36ae80d9780ce3d4c8696379e6711b3d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!114 &114162661430380176
 MonoBehaviour:
   m_ObjectHideFlags: 1
