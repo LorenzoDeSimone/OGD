@@ -261,6 +261,7 @@ GameObject:
   - component: {fileID: 38238904}
   - component: {fileID: 38238903}
   - component: {fileID: 38238907}
+  - component: {fileID: 38238908}
   m_Layer: 0
   m_Name: Online Manager
   m_TagString: OnlineGameManager
@@ -350,6 +351,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f21a24bc32cdcba45a66b5e7992153c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &38238908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 38238902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28104e39e0a3a874eb721d21f7cea50e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  npcPrefabs:
+  - {fileID: 1400696220740140, guid: 0cfbc3225db5d8a4394296d34488dd3c, type: 2}
+  - {fileID: 1041361371178542, guid: 46058b03f696f414ea0d8d2c3f1aaf4a, type: 2}
+  minTime: 20
+  maxTime: 20
+  numNpcMax: 3
 --- !u!1001 &97624342
 Prefab:
   m_ObjectHideFlags: 0
@@ -387,7 +405,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4012750390406714, guid: a37da5eeb45aaf64ea1a6e8c7e57bfe6, type: 2}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a37da5eeb45aaf64ea1a6e8c7e57bfe6, type: 2}
@@ -610,8 +628,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 221655972}
-  - component: {fileID: 221655973}
-  - component: {fileID: 221655974}
   m_Layer: 0
   m_Name: Map
   m_TagString: Untagged
@@ -640,54 +656,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &221655973
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 221655971}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28104e39e0a3a874eb721d21f7cea50e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  npcPrefabs:
-  - {fileID: 1400696220740140, guid: 0cfbc3225db5d8a4394296d34488dd3c, type: 2}
-  minTime: 5
-  maxTime: 5
-  numNpcMax: 3
---- !u!114 &221655974
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 221655971}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 0
-    i1: 0
-    i2: 0
-    i3: 0
-    i4: 0
-    i5: 0
-    i6: 0
-    i7: 0
-    i8: 0
-    i9: 0
-    i10: 0
-    i11: 0
-    i12: 0
-    i13: 0
-    i14: 0
-    i15: 0
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0
 --- !u!1 &363220295
 GameObject:
   m_ObjectHideFlags: 0
@@ -2094,7 +2062,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1958975813 stripped
 Transform:

@@ -23,7 +23,7 @@ public class ChaserBot : NetworkBehaviour
     private OnCollectableHitHandler MyOnCollectableHit;
 
     private bool playerHit;
-    public static Dictionary<int, GameObject> PlayersGameObjects = null;
+    public Dictionary<int, GameObject> PlayersGameObjects;
 
     public void SetTargetGetter(TargetGetter MyTargetGetter)
     {
@@ -53,12 +53,9 @@ public class ChaserBot : NetworkBehaviour
         RandomizeDirection();
         playerHit = false;
 
-        if (PlayersGameObjects == null)
-        {
-            PlayersGameObjects = new Dictionary<int, GameObject>();
-            foreach (GameObject currPlayer in GameObject.FindGameObjectsWithTag("Player"))
-                PlayersGameObjects.Add(currPlayer.GetComponent<PlayerDataHolder>().playerId, currPlayer);
-        }
+        PlayersGameObjects = new Dictionary<int, GameObject>();
+        foreach (GameObject currPlayer in GameObject.FindGameObjectsWithTag("Player"))
+            PlayersGameObjects.Add(currPlayer.GetComponent<PlayerDataHolder>().playerId, currPlayer);
     }
 
     public void SetPlayerHit(bool playerHit)
@@ -93,9 +90,9 @@ public class ChaserBot : NetworkBehaviour
             return;
 
         //The agent reached its target planet
-        if(GameObject.ReferenceEquals(myPathfinder.GetPlanetToReach(), myRadar.GetMyGround().collider.gameObject))
+        if (GameObject.ReferenceEquals(myPathfinder.GetPlanetToReach(), myRadar.GetMyGround().collider.gameObject))
         {
-            if(!myPathfinder.IsPathfindingStillCoroutineRunning())
+            if (!myPathfinder.IsPathfindingStillCoroutineRunning())
             {
                 Graph graph = PathFindingManager.GetGraph();
 
@@ -140,16 +137,19 @@ public class ChaserBot : NetworkBehaviour
 
         Destroy(gameObject);
     }
-    
+
     public void OnHit()
     {
         if (MyOnHit != null)
+        {
+            NpcSpawner.Instance.removeNpc();
             MyOnHit();
+        }
     }
 
     public void OnCollectableHit(GameObject collectable)
     {
-        if (MyOnCollectableHit!= null)
+        if (MyOnCollectableHit != null)
             MyOnCollectableHit(collectable);
     }
 }
