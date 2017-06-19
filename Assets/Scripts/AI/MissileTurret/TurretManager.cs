@@ -24,7 +24,7 @@ public class TurretManager : NetworkBehaviour
         nextShoot = Time.time;
     }
 
-    private float minorDistance;
+    private float minorDistance, distance;
     private Vector3 target, direction;
     Quaternion finalRotation;
 
@@ -35,8 +35,12 @@ public class TurretManager : NetworkBehaviour
             minorDistance = radius;
             foreach (GameObject go in players)
             {
-                if (Vector3.Distance(transform.position, go.transform.position) < minorDistance)
+                distance = Vector3.Distance(transform.position, go.transform.position);
+                if (distance < minorDistance)
+                {
                     target = go.transform.position;
+                    minorDistance = distance;
+                }
             }
             direction = (transform.position - target).normalized;
             finalRotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + 180);

@@ -19,12 +19,10 @@ namespace Assets.Scripts.Spawn_collectable
         private HashSet<GameObject> collectables;
         private List<Vector3> positions;
         private CountDown countdownCounter;
-        private NpcSpawner npcSpawner;
 
         private void Start()
         {
             GameObject go;
-            npcSpawner = transform.parent.parent.gameObject.GetComponent<NpcSpawner>();
             collectables = new HashSet<GameObject>();
             positions = new List<Vector3>();
             try
@@ -108,15 +106,13 @@ namespace Assets.Scripts.Spawn_collectable
 
         private void SpawnNpc()
         {
-            if (npcSpawner!=null)
+            GameObject npcPrefab = NpcSpawner.Instance.getNpc();
+            if (npcPrefab != null)
             {
-                GameObject npcPrefab = npcSpawner.getNpc();
-                if (npcPrefab != null)
-                {
-                    Transform platfomTransform = transform.parent;
-                    GameObject go = Instantiate(npcPrefab, platfomTransform.position + platfomTransform.up + npcPrefab.transform.up, Quaternion.identity, transform);
-                    NetworkServer.Spawn(go);
-                } 
+                NpcSpawner.Instance.addNpc();
+                Transform platfomTransform = transform.parent;
+                GameObject go = Instantiate(npcPrefab, platfomTransform.position + platfomTransform.up + npcPrefab.transform.up, Quaternion.identity, transform);
+                NetworkServer.Spawn(go);
             }
         }
     }

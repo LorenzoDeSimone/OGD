@@ -12,32 +12,42 @@ public class NpcSpawner : NetworkBehaviour
     private  GameObject npcPrefabChosen;
     private List<GameObject> platforms;
     private int numNpc;
+    private float nextSpawnTime;
+
+    private static NpcSpawner instance;
     
+    public static NpcSpawner Instance
+    {
+        get
+        {
+            if (instance == null)
+                instance = new NpcSpawner();
+            return instance;
+        }
+    }
+
     [Server]
     void Start()
     {
         npcPrefabChosen = null;
         numNpc = 0;
-        StartCoroutine(NextSpawn());
-    }
-
-    public IEnumerator NextSpawn()
-    {
-        yield return new WaitForSeconds(Random.Range(minTime, maxTime + 1));
-        if(numNpc < numNpcMax)
-            npcPrefabChosen = npcPrefabs[Random.Range(0, npcPrefabs.Count)];
+        nextSpawnTime = Time.time + Random.Range(minTime, maxTime + 1);
+        instance = this;
     }
 
     public GameObject getNpc()
     {
-        GameObject go = npcPrefabChosen;
-        if (npcPrefabChosen != null)
+        if(Time.time > nextSpawnTime && numNpc < numNpcMax)
         {
-            numNpc++;
-            npcPrefabChosen = null;
-            StartCoroutine(NextSpawn());
+            nextSpawnTime = Time.time + Random.Range(minTime, maxTime + 1);
+            return npcPrefabs[Random.Range(0, npcPrefabs.Count)];
         }
-        return go;
+        return null;
+    }
+
+    public void addNpc()
+    {
+        numNpc++;
     }
 
     public void removeNpc()
