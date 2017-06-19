@@ -859,6 +859,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6767dd5628137f41ae182cfe8e8f93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayerWalker: 0
+  playerDresser: {fileID: 0}
 --- !u!114 &304749140
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3387,6 +3389,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6767dd5628137f41ae182cfe8e8f93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayerWalker: 1
+  playerDresser: {fileID: 11400000, guid: 08ada4db82981c14d940c31bbdcb7ebd, type: 2}
 --- !u!212 &1667769784
 SpriteRenderer:
   m_ObjectHideFlags: 0
