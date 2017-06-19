@@ -43,10 +43,7 @@ namespace Assets.Scripts.Spawn_collectable
             if (player)
                 CmdUpdateServerState(false, coll.gameObject.GetComponent<PlayerDataHolder>().playerId);
             if (bot)
-            {
-                CmdUpdateServerState(false, -1);
                 bot.OnCollectableHit(gameObject);
-            }
         }
 
         private void UpdateNetworkState(bool b)
@@ -57,7 +54,7 @@ namespace Assets.Scripts.Spawn_collectable
         }
 
         [Command]
-        private void CmdUpdateServerState(bool b, int id)
+        public void CmdUpdateServerState(bool b, int id)
         {
             RealUpdate(b, id);
         }

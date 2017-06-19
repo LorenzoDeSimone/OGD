@@ -55,7 +55,9 @@ public class GoldMagnetBotDelegateInitializer : NetworkBehaviour
         Collectable collectableComponent = collectable.GetComponent<Collectable>();
 
         if (collectableComponent)
+        {
             coinsCollected += collectableComponent.pointValue;
-
+            collectableComponent.CmdUpdateServerState(false, -1);
+        }
     }
 }

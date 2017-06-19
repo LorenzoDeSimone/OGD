@@ -211,7 +211,7 @@ namespace Assets.Scripts.Player
         private void SyncFlip(bool b)
         {
             flip = b;
-            if(!isLocalPlayer)
+            if(!isLocalPlayer && mySpriteRenderer)
                 mySpriteRenderer.flipX = b;
         }
     }

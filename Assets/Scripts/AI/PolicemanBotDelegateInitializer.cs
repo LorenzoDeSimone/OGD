@@ -47,6 +47,6 @@ public class PolicemanBotDelegateInitializer : NetworkBehaviour
 
     public void PolicemanBotOnCollectableHit(GameObject collectable)
     {
-       // Debug.LogError("oooo");
+
     }
 }
