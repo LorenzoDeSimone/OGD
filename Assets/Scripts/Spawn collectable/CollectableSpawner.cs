@@ -19,10 +19,12 @@ namespace Assets.Scripts.Spawn_collectable
         private HashSet<GameObject> collectables;
         private List<Vector3> positions;
         private CountDown countdownCounter;
+        private Platform parentPlatform;
 
         private void Start()
         {
             GameObject go;
+            parentPlatform = transform.parent.GetComponent<Platform>();
             collectables = new HashSet<GameObject>();
             positions = new List<Vector3>();
             try
@@ -98,7 +100,7 @@ namespace Assets.Scripts.Spawn_collectable
             countdownCounter.RpcChangeNetworkState(countdown);
             yield return new WaitForSecondsRealtime(countdown);
             SpawnCoins();
-            if (spawnNpc)
+            if (spawnNpc && parentPlatform.players.Count == 0)
                 SpawnNpc();
             yield return new WaitForSecondsRealtime(3);
             StartCoroutine(StartCountdown());
