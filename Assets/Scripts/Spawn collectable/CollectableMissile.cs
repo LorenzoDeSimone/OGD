@@ -18,6 +18,7 @@ namespace Assets.Scripts.Spawn_collectable
                     mySprite.enabled = b;
                     myCollider.enabled = b;
                     pDH.CmdAddMissile();
+                    PlaySound();
                     break;
                 }
             }
