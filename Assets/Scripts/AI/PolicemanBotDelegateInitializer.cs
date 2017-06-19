@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.Player;
+using Assets.Scripts.Networking;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -20,18 +21,21 @@ public class PolicemanBotDelegateInitializer : NetworkBehaviour
 
     public GameObject GetBestPlayer()
     {
-        Dictionary<int, int> ofPlayersAndPoints = PointManager.instance.GetPointsForPlayers();
-        int highestScore = -1;
+        int highestScore = int.MinValue;
         GameObject bestPlayer = null;
+        PlayerDataHolder currPlayerDataHolder;
 
-        foreach (int currPlayerID in ofPlayersAndPoints.Keys)
+        foreach (GameObject currPlayer in NetworkLobbyController.instance.GetPlayersInMatch())
         {
-            if(ofPlayersAndPoints[currPlayerID] > highestScore)
+            currPlayerDataHolder = currPlayer.GetComponent<PlayerDataHolder>();
+
+            if (currPlayerDataHolder.GetPoints() > highestScore)
             {
-                bestPlayer = myChaserBot.PlayersGameObjects[currPlayerID];
-                highestScore = ofPlayersAndPoints[currPlayerID];
+                bestPlayer = currPlayer;
+                highestScore = currPlayerDataHolder.GetPoints();
             }
         }
+
         return bestPlayer;
     }
 

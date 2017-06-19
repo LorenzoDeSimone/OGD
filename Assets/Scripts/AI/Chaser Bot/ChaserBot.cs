@@ -23,7 +23,7 @@ public class ChaserBot : NetworkBehaviour
     private OnCollectableHitHandler MyOnCollectableHit;
 
     private bool playerHit;
-    public Dictionary<int, GameObject> PlayersGameObjects;
+    //public Dictionary<int, GameObject> PlayersGameObjects;
 
     public void SetTargetGetter(TargetGetter MyTargetGetter)
     {
@@ -52,10 +52,6 @@ public class ChaserBot : NetworkBehaviour
         input = new Movable.CharacterInput();
         RandomizeDirection();
         playerHit = false;
-
-        PlayersGameObjects = new Dictionary<int, GameObject>();
-        foreach (GameObject currPlayer in GameObject.FindGameObjectsWithTag("Player"))
-            PlayersGameObjects.Add(currPlayer.GetComponent<PlayerDataHolder>().playerId, currPlayer);
     }
 
     public void SetPlayerHit(bool playerHit)
@@ -96,13 +92,17 @@ public class ChaserBot : NetworkBehaviour
             {
                 Graph graph = PathFindingManager.GetGraph();
 
-                Radar targetPlayerRadar = MyTargetGetter().GetComponentInChildren<Radar>();
-                Node start = GetNodeFromGameObject(myRadar.GetMyGround().collider.gameObject);
-                Node end = GetNodeFromGameObject(targetPlayerRadar.GetMyGround().collider.gameObject);
-                if (!GameObject.ReferenceEquals(start.sceneObject, end.sceneObject))
+                GameObject targetPlayer = MyTargetGetter();
+                if (targetPlayer != null)//Edge case: players might not be loaded at start
                 {
-                    RandomizeDirection();
-                    myPathfinder.FindPath(start, end);
+                    Radar targetPlayerRadar = MyTargetGetter().GetComponentInChildren<Radar>();
+                    Node start = GetNodeFromGameObject(myRadar.GetMyGround().collider.gameObject);
+                    Node end = GetNodeFromGameObject(targetPlayerRadar.GetMyGround().collider.gameObject);
+                    if (!GameObject.ReferenceEquals(start.sceneObject, end.sceneObject))
+                    {
+                        RandomizeDirection();
+                        myPathfinder.FindPath(start, end);
+                    }
                 }
             }
         }
