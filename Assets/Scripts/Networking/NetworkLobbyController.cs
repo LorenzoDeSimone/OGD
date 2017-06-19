@@ -44,6 +44,8 @@ namespace Assets.Scripts.Networking
         private void Start()
         {
             networkExplorer = GetComponent<NetworkDiscovery>();
+            networkExplorer.broadcastPort = Random.Range(5000,7000);
+            networkPort = Random.Range(7001, 9001);
         }
 
         public override void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo)
@@ -199,6 +201,8 @@ namespace Assets.Scripts.Networking
             creatingMatch = true;
 
             gamePlayers = new List<GameObject>();
+            networkExplorer.broadcastPort = Random.Range(5000, 7000);
+            networkPort = Random.Range(7001, 9001);
         }
 
         public void SafeStopBroadCast()
