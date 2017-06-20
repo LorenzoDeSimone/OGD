@@ -1277,7 +1277,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 5cd4205af03291646bf3b2b7ce1d9ceb, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8982801ad68355540a98eb6a591a670d, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -1765,7 +1765,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 4c1a6be80f9045147914b693201830ff, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5bbe654e1ef38fa4cb47b3b99708dc79, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -2970,7 +2970,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 0e302dec5dd6bcc40913c9dea5e9ec5f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d499538d6871df5419353a98b9a85cda, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -4374,7 +4374,7 @@ MonoBehaviour:
   m_DontDestroyOnLoad: 1
   m_RunInBackground: 1
   m_ScriptCRCCheck: 1
-  m_MaxDelay: 0.01
+  m_MaxDelay: 0
   m_LogLevel: 0
   m_PlayerPrefab: {fileID: 0}
   m_AutoCreatePlayer: 1
