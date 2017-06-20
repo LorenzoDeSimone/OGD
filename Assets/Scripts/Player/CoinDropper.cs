@@ -7,14 +7,43 @@ using UnityEngine.Networking;
 
 public class CoinDropper : NetworkBehaviour
 {
-    public void DropCoins(int malus)
+    /*public 
+        PlayerNumberSelector/ma
+        num coin da droppare
+        max coin da droppare
+        coin da droppare (num/max) + (num % max);
+    
+    CoinDropper
+        (coin da droppare / max) +1 -> valore
+        quanti coin da droppare  coin da droppare / valore
+    */
+    public int maxCoinsToDrop = 5;
+
+    public struct CoinToDropInfos
+    {
+        public Vector3 airPoint;
+        public Vector3 groundPoint;
+        public int value;
+    }
+
+    public List<CoinToDropInfos> coinsToSpawn;
+
+    void Start()
+    {
+        coinsToSpawn = new List<CoinToDropInfos>();
+        StartCoroutine(DropCoinsContinously());
+    }
+
+    public void DropCoins(int coinsToDrop)
     {
         GameObject go;
         Vector3 movementVersor;
         Vector3 playerExtents = PlayerDataHolder.GetLocalPlayer().GetComponent<Collider2D>().bounds.extents;
         RaycastHit2D myGround = GetComponentInChildren<Radar>().GetMyGround();
+        int valueOfCoinsToDrop = ((coinsToDrop / maxCoinsToDrop)) +1;
+        coinsToDrop = coinsToDrop / valueOfCoinsToDrop;
 
-        for (int i = 0; i < malus; i++)
+        for (int i = 0; i < coinsToDrop; i++)
         {
             Vector3 airPoint, groundRaycastStartPoint, groundPoint;
 
@@ -36,15 +65,37 @@ public class CoinDropper : NetworkBehaviour
                                                               Mathf.Infinity,
                                                               LayerMask.GetMask("Walkable"));
 
-            go = Instantiate((GameObject)Resources.Load("Prefabs/Collectables/DroppedCoin"), transform.position, Quaternion.identity);
-
             //Elevates the ground point to the center of the dropped coin transform
-            groundPoint = groundPointHit2D.point + groundPointHit2D.normal * go.GetComponent<Collider2D>().bounds.extents.y;
-            Debug.DrawLine(transform.position, airPoint, Color.cyan);
-            Debug.DrawLine(airPoint, groundPoint, Color.green);
-            DroppedCoin droppedCoin = go.GetComponent<DroppedCoin>();
-            NetworkServer.Spawn(go);
-            droppedCoin.SetCurvePoints(transform.position, airPoint, groundPoint);
+            groundPoint = groundPointHit2D.point + groundPointHit2D.normal * 0.5f;//go.GetComponent<Collider2D>().bounds.extents.y;
+
+            //go = Instantiate((GameObject)Resources.Load("Prefabs/Collectables/DroppedCoin"), transform.position, Quaternion.identity);
+
+            CoinToDropInfos newCoinToSpawn;
+            newCoinToSpawn.airPoint = airPoint;
+            newCoinToSpawn.groundPoint = groundPoint;
+            newCoinToSpawn.value = valueOfCoinsToDrop;
+            coinsToSpawn.Add(newCoinToSpawn);
+
+            //Debug.DrawLine(transform.position, airPoint, Color.cyan);
+            //Debug.DrawLine(airPoint, groundPoint, Color.green);
+        }
+    }
+
+    private IEnumerator DropCoinsContinously()
+    {    
+        while(true)
+        {
+            if(coinsToSpawn.Count > 0)
+            {
+                CoinToDropInfos coinInfos = coinsToSpawn[0];
+                coinsToSpawn.Remove(coinInfos);
+                GameObject go = Instantiate((GameObject)Resources.Load("Prefabs/Collectables/DroppedCoin"), transform.position, Quaternion.identity);
+                DroppedCoin droppedCoin = go.GetComponent<DroppedCoin>();
+                droppedCoin.pointValue = coinInfos.value;
+                droppedCoin.SetCurvePoints(transform.position, coinInfos.airPoint, coinInfos.groundPoint);
+                NetworkServer.Spawn(go);
+            }
+            yield return new WaitForSeconds(0.2f);
         }
     }
 }

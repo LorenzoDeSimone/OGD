@@ -9,6 +9,7 @@ using UnityEngine.Networking;
 public class GoldMagnetBotDelegateInitializer : NetworkBehaviour
 {
     private ChaserBot myChaserBot;
+    private CoinDropper myCoinDropper;
 
     [SyncVar]
     int coinsCollected;
@@ -17,6 +18,7 @@ public class GoldMagnetBotDelegateInitializer : NetworkBehaviour
     void Start()
     {
         myChaserBot = GetComponent<ChaserBot>();
+        myCoinDropper = GetComponent<CoinDropper>();
         myChaserBot.SetTargetGetter(GetWorstPlayer);
         myChaserBot.SetOnHitHandler(GoldMagnetBotOnMissileHit);
         myChaserBot.SetOnCollectableHit(GoldMagnetBotOnCollectableHit);
@@ -46,6 +48,21 @@ public class GoldMagnetBotDelegateInitializer : NetworkBehaviour
     public void GoldMagnetBotOnMissileHit()
     {
         GetComponent<CoinDropper>().DropCoins(coinsCollected);
+        NetworkServer.UnSpawn(gameObject);
+        CoinDropper myCoinDropper = GetComponent<CoinDropper>();
+
+        //Fake instant death
+        GetComponent<SpriteRenderer>().enabled = false;
+        GetComponent<Collider2D>().enabled = false;
+
+        StartCoroutine(SpawnAllCoinsAndDie());
+    }
+
+    private IEnumerator SpawnAllCoinsAndDie()
+    {
+        while (myCoinDropper.coinsToSpawn.Count > 0)
+            yield return new WaitForSeconds(2f);
+
         NetworkServer.UnSpawn(gameObject);
         Destroy(gameObject);
     }
