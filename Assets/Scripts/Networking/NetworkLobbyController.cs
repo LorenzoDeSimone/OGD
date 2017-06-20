@@ -48,6 +48,7 @@ namespace Assets.Scripts.Networking
         {
             networkExplorer = GetComponent<NetworkDiscovery>();
             sceneSelector = GetComponent<OnlineSceneSelector>();
+            SafeSetOnlineScene();
         }
 
         public override void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo)
@@ -215,6 +216,11 @@ namespace Assets.Scripts.Networking
         public void SetMinPlayers(int val)
         {
             minPlayers = val;
+            SafeSetOnlineScene();
+        }
+
+        private void SafeSetOnlineScene()
+        {
             if (sceneSelector)
             {
                 playScene = sceneSelector.GetSceneFor(minPlayers);

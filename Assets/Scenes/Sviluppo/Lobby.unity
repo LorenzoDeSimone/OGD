@@ -5549,7 +5549,7 @@ MonoBehaviour:
   m_GamePlayerPrefab: {fileID: 1582415777413702, guid: 890ee3d1764f1584c87df9061563aeeb,
     type: 2}
   m_LobbyScene: Lobby
-  m_PlayScene: Arena_2
+  m_PlayScene: 
   lobbySlots: []
   publicMatchWaitTime: 10
   simulateServerOnly: 0
@@ -5614,10 +5614,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneNames:
-  - Game2
-  - MusicScene
-  - Game2
-  - Game2
+  - Arena_2
+  - Arena_2
+  - Arena_2
+  - Arena_2
+  - Arena_4
 --- !u!1 &2135801295
 GameObject:
   m_ObjectHideFlags: 0
