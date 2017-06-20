@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 
 public class ChaserBot : NetworkBehaviour
 {
-    public float standStillTime = 3f;
+    public float standStillTime = 5f;
 
     private Movable myMovable;
     private Radar myRadar;
