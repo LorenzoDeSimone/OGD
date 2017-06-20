@@ -11,6 +11,7 @@ namespace Assets.Scripts.Networking
     public class NetworkLobbyController : NetworkLobbyManager {
 
         public float publicMatchWaitTime = 10.0f;
+        public bool simulateServerOnly = false;
         public static NetworkLobbyController instance;
 
         internal bool loadingMatches = true;
