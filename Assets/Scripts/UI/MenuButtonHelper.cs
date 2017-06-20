@@ -8,7 +8,6 @@ namespace Assets.Scripts.UI
     {
         public BackButtonHelper backButtonHelper;
         public bool backButtonWillResetLobbyController = true;
-        public bool enableFastRestart = false;
 
         internal override void Init()
         {
