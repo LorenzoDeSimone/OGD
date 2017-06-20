@@ -80,8 +80,7 @@ namespace Assets.Scripts.Spawn_collectable
             foreach (GameObject g in collectables)
             {
                 c = g.GetComponent<Collectable>();
-                if (!c.GetNetworkActiveState())
-                    c.RpcChangeNetworkState(true, positions[i]);
+                c.RpcChangeNetworkState(true, positions[i]);
                 i++;
             }
         }
