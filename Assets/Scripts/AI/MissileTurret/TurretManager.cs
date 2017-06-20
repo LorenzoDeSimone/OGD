@@ -7,7 +7,7 @@ using UnityEngine.Networking;
 public class TurretManager : NetworkBehaviour
 {
     public float rotationSpeed = 1;
-    public float shootRating = 5;
+    public float shootRate = 5;
 
     private List<GameObject> players;
     private static float radius;
@@ -62,7 +62,7 @@ public class TurretManager : NetworkBehaviour
             playerMissile.gameObject.SetActive(true);
             NetworkServer.Spawn(playerMissile);
         }
-        nextShoot = Time.time + shootRating;
+        nextShoot = Time.time + shootRate;
     }
 
     private void OnTriggerEnter2D(Collider2D collider)

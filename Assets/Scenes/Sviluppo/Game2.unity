@@ -367,7 +367,7 @@ MonoBehaviour:
   - {fileID: 1041361371178542, guid: 46058b03f696f414ea0d8d2c3f1aaf4a, type: 2}
   minTime: 20
   maxTime: 20
-  numNpcMax: 3
+  numNpcMax: 2
 --- !u!1 &88783462
 GameObject:
   m_ObjectHideFlags: 0
@@ -475,6 +475,11 @@ Prefab:
     - target: {fileID: 4012750390406714, guid: a37da5eeb45aaf64ea1a6e8c7e57bfe6, type: 2}
       propertyPath: m_RootOrder
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114581321765087692, guid: a37da5eeb45aaf64ea1a6e8c7e57bfe6,
+        type: 2}
+      propertyPath: shootRate
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a37da5eeb45aaf64ea1a6e8c7e57bfe6, type: 2}
@@ -774,33 +779,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01c1aab5497521c44817da61cfad860c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  starLayers:
-  - {fileID: 1143554051}
-  - {fileID: 671475747}
-  - {fileID: 1316734830}
-  - {fileID: 1316734830}
-  - {fileID: 1316734830}
-  - {fileID: 1316734830}
-  - {fileID: 1316734830}
-  - {fileID: 1316734830}
-  - {fileID: 1316734830}
-  - {fileID: 1316734830}
-  - {fileID: 1316734830}
-  - {fileID: 1316734830}
-  - {fileID: 1316734830}
-  - {fileID: 1316734830}
-  - {fileID: 1316734830}
-  - {fileID: 1316734830}
-  - {fileID: 1316734830}
-  - {fileID: 1316734830}
-  - {fileID: 1316734830}
-  - {fileID: 1316734830}
-  - {fileID: 1316734830}
-  - {fileID: 1316734830}
-  - {fileID: 1316734830}
-  - {fileID: 1316734830}
-  - {fileID: 1316734830}
-  - {fileID: 1316734830}
   minSpeed: 0.005
   maxDelta: 0.05
 --- !u!212 &191080644
