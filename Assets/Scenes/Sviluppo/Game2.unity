@@ -367,7 +367,7 @@ MonoBehaviour:
   - {fileID: 1041361371178542, guid: 46058b03f696f414ea0d8d2c3f1aaf4a, type: 2}
   minTime: 20
   maxTime: 20
-  numNpcMax: 3
+  numNpcMax: 2
 --- !u!1 &88783462
 GameObject:
   m_ObjectHideFlags: 0
