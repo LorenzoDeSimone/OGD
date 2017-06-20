@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 
 public class PathFindingManager : NetworkBehaviour {
 
-    public static int maxDistanceAdjacencies = 10;
+    public static int maxDistanceAdjacencies = 8;
     private static Graph graph;
 
     void Start ()
@@ -31,7 +31,7 @@ public class PathFindingManager : NetworkBehaviour {
                 distance = graph.GetNodes()[i].sceneObject.GetComponent<Collider2D>().Distance(graph.GetNodes()[j].sceneObject.GetComponent<Collider2D>()).distance;
                 if (distance < maxDistanceAdjacencies)
                 {
-                    //Debug.DrawLine(graph.getNodes()[i].sceneObject.transform.position, graph.getNodes()[j].sceneObject.transform.position, Color.green);
+                    //Debug.DrawLine(graph.GetNodes()[i].sceneObject.transform.position, graph.GetNodes()[j].sceneObject.transform.position, Color.green);
                     graph.AddEdge(new Edge(graph.GetNodes()[i], graph.GetNodes()[j], 1));
                     graph.AddEdge(new Edge(graph.GetNodes()[j], graph.GetNodes()[i], 1));
                 }
