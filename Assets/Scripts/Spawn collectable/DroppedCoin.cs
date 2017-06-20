@@ -22,10 +22,10 @@ namespace Assets.Scripts.Spawn_collectable
             StartCoroutine(UncollectableTime(uncollectableTimeWindow));
         }
 
-        private void OnTriggerEnter2D(Collider2D coll)
+        private void OnTriggerStay2D(Collider2D coll)
         {
             if (isCollectable)
-                base.OnTriggerEnter2D(coll);
+                base.OnTriggerStay2D(coll);
         }
 
         private void Update()

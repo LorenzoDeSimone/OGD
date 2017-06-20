@@ -4459,6 +4459,7 @@ MonoBehaviour:
   m_PlayScene: Game2
   lobbySlots: []
   publicMatchWaitTime: 10
+  simulateServerOnly: 0
 --- !u!114 &2108872119
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -35,7 +35,7 @@ namespace Assets.Scripts.Spawn_collectable
             audioSource = GetComponent<AudioSource>();
         }
 
-        public void OnTriggerEnter2D(Collider2D coll)
+        public void OnTriggerStay2D(Collider2D coll)
         {
             PlayerDataHolder player = coll.gameObject.GetComponent<PlayerDataHolder>();
             ChaserBot bot = coll.gameObject.GetComponent<ChaserBot>();
