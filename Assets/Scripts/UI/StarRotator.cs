@@ -5,7 +5,7 @@ using System.Collections;
 
 public class StarRotator : MonoBehaviour
 {
-    public List<GameObject> starLayers;
+    private List<GameObject> starLayers;
     public float minSpeed = 0.1f;
     public float maxDelta = 0.3f;
     
@@ -14,8 +14,17 @@ public class StarRotator : MonoBehaviour
 
     void Start()
     {
+        starLayers = new List<GameObject>();
+
+        foreach (Transform currStarLayer in transform)
+        {
+            if(!currStarLayer.Equals(transform))
+                starLayers.Add(currStarLayer.gameObject);
+        }
+
         starLayerSpeeds = new List<float>();
         int[] randoms = {1, -1};
+
         rotationDirection = randoms[UnityEngine.Random.Range(0,randoms.Length)];
 
         for(int i = 0; i < starLayers.Count; i++)
@@ -31,7 +40,7 @@ public class StarRotator : MonoBehaviour
     {
         foreach (GameObject go in starLayers)
         {
-            go.transform.Rotate(go.transform.forward, UnityEngine.Random.Range(0.0f,360.0f));
+            go.transform.Rotate(transform.forward, UnityEngine.Random.Range(0.0f,360.0f));
         }
     }
 
