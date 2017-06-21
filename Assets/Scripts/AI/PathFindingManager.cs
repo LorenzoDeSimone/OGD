@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 
 public class PathFindingManager : NetworkBehaviour {
 
-    public static int maxDistanceAdjacencies = 10;
+    public static int maxDistanceAdjacencies = 7;
     private static Graph graph;
 
     void Start ()
