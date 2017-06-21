@@ -22,44 +22,50 @@ public class InputManager : NetworkBehaviour {
     //Handles continous movement
     void Update()
     {
-        if(localPlayerInputController == null)
+        if (localPlayerInputController == null)
         {
-            localPlayerInputController = PlayerDataHolder.GetLocalPlayer().GetComponent<InputController>();
-            localPlayerShootingController = PlayerDataHolder.GetLocalPlayer().gameObject.GetComponent<ShootingController>();
-            localPlayerAnimator = PlayerDataHolder.GetLocalPlayer().gameObject.GetComponent<Animator>();
-        }
-
-        Movable.CharacterInput input;
-        input.counterClockwise = input.clockwise = input.jump = false;
-
-        if (counterclockwisePressed || Input.GetKey(KeyCode.LeftArrow))
-        {
-            input.counterClockwise = true;
-            localPlayerAnimator.SetBool("moving", true);
-            localPlayerInputController.RequestMovement(input);
-        }
-        else if (clockwisePressed   || Input.GetKey(KeyCode.RightArrow))
-        {
-            input.clockwise = true;
-            localPlayerAnimator.SetBool("moving", true);
-            localPlayerInputController.RequestMovement(input);
+            if (PlayerDataHolder.GetLocalPlayer())
+            {
+                localPlayerInputController = PlayerDataHolder.GetLocalPlayer().GetComponent<InputController>();
+                localPlayerShootingController = PlayerDataHolder.GetLocalPlayer().gameObject.GetComponent<ShootingController>();
+                localPlayerAnimator = PlayerDataHolder.GetLocalPlayer().gameObject.GetComponent<Animator>();
+            }
         }
         else
         {
-            localPlayerAnimator.SetBool("moving", false);
-        }
 
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            input.jump = true;
-            localPlayerAnimator.SetTrigger("jump");
-            localPlayerInputController.RequestMovement(input);
-        }
+            Movable.CharacterInput input;
+            input.counterClockwise = input.clockwise = input.jump = false;
 
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            //Debug.LogError("Shoot");
-            localPlayerShootingController.Shoot();
+            if (counterclockwisePressed || Input.GetKey(KeyCode.LeftArrow))
+            {
+                input.counterClockwise = true;
+                localPlayerAnimator.SetBool("moving", true);
+                localPlayerInputController.RequestMovement(input);
+            }
+            else if (clockwisePressed || Input.GetKey(KeyCode.RightArrow))
+            {
+                input.clockwise = true;
+                localPlayerAnimator.SetBool("moving", true);
+                localPlayerInputController.RequestMovement(input);
+            }
+            else
+            {
+                localPlayerAnimator.SetBool("moving", false);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                input.jump = true;
+                localPlayerAnimator.SetTrigger("jump");
+                localPlayerInputController.RequestMovement(input);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                //Debug.LogError("Shoot");
+                localPlayerShootingController.Shoot();
+            }
         }
     }
 

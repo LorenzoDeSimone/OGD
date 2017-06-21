@@ -88,9 +88,12 @@ namespace Assets.Scripts.Spawn_collectable
         [ClientRpc]
         public void RpcChangeNetworkState(bool b, Vector3 v)
         {
-            mySprite.enabled = b;
-            myCollider.enabled = b;
-            transform.position = v;
+            if (mySprite)
+            {
+                mySprite.enabled = b;
+                myCollider.enabled = b;
+                transform.position = v;
+            }
         }
         
         protected void PlaySound()
