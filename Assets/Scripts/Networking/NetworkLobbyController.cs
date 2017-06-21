@@ -5,6 +5,7 @@ using UnityEngine.Networking.Match;
 using UnityEngine.Networking.Types;
 using UnityEngine.Events;
 using Assets.Scripts.Player;
+using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.Networking
 {
@@ -34,6 +35,7 @@ namespace Assets.Scripts.Networking
         //Gives players a unique id
         int idCounter = 0;
         List<GameObject> gamePlayers;
+        OnlineSceneSelector sceneSelector;
 
         private void Awake()
         {
@@ -45,6 +47,8 @@ namespace Assets.Scripts.Networking
         private void Start()
         {
             networkExplorer = GetComponent<NetworkDiscovery>();
+            sceneSelector = GetComponent<OnlineSceneSelector>();
+            SafeSetOnlineScene();
         }
 
         public override void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo)
@@ -142,6 +146,7 @@ namespace Assets.Scripts.Networking
 
         public void CreateMatch(string matchName)
         {
+
             matchMaker.CreateMatch(
                    matchName,
                    (uint)maxPlayers,
@@ -206,6 +211,20 @@ namespace Assets.Scripts.Networking
         {
             if (networkExplorer && networkExplorer.running)
                 networkExplorer.StopBroadcast();
+        }
+
+        public void SetMinPlayers(int val)
+        {
+            minPlayers = val;
+            SafeSetOnlineScene();
+        }
+
+        private void SafeSetOnlineScene()
+        {
+            if (sceneSelector)
+            {
+                playScene = sceneSelector.GetSceneFor(minPlayers);
+            }
         }
 
         public bool Online

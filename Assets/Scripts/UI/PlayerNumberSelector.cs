@@ -8,12 +8,12 @@ public class PlayerNumberSelector : SliderHelper {
 
     protected override void Init(float newValue)
     {
-        lobbyController.minPlayers = (int)newValue;
+        lobbyController.SetMinPlayers((int)newValue);
     }
 
     protected override void OnValueChanged(float newValue)
     {
         textField.text = "" + (int)newValue;
-        lobbyController.minPlayers = (int)newValue;
+        lobbyController.SetMinPlayers((int)newValue);
     }
 }

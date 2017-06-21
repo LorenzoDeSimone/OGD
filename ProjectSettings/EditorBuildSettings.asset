@@ -12,8 +12,11 @@ EditorBuildSettings:
     path: Assets/Scenes/Sviluppo/Lobby.unity
     guid: cff004e9efbf49147aa5564e181700ce
   - enabled: 1
-    path: Assets/Scenes/Sviluppo/Game2.unity
-    guid: 4d921ee221800af4f8a0966289acb399
+    path: Assets/Scenes/Sviluppo/MusicScene.unity
+    guid: 00aae5f3cd84fc24aa14e12e11aa2c74
   - enabled: 1
-    path: Assets/Scenes/Sviluppo/Arena_3.unity
-    guid: 00000000000000000000000000000000
+    path: Assets/Scenes/Arenas/Arena_2.unity
+    guid: 704bd77ce1d5aa044ad862116758afd2
+  - enabled: 1
+    path: Assets/Scenes/Arenas/Arena_4.unity
+    guid: 31efa9724a5ae1a4295573aa5072cca9

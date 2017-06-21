@@ -548,7 +548,7 @@ Prefab:
     - target: {fileID: 114581321765087692, guid: a37da5eeb45aaf64ea1a6e8c7e57bfe6,
         type: 2}
       propertyPath: shootRate
-      value: 10
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a37da5eeb45aaf64ea1a6e8c7e57bfe6, type: 2}

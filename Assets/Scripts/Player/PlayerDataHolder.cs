@@ -78,40 +78,20 @@ namespace Assets.Scripts.Player
 
         private void Blink()
         {
-            StartCoroutine(StartPlayerHitEffect());
-            RpcBlink();
+            StartCoroutine(StartHitEffect());
+            RpcStartHitEffect();
+
+            StartCoroutine(EndHitEffect());
+            RpcEndHitEffect();
         }
 
         [ClientRpc]
-        private void RpcBlink()
+        private void RpcStartHitEffect()
         {
-            StartCoroutine(StartPlayerHitEffect());
+            StartCoroutine(StartHitEffect());
         }
 
-        private IEnumerator StartPlayerHitEffect()
-        {
-            RpcActivateClientHitEffect();
-            yield return new WaitForSecondsRealtime(disabledControlsTimeWindow);
-            hit = false;
-        }
-
-        private IEnumerator StopPlayerMovement(float disabledControlsTimeWindow)
-        {
-            CmdSyncHitBool(true);
-            yield return new WaitForSecondsRealtime(disabledControlsTimeWindow);
-            CmdSyncHitBool(false);
-        }
-
-        private bool hit, decrese;
-        private float alpha, originalRed;
-
-        [ClientRpc]
-        private void RpcActivateClientHitEffect()
-        {
-            StartCoroutine(clientHitEffect());
-        }
-
-        private IEnumerator clientHitEffect()
+        private IEnumerator StartHitEffect()
         {
             hit = true;
             decrese = false;
@@ -130,8 +110,31 @@ namespace Assets.Scripts.Player
                     alpha += 5;
                 mySpriteRenderer.color = new Color(1, 1, 1, alpha / 255);
             }
-            mySpriteRenderer.color = new Color(1,1,1,1);
+            mySpriteRenderer.color = new Color(1, 1, 1, 1);
         }
+
+        [ClientRpc]
+        private void RpcEndHitEffect()
+        {
+            StartCoroutine(EndHitEffect());
+        }
+
+        private IEnumerator EndHitEffect()
+        {
+            yield return new WaitForSecondsRealtime(disabledControlsTimeWindow);
+            hit = false;
+        }
+
+        private IEnumerator StopPlayerMovement(float disabledControlsTimeWindow)
+        {
+            CmdSyncHitBool(true);
+            yield return new WaitForSecondsRealtime(disabledControlsTimeWindow);
+            CmdSyncHitBool(false);
+        }
+
+        private bool hit, decrese;
+        private float alpha, originalRed;
+
 
         [Command]
         private void CmdSyncHitBool(bool b)

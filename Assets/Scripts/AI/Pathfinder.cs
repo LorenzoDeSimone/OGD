@@ -40,7 +40,7 @@ public class Pathfinder : MonoBehaviour
     {
         while (currentAStarStepSolver.Step())
         {
-            yield return new WaitForSeconds(0f);
+            yield return new WaitForSeconds(0.2f);
         }
 
         Edge[] path = currentAStarStepSolver.solution;
