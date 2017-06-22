@@ -175,7 +175,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Visual Artist\r"
+  m_Text: "Visual Artist\r\nmarta.barducchi@gmail.com"
 --- !u!222 &15226667
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -820,7 +820,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Sound Designer\r\nMusic Composer"
+  m_Text: "Sound Designer\r Music Composer\nvalky3it@gmail.com\r"
 --- !u!222 &259189461
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -894,7 +894,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Game Designer\r\nGame Programmer\r\r"
+  m_Text: "Game Designer\r Game Programmer\r\r\nemanuele.lattanzio@studenti.unimi.it\r"
 --- !u!222 &282969951
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1877,8 +1877,8 @@ RectTransform:
   m_Father: {fileID: 393467410}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.45, y: 0.05}
-  m_AnchorMax: {x: 0.55, y: 0.15}
+  m_AnchorMin: {x: 0.8, y: 0.8}
+  m_AnchorMax: {x: 0.95, y: 0.9}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
@@ -2781,7 +2781,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Game Programmer\r"
+  m_Text: "Game Programmer\n\rjegher.andrea@gmail.com"
 --- !u!222 &1023107054
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3249,7 +3249,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0.6}
+  m_AnchorMax: {x: 1, y: 0.65}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -3930,7 +3930,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Game Designer\r"
+  m_Text: "Game Designer\r\ngiulia.barnaba92@gmail.com"
 --- !u!222 &1418426720
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5723,7 +5723,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Game Designer\r\nGame Programmer"
+  m_Text: "Game Designer\r Game Programmer\nlorenz.desimone@gmail.com\r"
 --- !u!222 &2144770223
 CanvasRenderer:
   m_ObjectHideFlags: 0
