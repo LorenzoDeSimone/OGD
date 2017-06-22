@@ -6,20 +6,26 @@ using UnityEngine.UI;
 public class MissileButton : MonoBehaviour
 {
     public static MissileButton instance;
+    private Button button;
+    private Image image;
 
     public void Activate()
     {
-        GetComponent<Button>().interactable = true;
+        button.interactable = true;
+        image.color = button.colors.normalColor;
     }
 
     public void Deactivate()
     {
-        GetComponent<Button>().interactable = false;
+        button.interactable = false;
+        image.color = button.colors.disabledColor;
     }
 
     void Start()
     {
         if (instance == null)
             instance = this;
+        button = GetComponent<Button>();
+        image = GetComponent<Image>();
     }
 }
