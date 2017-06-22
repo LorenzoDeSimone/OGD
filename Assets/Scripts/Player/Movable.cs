@@ -122,9 +122,23 @@ namespace Assets.Scripts.Player
                 return true;
         }
 
+        private void FlipSpriteAccordinglyToInput(CharacterInput input)
+        {
+            if (flipSprite)
+            {
+                if (input.counterClockwise)
+                    SafeFlip(true);
+                else if (input.clockwise)
+                    SafeFlip(false);
+            }
+        }
+
+
         //Movement routines called by the input manager
         public Vector2 Move(CharacterInput input)//returns new movement versor just for checking
         {
+            FlipSpriteAccordinglyToInput(input);
+
             if (!CanMove())
                 return Vector2.zero;
 
@@ -143,20 +157,20 @@ namespace Assets.Scripts.Player
                 movementVersor = new Vector3(-myGround.normal.y, myGround.normal.x);
                 movementPerpendicularDown = -myGround.normal;//new Vector2(-movementVersor.y, movementVersor.x).normalized;
 
-                if (flipSprite)
+                /*if (flipSprite)
                 {
                     SafeFlip(true); 
-                }
+                }*/
             }
             else if (input.clockwise)
             {
                 movementVersor = new Vector3(myGround.normal.y, -myGround.normal.x);
                 movementPerpendicularDown = -myGround.normal;// new Vector2(movementVersor.y, -movementVersor.x).normalized;
 
-                if (flipSprite)
+                /*if (flipSprite)
                 {
                     SafeFlip(false); 
-                }
+                }*/
             }
             else
             {

@@ -33,13 +33,13 @@ namespace Assets.Scripts.Player
 
         public void UpdateShootStartPosition(Movable.CharacterInput input)
         {
-            if (myMovable.CanMove())
-            {
+            //if (myMovable.CanMove())
+            //{
                 if (input.counterClockwise)
                     currShootPosition = leftShootPosition;
                 else if (input.clockwise)
                     currShootPosition = rightShootPosition;
-            }
+            //}
         }
 
         public void Shoot()
