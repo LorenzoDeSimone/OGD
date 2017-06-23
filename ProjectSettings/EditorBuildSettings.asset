@@ -19,7 +19,7 @@ EditorBuildSettings:
     guid: 704bd77ce1d5aa044ad862116758afd2
   - enabled: 1
     path: Assets/Scenes/Arenas/Arena_3.unity
-    guid: 78cefc006eff0514baa8919ccfc3ce32
+    guid: f1464113424d2434da1c306686eb2526
   - enabled: 1
     path: Assets/Scenes/Arenas/Arena_4.unity
     guid: 31efa9724a5ae1a4295573aa5072cca9
