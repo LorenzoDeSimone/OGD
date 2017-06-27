@@ -48,8 +48,6 @@ namespace Assets.Scripts.Spawn_collectable
 
         private void UpdateNetworkState(bool b)
         {
-            if (!b)
-                PlaySound();
             networkActiveState = b;
             if (isServer)
                 RpcChangeNetworkState(b, transform.position); 
@@ -96,6 +94,9 @@ namespace Assets.Scripts.Spawn_collectable
                 mySprite.enabled = b;
                 myCollider.enabled = b;
                 transform.position = v;
+                //Play on client on deactivation
+                if (!b)
+                    PlaySound();
             }
         }
         

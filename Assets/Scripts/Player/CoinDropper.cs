@@ -36,7 +36,6 @@ public class CoinDropper : NetworkBehaviour
 
     public void DropCoins(int coinsToDrop)
     {
-        GameObject go;
         Vector3 movementVersor;
         Vector3 playerExtents = PlayerDataHolder.GetLocalPlayer().GetComponent<Collider2D>().bounds.extents;
         RaycastHit2D myGround = GetComponentInChildren<Radar>().GetMyGround();
