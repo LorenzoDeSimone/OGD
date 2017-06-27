@@ -57,6 +57,8 @@ namespace Assets.Scripts.Spawn_collectable
         public void CmdUpdateServerState(bool b, int id)
         {
             RealUpdate(b, id);
+            if(!b)
+                PlaySound();
         }
 
         protected virtual void RealUpdate(bool b, int id)
@@ -75,8 +77,9 @@ namespace Assets.Scripts.Spawn_collectable
                         pDH.CmdAddPoints(pointValue * pointScaler);
                         break;
                     }
-                } 
+                }
             }
+            //Play sound on server
             PlaySound();
         }
 

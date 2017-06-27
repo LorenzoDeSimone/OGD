@@ -87,6 +87,7 @@ public class InputManager : NetworkBehaviour {
         Movable.CharacterInput input;
         input.counterClockwise = input.clockwise = false;
         input.jump = true;
+        localPlayerAnimator.SetTrigger("jump");
         localPlayerInputController.RequestMovement(input);
     }
 }
